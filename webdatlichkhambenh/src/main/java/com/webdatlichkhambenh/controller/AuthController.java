@@ -3,6 +3,7 @@ package com.webdatlichkhambenh.controller;
 import com.webdatlichkhambenh.dto.LoginRequest;
 import com.webdatlichkhambenh.dto.RegisterRequest;
 import com.webdatlichkhambenh.service.UserService;
+import com.webdatlichkhambenh.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,9 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private JwtService jwtService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
@@ -36,10 +40,16 @@ public class AuthController {
         boolean success = userService.login(request.getUsername(), request.getPassword());
         
         if (success) {
-            String token = "token_" + request.getUsername() + "_" + System.currentTimeMillis();
+            String accessToken = jwtService.generateAccessToken(request.getUsername());
+            String refreshToken = jwtService.generateRefreshToken(request.getUsername());
+            
+            // Save refresh token to database
+            jwtService.saveRefreshTokenToDatabase(request.getUsername(), refreshToken);
+            
             response.put("success", true);
             response.put("message", "Đăng nhập thành công");
-            response.put("token", token);
+            response.put("accessToken", accessToken);
+            response.put("refreshToken", refreshToken);
             response.put("username", request.getUsername());
             return ResponseEntity.ok(response);
         } else {
@@ -101,14 +111,71 @@ public class AuthController {
         boolean success = userService.register(request);
         
         if (success) {
+            // Tự động tạo token sau khi đăng ký thành công
+            String accessToken = jwtService.generateAccessToken(request.getUsername());
+            String refreshToken = jwtService.generateRefreshToken(request.getUsername());
+            
+            // Save refresh token to database
+            jwtService.saveRefreshTokenToDatabase(request.getUsername(), refreshToken);
+            
             response.put("success", true);
             response.put("message", "Đăng ký thành công");
+            response.put("accessToken", accessToken);
+            response.put("refreshToken", refreshToken);
+            response.put("username", request.getUsername());
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
             response.put("message", "Đăng ký không thành công. Vui lòng thử lại");
             return ResponseEntity.badRequest().body(response);
         }
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, Object>> refreshToken(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+        
+        String refreshToken = request.get("refreshToken");
+        String username = request.get("username");
+        
+        if (refreshToken == null || username == null) {
+            response.put("success", false);
+            response.put("message", "Refresh token và username không được để trống");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        if (jwtService.validateRefreshToken(refreshToken, username)) {
+            String newAccessToken = jwtService.generateAccessToken(username);
+            String newRefreshToken = jwtService.generateRefreshToken(username);
+            
+            // Save new tokens to database
+            jwtService.saveRefreshTokenToDatabase(username, newRefreshToken);
+            
+            response.put("success", true);
+            response.put("message", "Token đã được làm mới");
+            response.put("accessToken", newAccessToken);
+            response.put("refreshToken", newRefreshToken);
+            response.put("username", username);
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("success", false);
+            response.put("message", "Refresh token không hợp lệ hoặc đã hết hạn");
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+    
+    @PostMapping("/logout")
+    public ResponseEntity<Map<String, Object>> logout(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+        
+        String username = request.get("username");
+        if (username != null) {
+            jwtService.revokeRefreshToken(username);
+        }
+        
+        response.put("success", true);
+        response.put("message", "Đăng xuất thành công");
+        return ResponseEntity.ok(response);
     }
     
     @GetMapping("/test")

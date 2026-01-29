@@ -1,27 +1,23 @@
 // Check authentication status and update UI
 function checkAuthStatus() {
-  const token =
-    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
-  const currentUser =
-    localStorage.getItem("currentUser") ||
-    sessionStorage.getItem("currentUser");
-
+  // Check if authManager is available and user is authenticated
+  const isAuth = window.authManager && window.authManager.isAuthenticated();
   const authButtons = document.querySelector(".nav-auth");
 
-  if (token && currentUser) {
+  if (isAuth) {
     // User đã đăng nhập
-    const userData = JSON.parse(currentUser);
+    const { user } = window.authManager.getTokens();
 
     // Cập nhật UI cho user đã đăng nhập
     authButtons.innerHTML = `
       <div class="user-menu">
-        <span class="user-welcome">Xin chào, ${userData.username}!</span>
+        <span class="user-welcome">Xin chào, ${user.username}!</span>
         <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
       </div>
     `;
 
     // Hiển thị thông tin user đã đăng nhập
-    console.log("User logged in:", userData);
+    console.log("User logged in:", user);
   } else {
     // User chưa đăng nhập - hiển thị nút đăng nhập/đăng ký
     authButtons.innerHTML = `
@@ -32,25 +28,17 @@ function checkAuthStatus() {
 }
 
 // Logout function
-function logout() {
-  // Xóa token và user data
-  localStorage.removeItem("authToken");
-  localStorage.removeItem("currentUser");
-  sessionStorage.removeItem("authToken");
-  sessionStorage.removeItem("currentUser");
-
-  // Gọi API logout (optional)
-  fetch("/api/auth/logout", {
-    method: "POST",
-    headers: {
-      Authorization:
-        localStorage.getItem("authToken") ||
-        sessionStorage.getItem("authToken"),
-    },
-  }).catch((error) => console.log("Logout API error:", error));
-
-  // Refresh trang để cập nhật UI
-  window.location.reload();
+async function logout() {
+  if (window.authManager) {
+    await window.authManager.logout();
+  } else {
+    // Fallback for old logout logic
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("authToken");
+    sessionStorage.removeItem("currentUser");
+    window.location.reload();
+  }
 }
 
 // Mobile menu toggle
@@ -118,6 +106,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Appointment booking function
 function handleAppointmentBooking() {
+  // Check authentication first
+  if (!window.authManager || !window.authManager.requireAuth()) {
+    showNotificationWithAction(
+      "Vui lòng đăng nhập để đặt lịch khám!",
+      "warning",
+      "Đăng nhập",
+      () => {
+        window.location.href = "html/login.html";
+      },
+    );
+    return;
+  }
+
   const formData = {
     specialty: document.getElementById("specialty").value,
     doctor: document.getElementById("doctor").value,
@@ -157,10 +158,7 @@ function handleAppointmentBooking() {
     // Reset form
     document.getElementById("appointmentForm").reset();
 
-    // Redirect to login for authentication
-    setTimeout(() => {
-      window.location.href = "html/login.html";
-    }, 2000);
+    // No need to redirect - user is already authenticated
   }, 2000);
 }
 
@@ -215,14 +213,16 @@ function updateDoctorsList(specialty) {
 
 // Book specific doctor
 function bookDoctor(doctorName) {
-  // Check if user is logged in
-  const isLoggedIn = localStorage.getItem("userLoggedIn");
-
-  if (!isLoggedIn) {
-    showNotification("Vui lòng đăng nhập để đặt lịch khám!", "warning");
-    setTimeout(() => {
-      window.location.href = "html/login.html";
-    }, 1500);
+  // Check if user is authenticated using authManager
+  if (!window.authManager || !window.authManager.requireAuth()) {
+    showNotificationWithAction(
+      "Vui lòng đăng nhập để đặt lịch khám!",
+      "warning",
+      "Đăng nhập",
+      () => {
+        window.location.href = "html/login.html";
+      },
+    );
     return;
   }
 
@@ -354,6 +354,136 @@ function getNotificationIcon(type) {
     info: "info-circle",
   };
   return icons[type] || "info-circle";
+}
+
+// Show notification with action button
+function showNotificationWithAction(
+  message,
+  type = "info",
+  buttonText = "",
+  buttonAction = null,
+) {
+  // Remove existing notifications
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach((notification) => notification.remove());
+
+  const notification = document.createElement("div");
+  notification.className = `notification notification-${type}`;
+
+  const actionButton =
+    buttonAction && buttonText
+      ? `<button class="notification-action-btn" onclick="this.handleAction()" style="
+        background: rgba(255,255,255,0.2);
+        border: 1px solid rgba(255,255,255,0.3);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-left: 10px;
+        font-size: 14px;
+        transition: background 0.2s ease;
+      ">${buttonText}</button>`
+      : "";
+
+  notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+            ${actionButton}
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+  // Add action event listener if provided
+  if (buttonAction && buttonText) {
+    const actionBtn = notification.querySelector(".notification-action-btn");
+    if (actionBtn) {
+      actionBtn.handleAction = buttonAction;
+      actionBtn.addEventListener("mouseover", function () {
+        this.style.background = "rgba(255,255,255,0.3)";
+      });
+      actionBtn.addEventListener("mouseout", function () {
+        this.style.background = "rgba(255,255,255,0.2)";
+      });
+    }
+  }
+
+  // Add styles if not already added
+  if (!document.querySelector("#notification-styles")) {
+    const styles = document.createElement("style");
+    styles.id = "notification-styles";
+    styles.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                max-width: 400px;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease-out;
+            }
+            
+            .notification-success {
+                background: #4CAF50;
+                color: white;
+            }
+            
+            .notification-error {
+                background: #F44336;
+                color: white;
+            }
+            
+            .notification-warning {
+                background: #FF9800;
+                color: white;
+            }
+            
+            .notification-info {
+                background: #2196F3;
+                color: white;
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                gap: 10px;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: inherit;
+                cursor: pointer;
+                margin-left: auto;
+                padding: 5px;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+    document.head.appendChild(styles);
+  }
+
+  document.body.appendChild(notification);
+
+  // Auto remove after 8 seconds (longer for actionable notifications)
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 8000);
 }
 
 // Initialize animations

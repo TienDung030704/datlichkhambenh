@@ -62,4 +62,31 @@ public class UserService {
             return false;
         }
     }
+    
+    public void saveRefreshToken(String username, String refreshToken, java.sql.Timestamp expiresAt) {
+        try {
+            String sql = "UPDATE users SET refresh_token = ?, token_expires_at = ?, updated_at = NOW() WHERE username = ?";
+            jdbcTemplate.update(sql, refreshToken, expiresAt, username);
+        } catch (Exception e) {
+            System.out.println("Save refresh token error: " + e.getMessage());
+        }
+    }
+    
+    public String getRefreshToken(String username) {
+        try {
+            String sql = "SELECT refresh_token FROM users WHERE username = ? AND is_active = 1";
+            return jdbcTemplate.queryForObject(sql, String.class, username);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    
+    public void clearRefreshToken(String username) {
+        try {
+            String sql = "UPDATE users SET refresh_token = NULL, token_expires_at = NULL, updated_at = NOW() WHERE username = ?";
+            jdbcTemplate.update(sql, username);
+        } catch (Exception e) {
+            System.out.println("Clear refresh token error: " + e.getMessage());
+        }
+    }
 }

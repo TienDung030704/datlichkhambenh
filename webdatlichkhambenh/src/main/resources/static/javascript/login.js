@@ -56,17 +56,20 @@ document.addEventListener("DOMContentLoaded", function () {
         // Đăng nhập thành công
         showSuccess(result.message || "Đăng nhập thành công!");
 
-        // Lưu token và user info
+        // Lưu tokens và user info
         const userData = {
           username: result.username,
-          token: result.token,
+          accessToken: result.accessToken,
+          refreshToken: result.refreshToken,
         };
 
         if (remember) {
-          localStorage.setItem("authToken", result.token);
+          localStorage.setItem("accessToken", result.accessToken);
+          localStorage.setItem("refreshToken", result.refreshToken);
           localStorage.setItem("currentUser", JSON.stringify(userData));
         } else {
-          sessionStorage.setItem("authToken", result.token);
+          sessionStorage.setItem("accessToken", result.accessToken);
+          sessionStorage.setItem("refreshToken", result.refreshToken);
           sessionStorage.setItem("currentUser", JSON.stringify(userData));
         }
 

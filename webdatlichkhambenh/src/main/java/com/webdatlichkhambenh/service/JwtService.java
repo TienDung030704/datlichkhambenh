@@ -2,7 +2,6 @@ package com.webdatlichkhambenh.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ public class JwtService {
     @Autowired
     private UserService userService;
     
-    private final SecretKey SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor("mySecretKey1234567890abcdefghijklmnopqrstuvwxyz".getBytes());
     private final long ACCESS_TOKEN_VALIDITY = 15 * 60 * 1000; // 15 minutes
     private final long REFRESH_TOKEN_VALIDITY = 7 * 24 * 60 * 60 * 1000; // 7 days
     
@@ -45,10 +44,10 @@ public class JwtService {
     
     private String createToken(Map<String, Object> claims, String subject, long validity) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + validity))
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + validity))
                 .signWith(SECRET_KEY)
                 .compact();
     }

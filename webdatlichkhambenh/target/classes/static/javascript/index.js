@@ -1,3 +1,58 @@
+// Check authentication status and update UI
+function checkAuthStatus() {
+  const token =
+    localStorage.getItem("authToken") || sessionStorage.getItem("authToken");
+  const currentUser =
+    localStorage.getItem("currentUser") ||
+    sessionStorage.getItem("currentUser");
+
+  const authButtons = document.querySelector(".nav-auth");
+
+  if (token && currentUser) {
+    // User đã đăng nhập
+    const userData = JSON.parse(currentUser);
+
+    // Cập nhật UI cho user đã đăng nhập
+    authButtons.innerHTML = `
+      <div class="user-menu">
+        <span class="user-welcome">Xin chào, ${userData.username}!</span>
+        <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
+      </div>
+    `;
+
+    // Hiển thị thông tin user đã đăng nhập
+    console.log("User logged in:", userData);
+  } else {
+    // User chưa đăng nhập - hiển thị nút đăng nhập/đăng ký
+    authButtons.innerHTML = `
+      <a href="html/login.html" class="btn-outline">Đăng Nhập</a>
+      <a href="html/register.html" class="btn-primary">Đăng Ký</a>
+    `;
+  }
+}
+
+// Logout function
+function logout() {
+  // Xóa token và user data
+  localStorage.removeItem("authToken");
+  localStorage.removeItem("currentUser");
+  sessionStorage.removeItem("authToken");
+  sessionStorage.removeItem("currentUser");
+
+  // Gọi API logout (optional)
+  fetch("/api/auth/logout", {
+    method: "POST",
+    headers: {
+      Authorization:
+        localStorage.getItem("authToken") ||
+        sessionStorage.getItem("authToken"),
+    },
+  }).catch((error) => console.log("Logout API error:", error));
+
+  // Refresh trang để cập nhật UI
+  window.location.reload();
+}
+
 // Mobile menu toggle
 function toggleMobileMenu() {
   const navMenu = document.querySelector(".nav-menu");
@@ -6,6 +61,9 @@ function toggleMobileMenu() {
 
 // Appointment form handling
 document.addEventListener("DOMContentLoaded", function () {
+  // Kiểm tra trạng thái đăng nhập khi trang load
+  checkAuthStatus();
+
   const appointmentForm = document.getElementById("appointmentForm");
 
   if (appointmentForm) {

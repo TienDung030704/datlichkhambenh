@@ -84,6 +84,20 @@ public class AuthController {
             return ResponseEntity.badRequest().body(response);
         }
         
+        // Kiểm tra email đã tồn tại
+        if (userService.emailExists(request.getEmail())) {
+            response.put("success", false);
+            response.put("message", "Email này đã được sử dụng");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
+        // Kiểm tra username đã tồn tại
+        if (userService.userExists(request.getUsername())) {
+            response.put("success", false);
+            response.put("message", "Tên đăng nhập đã tồn tại");
+            return ResponseEntity.badRequest().body(response);
+        }
+        
         boolean success = userService.register(request);
         
         if (success) {
@@ -92,7 +106,7 @@ public class AuthController {
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
-            response.put("message", "Username hoặc email đã tồn tại");
+            response.put("message", "Đăng ký không thành công. Vui lòng thử lại");
             return ResponseEntity.badRequest().body(response);
         }
     }

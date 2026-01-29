@@ -24,15 +24,7 @@ public class UserService {
     
     public boolean register(RegisterRequest request) {
         try {
-            // Kiểm tra username đã tồn tại
-            String checkSql = "SELECT COUNT(*) FROM users WHERE username = ? OR email = ?";
-            int count = jdbcTemplate.queryForObject(checkSql, Integer.class, request.getUsername(), request.getEmail());
-            
-            if (count > 0) {
-                return false; // User đã tồn tại
-            }
-            
-            // Thêm user mới
+            // Thêm user mới (không cần kiểm tra tồn tại vì đã kiểm tra ở Controller)
             String insertSql = "INSERT INTO users (username, password, email, full_name, phone_number, role, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 'PATIENT', 1, NOW(), NOW())";
             
             int result = jdbcTemplate.update(insertSql, 
@@ -55,6 +47,16 @@ public class UserService {
         try {
             String sql = "SELECT COUNT(*) FROM users WHERE username = ?";
             int count = jdbcTemplate.queryForObject(sql, Integer.class, username);
+            return count > 0;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    public boolean emailExists(String email) {
+        try {
+            String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+            int count = jdbcTemplate.queryForObject(sql, Integer.class, email);
             return count > 0;
         } catch (Exception e) {
             return false;

@@ -36,72 +36,54 @@ document.addEventListener("DOMContentLoaded", function () {
     showLoading(true);
 
     try {
-      // Check registered user in localStorage (for demo)
-      const registeredUser = localStorage.getItem("registeredUser");
+      const loginData = {
+        username: email, // Có thể là username hoặc email
+        password: password,
+      };
 
-      if (registeredUser) {
-        const userData = JSON.parse(registeredUser);
+      // Gọi API đăng nhập backend
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
 
-        // Simple demo authentication
-        if (userData.email === email) {
-          // Đăng nhập thành công
-          showSuccess("Đăng nhập thành công!");
+      const result = await response.json();
 
-          // Lưu token demo
-          const token = "demo_token_" + Date.now();
-          if (remember) {
-            localStorage.setItem("authToken", token);
-            localStorage.setItem("currentUser", JSON.stringify(userData));
-          } else {
-            sessionStorage.setItem("authToken", token);
-            sessionStorage.setItem("currentUser", JSON.stringify(userData));
-          }
+      if (response.ok && result.success) {
+        // Đăng nhập thành công
+        showSuccess(result.message || "Đăng nhập thành công!");
 
-          // Chuyển hướng sau 1 giây
-          setTimeout(() => {
-            window.location.href = "../index.html";
-          }, 1000);
+        // Lưu token và user info
+        const userData = {
+          username: result.username,
+          token: result.token,
+        };
+
+        if (remember) {
+          localStorage.setItem("authToken", result.token);
+          localStorage.setItem("currentUser", JSON.stringify(userData));
         } else {
-          showError("Email hoặc mật khẩu không đúng!");
+          sessionStorage.setItem("authToken", result.token);
+          sessionStorage.setItem("currentUser", JSON.stringify(userData));
         }
+
+        // Chuyển hướng sau 1.5 giây để user thấy thông báo thành công
+        setTimeout(() => {
+          // Redirect về trang dashboard hoặc trang chủ dành cho user đã login
+          window.location.href = "../index.html";
+        }, 1500);
       } else {
-        // Demo login with default accounts
-        const demoAccounts = [
-          { email: "admin@healthcare.vn", password: "123456", name: "Admin" },
-          {
-            email: "user@healthcare.vn",
-            password: "123456",
-            name: "User Demo",
-          },
-        ];
-
-        const demoUser = demoAccounts.find(
-          (acc) => acc.email === email && acc.password === password,
-        );
-
-        if (demoUser) {
-          showSuccess("Đăng nhập thành công!");
-
-          const token = "demo_token_" + Date.now();
-          if (remember) {
-            localStorage.setItem("authToken", token);
-            localStorage.setItem("currentUser", JSON.stringify(demoUser));
-          } else {
-            sessionStorage.setItem("authToken", token);
-            sessionStorage.setItem("currentUser", JSON.stringify(demoUser));
-          }
-
-          setTimeout(() => {
-            window.location.href = "../index.html";
-          }, 1000);
-        } else {
-          showError("Email hoặc mật khẩu không đúng!");
-        }
+        // Đăng nhập thất bại
+        showError(result.message || "Đăng nhập thất bại!");
       }
     } catch (error) {
       console.error("Login error:", error);
-      showError("Có lỗi xảy ra. Vui lòng thử lại!");
+      showError("Lỗi kết nối! Vui lòng thử lại.");
     } finally {
+      // Ẩn loading
       showLoading(false);
     }
   });

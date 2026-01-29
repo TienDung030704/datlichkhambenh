@@ -1,183 +1,96 @@
-// Register form functionality
-
-// Toggle password visibility
-function togglePassword(fieldId) {
-  const passwordInput = document.getElementById(fieldId);
-  if (!passwordInput) return;
-
-  const toggleIcon =
-    passwordInput.parentElement.querySelector(".password-toggle");
-  if (!toggleIcon) return;
-
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    toggleIcon.classList.remove("fa-eye-slash");
-    toggleIcon.classList.add("fa-eye");
-  } else {
-    passwordInput.type = "password";
-    toggleIcon.classList.remove("fa-eye");
-    toggleIcon.classList.add("fa-eye-slash");
-  }
-}
-
-// Simple form validation
-function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-function validatePhone(phone) {
-  const phoneRegex = /^[0-9]{10}$/;
-  return phoneRegex.test(phone.replace(/\s+/g, ""));
-}
-
-function validatePassword(password) {
-  return password.length >= 6;
-}
-
-// Show simple alert instead of complex notification
-function showMessage(message, isError = false) {
-  if (isError) {
-    alert("❌ " + message);
-  } else {
-    alert("✅ " + message);
-  }
-}
-
-// Simple form validation
-function validateForm() {
-  const fullName = document.getElementById("fullName");
-  const email = document.getElementById("email");
-  const phone = document.getElementById("phone");
-  const password = document.getElementById("password");
-  const confirmPassword = document.getElementById("confirmPassword");
-  const terms = document.getElementById("terms");
-
-  // Clear previous errors
-  document.querySelectorAll(".input-wrapper").forEach((wrapper) => {
-    wrapper.classList.remove("error");
-  });
-  document.querySelectorAll(".field-error").forEach((error) => {
-    error.remove();
-  });
-
-  let isValid = true;
-
-  // Validate full name
-  if (!fullName || !fullName.value.trim()) {
-    showFieldError("fullName", "Vui lòng nhập họ và tên");
-    isValid = false;
-  } else if (fullName.value.trim().length < 2) {
-    showFieldError("fullName", "Họ và tên phải có ít nhất 2 ký tự");
-    isValid = false;
-  }
-
-  // Validate email
-  if (!email || !email.value.trim()) {
-    showFieldError("email", "Vui lòng nhập email");
-    isValid = false;
-  } else if (!validateEmail(email.value.trim())) {
-    showFieldError("email", "Email không hợp lệ");
-    isValid = false;
-  }
-
-  // Validate phone
-  if (!phone || !phone.value.trim()) {
-    showFieldError("phone", "Vui lòng nhập số điện thoại");
-    isValid = false;
-  } else if (!validatePhone(phone.value.trim())) {
-    showFieldError("phone", "Số điện thoại không hợp lệ (10 chữ số)");
-    isValid = false;
-  }
-
-  // Validate password
-  if (!password || !password.value) {
-    showFieldError("password", "Vui lòng nhập mật khẩu");
-    isValid = false;
-  } else if (!validatePassword(password.value)) {
-    showFieldError("password", "Mật khẩu phải có ít nhất 6 ký tự");
-    isValid = false;
-  }
-
-  // Validate confirm password
-  if (!confirmPassword || !confirmPassword.value) {
-    showFieldError("confirmPassword", "Vui lòng xác nhận mật khẩu");
-    isValid = false;
-  } else if (password && password.value !== confirmPassword.value) {
-    showFieldError("confirmPassword", "Mật khẩu xác nhận không khớp");
-    isValid = false;
-  }
-
-  // Validate terms
-  if (!terms || !terms.checked) {
-    showMessage("Vui lòng đồng ý với điều khoản dịch vụ", true);
-    isValid = false;
-  }
-
-  return isValid;
-}
-
-// Show field-specific error
-function showFieldError(fieldId, message) {
-  const field = document.getElementById(fieldId);
-  if (!field) return;
-
-  const inputWrapper = field.closest(".input-wrapper");
-  if (!inputWrapper) return;
-
-  // Add error class
-  inputWrapper.classList.add("error");
-
-  // Create error element
-  const errorElement = document.createElement("div");
-  errorElement.className = "field-error";
-  errorElement.textContent = message;
-
-  // Insert after input wrapper
-  inputWrapper.parentNode.insertBefore(errorElement, inputWrapper.nextSibling);
-}
-
-// Initialize register page
+// Simple Register Form Handler
 document.addEventListener("DOMContentLoaded", function () {
-  const registerForm = document.getElementById("registerForm");
+  const form = document.getElementById("registerForm");
 
-  if (!registerForm) {
+  if (!form) {
+    console.error("Form not found!");
     return;
   }
 
-  registerForm.addEventListener("submit", function (e) {
+  form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
-    if (validateForm()) {
-      const submitBtn = registerForm.querySelector('button[type="submit"]');
-      if (submitBtn) {
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = "Đang xử lý...";
-        submitBtn.disabled = true;
+    // Get form data
+    const fullName = document.getElementById("fullName").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const password = document.getElementById("password").value;
+    const confirmPassword = document.getElementById("confirmPassword").value;
+    const terms = document.getElementById("terms").checked;
 
-        // Simulate processing
+    // Simple validation
+    if (!fullName) {
+      alert("❌ Vui lòng nhập họ tên!");
+      return;
+    }
+
+    if (!email) {
+      alert("❌ Vui lòng nhập email!");
+      return;
+    }
+
+    if (!phone) {
+      alert("❌ Vui lòng nhập số điện thoại!");
+      return;
+    }
+
+    if (!password || password.length < 6) {
+      alert("❌ Mật khẩu phải có ít nhất 6 ký tự!");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("❌ Mật khẩu xác nhận không khớp!");
+      return;
+    }
+
+    if (!terms) {
+      alert("❌ Vui lòng đồng ý với điều khoản dịch vụ!");
+      return;
+    }
+
+    // Disable submit button
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = "Đang xử lý...";
+    submitBtn.disabled = true;
+
+    // Prepare data for API
+    const registerData = {
+      username: fullName, // Use fullName as username
+      password: password,
+      email: email,
+      fullName: fullName,
+      phoneNumber: phone,
+    };
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(registerData),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert("✅ " + result.message);
+        // Redirect to login page
         setTimeout(() => {
-          showMessage("Đăng ký thành công!");
-
-          // Store basic user info
-          const fullName = document.getElementById("fullName");
-          const email = document.getElementById("email");
-          if (fullName && email) {
-            localStorage.setItem(
-              "registeredUser",
-              JSON.stringify({
-                name: fullName.value,
-                email: email.value,
-              }),
-            );
-          }
-
-          // Redirect to login
-          setTimeout(() => {
-            window.location.href = "login.html";
-          }, 1000);
-        }, 2000);
+          window.location.href = "login.html";
+        }, 1000);
+      } else {
+        alert("❌ " + result.message);
       }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("❌ Lỗi kết nối: " + error.message);
+    } finally {
+      // Re-enable submit button
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
     }
   });
 });

@@ -1,0 +1,353 @@
+// Mobile menu toggle
+function toggleMobileMenu() {
+  const navMenu = document.querySelector(".nav-menu");
+  navMenu.classList.toggle("active");
+}
+
+// Appointment form handling
+document.addEventListener("DOMContentLoaded", function () {
+  const appointmentForm = document.getElementById("appointmentForm");
+
+  if (appointmentForm) {
+    appointmentForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      handleAppointmentBooking();
+    });
+  }
+
+  // Initialize date picker with today's date as minimum
+  const dateInput = document.getElementById("appointmentDate");
+  if (dateInput) {
+    const today = new Date().toISOString().split("T")[0];
+    dateInput.min = today;
+  }
+
+  // Specialty selection
+  const specialtyCards = document.querySelectorAll(".specialty-card");
+  specialtyCards.forEach((card) => {
+    card.addEventListener("click", function () {
+      const specialty = this.querySelector("h3").textContent;
+      selectSpecialty(specialty);
+    });
+  });
+
+  // Doctor booking
+  const doctorBookBtns = document.querySelectorAll(".btn-book-doctor");
+  doctorBookBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      const doctorCard = this.closest(".doctor-card");
+      const doctorName = doctorCard.querySelector(".doctor-name").textContent;
+      bookDoctor(doctorName);
+    });
+  });
+
+  // Smooth scrolling for navigation links
+  const navLinks = document.querySelectorAll('a[href^="#"]');
+  navLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute("href");
+      const targetSection = document.querySelector(targetId);
+      if (targetSection) {
+        targetSection.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    });
+  });
+});
+
+// Appointment booking function
+function handleAppointmentBooking() {
+  const formData = {
+    specialty: document.getElementById("specialty").value,
+    doctor: document.getElementById("doctor").value,
+    date: document.getElementById("appointmentDate").value,
+    time: document.getElementById("appointmentTime").value,
+  };
+
+  // Validate form
+  if (
+    !formData.specialty ||
+    !formData.doctor ||
+    !formData.date ||
+    !formData.time
+  ) {
+    showNotification("Vui lòng điền đầy đủ thông tin!", "error");
+    return;
+  }
+
+  // Show loading
+  const submitBtn = document.querySelector(".btn-book");
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = "Đang xử lý...";
+  submitBtn.disabled = true;
+
+  // Simulate API call
+  setTimeout(() => {
+    // Reset button
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
+
+    // Show success message
+    showNotification(
+      "Đặt lịch thành công! Chúng tôi sẽ liên hệ với bạn sớm.",
+      "success",
+    );
+
+    // Reset form
+    document.getElementById("appointmentForm").reset();
+
+    // Redirect to login for authentication
+    setTimeout(() => {
+      window.location.href = "html/login.html";
+    }, 2000);
+  }, 2000);
+}
+
+// Specialty selection
+function selectSpecialty(specialty) {
+  const specialtySelect = document.getElementById("specialty");
+  if (specialtySelect) {
+    // Find matching option
+    const options = specialtySelect.options;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].text.includes(specialty)) {
+        specialtySelect.selectedIndex = i;
+        break;
+      }
+    }
+
+    // Update doctors based on specialty
+    updateDoctorsList(specialty);
+
+    // Scroll to appointment form
+    document.querySelector(".appointment-form").scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  }
+}
+
+// Update doctors list based on specialty
+function updateDoctorsList(specialty) {
+  const doctorSelect = document.getElementById("doctor");
+  if (!doctorSelect) return;
+
+  // Clear existing options except the first one
+  doctorSelect.innerHTML = '<option value="">Chọn Bác Sĩ</option>';
+
+  // Sample doctors data based on specialty
+  const doctorsBySpecialty = {
+    "Nhi Khoa": ["BS. Nguyễn Văn A", "BS. Trần Thị B", "BS. Lê Văn C"],
+    "Sản Phụ Khoa": ["BS. Hoàng Thị D", "BS. Phạm Văn E", "BS. Vũ Thị F"],
+    "Tim Mạch": ["BS. Đặng Văn G", "BS. Bùi Thị H", "BS. Lý Văn I"],
+    "Răng Hàm Mặt": ["BS. Tôn Thị J", "BS. Đỗ Văn K", "BS. Chu Thị L"],
+  };
+
+  const doctors = doctorsBySpecialty[specialty] || [];
+  doctors.forEach((doctor) => {
+    const option = document.createElement("option");
+    option.value = doctor;
+    option.textContent = doctor;
+    doctorSelect.appendChild(option);
+  });
+}
+
+// Book specific doctor
+function bookDoctor(doctorName) {
+  // Check if user is logged in
+  const isLoggedIn = localStorage.getItem("userLoggedIn");
+
+  if (!isLoggedIn) {
+    showNotification("Vui lòng đăng nhập để đặt lịch khám!", "warning");
+    setTimeout(() => {
+      window.location.href = "html/login.html";
+    }, 1500);
+    return;
+  }
+
+  // Pre-fill form with doctor
+  const doctorSelect = document.getElementById("doctor");
+  if (doctorSelect) {
+    // Find and select the doctor
+    const options = doctorSelect.options;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].text === doctorName) {
+        doctorSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  // Scroll to appointment form
+  document.querySelector(".appointment-form").scrollIntoView({
+    behavior: "smooth",
+    block: "center",
+  });
+
+  showNotification(
+    `Đã chọn ${doctorName}. Vui lòng hoàn thành thông tin đặt lịch.`,
+    "info",
+  );
+}
+
+// Show notification
+function showNotification(message, type = "info") {
+  // Remove existing notifications
+  const existingNotifications = document.querySelectorAll(".notification");
+  existingNotifications.forEach((notification) => notification.remove());
+
+  const notification = document.createElement("div");
+  notification.className = `notification notification-${type}`;
+  notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${getNotificationIcon(type)}"></i>
+            <span>${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+
+  // Add notification styles if not already present
+  if (!document.querySelector("#notification-styles")) {
+    const styles = document.createElement("style");
+    styles.id = "notification-styles";
+    styles.textContent = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 1000;
+                max-width: 400px;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease-out;
+            }
+            
+            .notification-success {
+                background: #4CAF50;
+                color: white;
+            }
+            
+            .notification-error {
+                background: #F44336;
+                color: white;
+            }
+            
+            .notification-warning {
+                background: #FF9800;
+                color: white;
+            }
+            
+            .notification-info {
+                background: #2196F3;
+                color: white;
+            }
+            
+            .notification-content {
+                display: flex;
+                align-items: center;
+                padding: 15px 20px;
+                gap: 10px;
+            }
+            
+            .notification-close {
+                background: none;
+                border: none;
+                color: inherit;
+                cursor: pointer;
+                margin-left: auto;
+                padding: 5px;
+            }
+            
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+        `;
+    document.head.appendChild(styles);
+  }
+
+  document.body.appendChild(notification);
+
+  // Auto remove after 5 seconds
+  setTimeout(() => {
+    if (notification.parentElement) {
+      notification.remove();
+    }
+  }, 5000);
+}
+
+// Get notification icon based on type
+function getNotificationIcon(type) {
+  const icons = {
+    success: "check-circle",
+    error: "exclamation-circle",
+    warning: "exclamation-triangle",
+    info: "info-circle",
+  };
+  return icons[type] || "info-circle";
+}
+
+// Initialize animations
+function initAnimations() {
+  // Animate elements on scroll
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: "0px 0px -50px 0px",
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = "1";
+        entry.target.style.transform = "translateY(0)";
+      }
+    });
+  }, observerOptions);
+
+  // Observe elements for animation
+  const animatedElements = document.querySelectorAll(
+    ".specialty-card, .doctor-card, .step-card",
+  );
+  animatedElements.forEach((el) => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(30px)";
+    el.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+    observer.observe(el);
+  });
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener("DOMContentLoaded", function () {
+  initAnimations();
+
+  // Add floating animation to hero icons
+  const floatingIcons = document.querySelectorAll(".floating-icon");
+  floatingIcons.forEach((icon, index) => {
+    icon.style.animationDelay = `${index * 0.5}s`;
+  });
+});
+
+// Handle navigation to different pages
+function navigateToPage(page) {
+  const pages = {
+    login: "html/login.html",
+    register: "html/register.html",
+    appointments: "html/appointments.html",
+    doctors: "html/doctors.html",
+  };
+
+  if (pages[page]) {
+    window.location.href = pages[page];
+  }
+}

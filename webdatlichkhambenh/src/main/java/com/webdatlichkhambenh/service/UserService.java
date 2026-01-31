@@ -89,4 +89,35 @@ public class UserService {
             System.out.println("Clear refresh token error: " + e.getMessage());
         }
     }
+    
+    public String getFullName(String usernameOrEmail) {
+        try {
+            System.out.println("🔍 Searching fullName for: " + usernameOrEmail);
+            
+            // Try search by username first
+            String sql = "SELECT full_name FROM users WHERE username = ? AND is_active = 1";
+            try {
+                String fullName = jdbcTemplate.queryForObject(sql, String.class, usernameOrEmail);
+                System.out.println("✅ Found by username: " + fullName);
+                return fullName;
+            } catch (Exception e) {
+                System.out.println("⚠️ Not found by username, trying email...");
+            }
+            
+            // If not found by username, try by email
+            sql = "SELECT full_name FROM users WHERE email = ? AND is_active = 1";
+            try {
+                String fullName = jdbcTemplate.queryForObject(sql, String.class, usernameOrEmail);
+                System.out.println("✅ Found by email: " + fullName);
+                return fullName;
+            } catch (Exception e) {
+                System.out.println("❌ Not found by email either");
+            }
+            
+            return null;
+        } catch (Exception e) {
+            System.err.println("❌ Error getting fullName: " + e.getMessage());
+            return null;
+        }
+    }
 }

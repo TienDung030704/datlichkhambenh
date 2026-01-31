@@ -182,4 +182,32 @@ public class AuthController {
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("API đang hoạt động!");
     }
+    
+    @GetMapping("/user-info")
+    public ResponseEntity<Map<String, Object>> getUserInfo(@RequestParam String username) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            System.out.println("🔍 Getting user info for: " + username);
+            String fullName = userService.getFullName(username);
+            
+            if (fullName != null) {
+                response.put("success", true);
+                response.put("fullName", fullName);
+                response.put("username", username);
+                System.out.println("✅ Found fullName: " + fullName);
+            } else {
+                response.put("success", false);
+                response.put("message", "User not found");
+                System.out.println("❌ User not found: " + username);
+            }
+            
+        } catch (Exception e) {
+            System.err.println("❌ Error getting user info: " + e.getMessage());
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        
+        return ResponseEntity.ok(response);
+    }
 }

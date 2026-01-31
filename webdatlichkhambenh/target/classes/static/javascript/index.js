@@ -1,5 +1,5 @@
 // Check authentication status and update UI
-function checkAuthStatus() {
+async function checkAuthStatus() {
   // Check if authManager is available and user is authenticated
   const isAuth = window.authManager && window.authManager.isAuthenticated();
   const authButtons = document.querySelector(".nav-auth");
@@ -8,16 +8,65 @@ function checkAuthStatus() {
     // User đã đăng nhập
     const { user } = window.authManager.getTokens();
 
-    // Cập nhật UI cho user đã đăng nhập
+    // Nếu chưa có fullName, fetch từ server
+    if (!user.fullName && user.username) {
+      try {
+        const response = await fetch(`/api/auth/user-info?username=${encodeURIComponent(user.username)}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+
+        if (result.success && result.fullName) {
+          user.fullName = result.fullName;
+          
+          // Lưu lại vào storage
+          const storage = localStorage.getItem("currentUser") ? localStorage : sessionStorage;
+          storage.setItem("currentUser", JSON.stringify(user));
+          
+          // Force update UI immediately
+          const displayName = result.fullName;
+          const avatarLetter = displayName.charAt(0).toUpperCase();
+          
+          authButtons.innerHTML = `
+            <div class="user-menu">
+              <div class="user-profile">
+                <div class="user-avatar">${avatarLetter}</div>
+                <span class="user-name">${displayName}</span>
+              </div>
+              <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
+            </div>
+          `;
+          
+          return; // Exit early after updating UI
+        }
+      } catch (error) {
+        console.error("❌ Failed to fetch user info:", error);
+      }
+    }
+
+    // Get display name - prioritize fullName
+    const displayName = user.fullName || user.username || "Người dùng";
+    const avatarLetter = displayName.charAt(0).toUpperCase();
+
+    // Cập nhật UI cho user đã đăng nhập với avatar và tên thật
     authButtons.innerHTML = `
       <div class="user-menu">
-        <span class="user-welcome">Xin chào, ${user.username}!</span>
+        <div class="user-profile">
+          <div class="user-avatar">${avatarLetter}</div>
+          <span class="user-name">${displayName}</span>
+        </div>
         <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
       </div>
     `;
 
-    // Hiển thị thông tin user đã đăng nhập
-    console.log("User logged in:", user);
   } else {
     // User chưa đăng nhập - hiển thị nút đăng nhập/đăng ký
     authButtons.innerHTML = `
@@ -544,3 +593,11 @@ function navigateToPage(page) {
     window.location.href = pages[page];
   }
 }
+
+// Initialize when page loads
+document.addEventListener("DOMContentLoaded", function() {
+  // Check authentication status and update UI
+  if (typeof checkAuthStatus === 'function') {
+    checkAuthStatus();
+  }
+});

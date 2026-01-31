@@ -11,12 +11,15 @@ async function checkAuthStatus() {
     // Nếu chưa có fullName, fetch từ server
     if (!user.fullName && user.username) {
       try {
-        const response = await fetch(`/api/auth/user-info?username=${encodeURIComponent(user.username)}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        });
+        const response = await fetch(
+          `/api/auth/user-info?username=${encodeURIComponent(user.username)}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          },
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -26,15 +29,17 @@ async function checkAuthStatus() {
 
         if (result.success && result.fullName) {
           user.fullName = result.fullName;
-          
+
           // Lưu lại vào storage
-          const storage = localStorage.getItem("currentUser") ? localStorage : sessionStorage;
+          const storage = localStorage.getItem("currentUser")
+            ? localStorage
+            : sessionStorage;
           storage.setItem("currentUser", JSON.stringify(user));
-          
+
           // Force update UI immediately
           const displayName = result.fullName;
           const avatarLetter = displayName.charAt(0).toUpperCase();
-          
+
           authButtons.innerHTML = `
             <div class="user-menu">
               <div class="user-profile">
@@ -44,7 +49,7 @@ async function checkAuthStatus() {
               <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
             </div>
           `;
-          
+
           return; // Exit early after updating UI
         }
       } catch (error) {
@@ -66,7 +71,6 @@ async function checkAuthStatus() {
         <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
       </div>
     `;
-
   } else {
     // User chưa đăng nhập - hiển thị nút đăng nhập/đăng ký
     authButtons.innerHTML = `
@@ -595,9 +599,9 @@ function navigateToPage(page) {
 }
 
 // Initialize when page loads
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
   // Check authentication status and update UI
-  if (typeof checkAuthStatus === 'function') {
+  if (typeof checkAuthStatus === "function") {
     checkAuthStatus();
   }
 });

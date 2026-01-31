@@ -173,15 +173,103 @@ class AuthManager {
       console.error("Logout API call failed:", error);
     } finally {
       this.clearAuth();
+
+      // Set logout success flag for login page to show notification
+      sessionStorage.setItem("justLoggedOut", "true");
+      console.log("Logout: Set justLoggedOut flag");
+
+      // Redirect immediately
       this.redirectToLogin();
     }
+  }
+
+  // Show logout notification
+  showLogoutNotification() {
+    // Create notification element
+    const notification = document.createElement("div");
+    notification.className = "notification notification-success";
+    notification.innerHTML = `
+      <div class="notification-content">
+        <i class="fas fa-check-circle"></i>
+        <span>Đăng xuất thành công!</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    `;
+
+    // Add styles if not already added
+    if (!document.querySelector("#notification-styles")) {
+      const styles = document.createElement("style");
+      styles.id = "notification-styles";
+      styles.textContent = `
+        .notification {
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 1000;
+          max-width: 400px;
+          border-radius: 8px;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+          animation: slideIn 0.3s ease-out;
+        }
+        
+        .notification-success {
+          background: #4CAF50;
+          color: white;
+        }
+        
+        .notification-content {
+          display: flex;
+          align-items: center;
+          padding: 15px 20px;
+          gap: 10px;
+        }
+        
+        .notification-close {
+          background: none;
+          border: none;
+          color: inherit;
+          cursor: pointer;
+          margin-left: auto;
+          padding: 5px;
+        }
+        
+        @keyframes slideIn {
+          from {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+      `;
+      document.head.appendChild(styles);
+    }
+
+    document.body.appendChild(notification);
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.remove();
+      }
+    }, 3000);
   }
 
   // Redirect to login page
   redirectToLogin() {
     const currentPath = window.location.pathname;
+    console.log("Current path:", currentPath);
     if (!currentPath.includes("login.html")) {
-      window.location.href = "/html/login.html";
+      // Try different redirect approaches based on current location
+      if (currentPath === "/" || currentPath.endsWith("index.html")) {
+        window.location.href = "html/login.html";
+      } else {
+        window.location.href = "/html/login.html";
+      }
     }
   }
 

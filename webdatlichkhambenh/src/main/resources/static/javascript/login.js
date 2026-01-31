@@ -1,5 +1,16 @@
 // Xử lý form đăng nhập
 document.addEventListener("DOMContentLoaded", function () {
+  // Check if user just logged out and show notification
+  console.log(
+    "Login page: Checking justLoggedOut flag:",
+    sessionStorage.getItem("justLoggedOut"),
+  );
+  if (sessionStorage.getItem("justLoggedOut") === "true") {
+    sessionStorage.removeItem("justLoggedOut");
+    console.log("Showing logout success notification");
+    showSuccess("Đăng xuất thành công!");
+  }
+
   const loginForm = document.getElementById("loginForm");
   const emailInput = document.getElementById("email");
   const passwordInput = document.getElementById("password");

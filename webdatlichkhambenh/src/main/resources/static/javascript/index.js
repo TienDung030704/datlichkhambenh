@@ -37,7 +37,12 @@ async function logout() {
     localStorage.removeItem("currentUser");
     sessionStorage.removeItem("authToken");
     sessionStorage.removeItem("currentUser");
-    window.location.reload();
+
+    // Set logout success flag for login page
+    sessionStorage.setItem("justLoggedOut", "true");
+
+    // Redirect to login
+    window.location.href = "html/login.html";
   }
 }
 

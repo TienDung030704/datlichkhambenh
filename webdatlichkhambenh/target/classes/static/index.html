@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HealthCare - Đặt Lịch Khám Bệnh Dễ Dàng</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/index.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -26,9 +26,9 @@
         </div>
         <nav class="nav-menu">
           <li><a href="#home">Trang Chủ</a></li>
-          <li><a href="#specialties">Chức năng</a></li>
-          <li><a href="#doctors">Thông báo</a></li>
-          <li><a href="#about">Hướng dẫn</a></li>
+          <li><a href="#specialties">Chuyên Khoa</a></li>
+          <li><a href="#doctors">Bác Sĩ</a></li>
+          <li><a href="#about">Về Chúng Tôi</a></li>
           <li><a href="#contact">Liên Hệ</a></li>
         </nav>
         <div class="nav-auth">
@@ -39,65 +39,62 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="medpro-hero">
-      <div class="medpro-container">
-        <!-- LEFT CARD -->
-        <div class="hospital-card">
-          <img src="image/hospital.jpg" class="hospital-logo" />
+    <section id="home" class="hero">
+      <div class="hero-container">
+        <div class="hero-content">
+          <h1>Đặt Lịch Khám Bệnh Dễ Dàng</h1>
+          <p>Đặt Lịch Cùng Bác Sĩ Ngọi Chuyên Gia Hàng Đầu</p>
 
-          <h2>
-            Bệnh viện Đại học Y Dược TP.HCM
-            <i class="fas fa-check-circle verified"></i>
-          </h2>
-
-          <div class="rating">
-            <span>4.7</span>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star"></i>
-            <i class="fas fa-star-half-alt"></i>
+          <div class="appointment-form">
+            <form id="appointmentForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Chọn Chuyên Khoa</label>
+                  <select id="specialty" required>
+                    <option value="">Chọn Chuyên Khoa</option>
+                    <option value="nhi-khoa">Nhi Khoa</option>
+                    <option value="san-phu-khoa">Sản Phụ Khoa</option>
+                    <option value="tim-mach">Tim Mạch</option>
+                    <option value="rang-ham-mat">Răng Hàm Mặt</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Chọn Bác Sĩ</label>
+                  <select id="doctor" required>
+                    <option value="">Chọn Bác Sĩ</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label>Chọn Ngày</label>
+                  <input type="date" id="appointmentDate" required />
+                </div>
+                <div class="form-group">
+                  <label>Chọn Giờ</label>
+                  <select id="appointmentTime" required>
+                    <option value="">Chọn Giờ</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                  </select>
+                </div>
+              </div>
+              <button type="submit" class="btn-book">Đặt Lịch</button>
+            </form>
           </div>
-
-          <p class="info">
-            <i class="fas fa-map-marker-alt"></i>
-            215 Hồng Bàng, Phường Chợ Lớn, TP.HCM
-          </p>
-
-          <p class="info">
-            <i class="fas fa-clock"></i>
-            Thứ 2 - Thứ 6 (7:30 - 16:30), Thứ 7 (7:30 - 11:30)
-          </p>
-
-          <p class="info">
-            <i class="fas fa-phone"></i>
-            Tổng đài đặt khám nhanh: <b>1900 2115</b>
-          </p>
-
-          <a href="html/login.html" class="btn-book-medpro"> Đặt khám ngay </a>
         </div>
 
-        <!-- RIGHT IMAGE -->
-        <div class="hospital-slider">
-          <div class="slider-wrapper">
-            <img src="image/hospital_1.jpg" class="slide active" />
-            <img src="image/hospital_2.jpg" class="slide" />
-            <img src="image/hospital_3.jpg" class="slide" />
-            <img src="image/hospital_4.jpg" class="slide" />
-            <img src="image/hospital_5.jpg" class="slide" />
-          </div>
-
-          <!-- Nút trái phải -->
-          <button class="slider-btn prev" onclick="prevSlide()">‹</button>
-          <button class="slider-btn next" onclick="nextSlide()">›</button>
-
-          <!-- Dots -->
-          <div class="slider-dots">
-            <span class="dot active" onclick="showSlide(0)"></span>
-            <span class="dot" onclick="showSlide(1)"></span>
-            <span class="dot" onclick="showSlide(2)"></span>
-            <span class="dot" onclick="showSlide(3)"></span>
-            <span class="dot" onclick="showSlide(4)"></span>
+        <div class="hero-image">
+          <img src="img/doctorlogin.webp" alt="Doctors" class="doctors-image" />
+          <div class="floating-icons">
+            <div class="floating-icon"><i class="fas fa-plus"></i></div>
+            <div class="floating-icon"><i class="fas fa-heartbeat"></i></div>
+            <div class="floating-icon"><i class="fas fa-stethoscope"></i></div>
+            <div class="floating-icon"><i class="fas fa-user-md"></i></div>
           </div>
         </div>
       </div>
@@ -300,7 +297,7 @@
       </div>
     </footer>
 
-    <script src="js/auth-utils.js"></script>
-    <script src="js/index.js"></script>
+    <script src="javascript/auth-utils.js"></script>
+    <script src="javascript/index.js"></script>
   </body>
 </html>

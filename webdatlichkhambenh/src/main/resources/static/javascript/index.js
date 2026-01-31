@@ -544,3 +544,64 @@ function navigateToPage(page) {
     window.location.href = pages[page];
   }
 }
+
+function initSlider() {
+  let currentSlide = 0;
+  let interval;
+
+  const slides = document.querySelectorAll(".slide");
+  const dotsContainer = document.querySelector(".slider-dots");
+
+  if (!slides.length || !dotsContainer) return;
+
+  // Tạo dots
+  slides.forEach((_, index) => {
+    const dot = document.createElement("span");
+    dot.classList.add("dot");
+    if (index === 0) dot.classList.add("active");
+
+    dot.addEventListener("click", () => {
+      showSlide(index);
+      resetAuto();
+    });
+
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = document.querySelectorAll(".dot");
+
+  function showSlide(index) {
+    slides[currentSlide].classList.remove("active");
+    dots[currentSlide].classList.remove("active");
+
+    currentSlide = index;
+
+    slides[currentSlide].classList.add("active");
+    dots[currentSlide].classList.add("active");
+  }
+
+  window.prevSlide = () => {
+    showSlide((currentSlide - 1 + slides.length) % slides.length);
+    resetAuto();
+  };
+
+  window.nextSlide = () => {
+    showSlide((currentSlide + 1) % slides.length);
+    resetAuto();
+  };
+
+  function startAuto() {
+    interval = setInterval(() => {
+      showSlide((currentSlide + 1) % slides.length);
+    }, 8000);
+  }
+
+  function resetAuto() {
+    clearInterval(interval);
+    startAuto();
+  }
+
+  startAuto();
+}
+
+document.addEventListener("DOMContentLoaded", initSlider);

@@ -42,11 +42,30 @@ async function checkAuthStatus() {
 
           authButtons.innerHTML = `
             <div class="user-menu">
-              <div class="user-profile">
+              <div class="user-profile" onclick="toggleUserDropdown()">
                 <div class="user-avatar">${avatarLetter}</div>
                 <span class="user-name">${displayName}</span>
+                <i class="fas fa-chevron-down dropdown-arrow"></i>
               </div>
-              <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
+              <div class="user-dropdown" id="userDropdown">
+                <div class="dropdown-item" onclick="showUserInfo()">
+                  <i class="fas fa-user"></i>
+                  <span>Thông tin cá nhân</span>
+                </div>
+                <div class="dropdown-item" onclick="showTerms()">
+                  <i class="fas fa-file-contract"></i>
+                  <span>Điều khoản dịch vụ</span>
+                </div>
+                <div class="dropdown-item" onclick="showPolicies()">
+                  <i class="fas fa-shield-alt"></i>
+                  <span>Quy định chung</span>
+                </div>
+                <div class="dropdown-divider"></div>
+                <div class="dropdown-item logout-item" onclick="logout()">
+                  <i class="fas fa-sign-out-alt"></i>
+                  <span>Đăng xuất</span>
+                </div>
+              </div>
             </div>
           `;
 
@@ -64,11 +83,30 @@ async function checkAuthStatus() {
     // Cập nhật UI cho user đã đăng nhập với avatar và tên thật
     authButtons.innerHTML = `
       <div class="user-menu">
-        <div class="user-profile">
+        <div class="user-profile" onclick="toggleUserDropdown()">
           <div class="user-avatar">${avatarLetter}</div>
           <span class="user-name">${displayName}</span>
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
         </div>
-        <button onclick="logout()" class="btn-outline">Đăng Xuất</button>
+        <div class="user-dropdown" id="userDropdown">
+          <div class="dropdown-item" onclick="showUserInfo()">
+            <i class="fas fa-user"></i>
+            <span>Thông tin cá nhân</span>
+          </div>
+          <div class="dropdown-item" onclick="showTerms()">
+            <i class="fas fa-file-contract"></i>
+            <span>Điều khoản dịch vụ</span>
+          </div>
+          <div class="dropdown-item" onclick="showPolicies()">
+            <i class="fas fa-shield-alt"></i>
+            <span>Quy định chung</span>
+          </div>
+          <div class="dropdown-divider"></div>
+          <div class="dropdown-item logout-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Đăng xuất</span>
+          </div>
+        </div>
       </div>
     `;
   } else {
@@ -79,6 +117,48 @@ async function checkAuthStatus() {
     `;
   }
 }
+
+// User dropdown functions
+function toggleUserDropdown() {
+  const dropdown = document.getElementById("userDropdown");
+  const arrow = document.querySelector(".dropdown-arrow");
+
+  if (dropdown) {
+    dropdown.classList.toggle("show");
+    arrow.classList.toggle("rotated");
+  }
+}
+
+function showUserInfo() {
+  alert("Chức năng Thông tin cá nhân đang được phát triển!");
+  toggleUserDropdown();
+}
+
+function showTerms() {
+  alert("Chức năng Điều khoản dịch vụ đang được phát triển!");
+  toggleUserDropdown();
+}
+
+function showPolicies() {
+  alert("Chức năng Quy định chung đang được phát triển!");
+  toggleUserDropdown();
+}
+
+// Close dropdown when clicking outside
+document.addEventListener("click", function (event) {
+  const dropdown = document.getElementById("userDropdown");
+  const userProfile = document.querySelector(".user-profile");
+
+  if (
+    dropdown &&
+    userProfile &&
+    !userProfile.contains(event.target) &&
+    !dropdown.contains(event.target)
+  ) {
+    dropdown.classList.remove("show");
+    document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
+  }
+});
 
 // Logout function
 async function logout() {
@@ -661,7 +741,7 @@ function initSlider() {
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize slider
   initSlider();
-  
+
   // Check authentication status and update UI
   if (typeof checkAuthStatus === "function") {
     checkAuthStatus();

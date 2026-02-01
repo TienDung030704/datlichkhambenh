@@ -188,22 +188,125 @@ public class AuthController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            System.out.println("🔍 Getting user info for: " + username);
             String fullName = userService.getFullName(username);
             
             if (fullName != null) {
                 response.put("success", true);
                 response.put("fullName", fullName);
                 response.put("username", username);
-                System.out.println("✅ Found fullName: " + fullName);
             } else {
                 response.put("success", false);
                 response.put("message", "User not found");
-                System.out.println("❌ User not found: " + username);
             }
             
         } catch (Exception e) {
-            System.err.println("❌ Error getting user info: " + e.getMessage());
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    // Get user profile
+    @GetMapping("/profile")
+    public ResponseEntity<Map<String, Object>> getUserProfile(@RequestParam String username) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Get user profile from database
+            Map<String, Object> profile = userService.getUserProfile(username);
+            
+            if (profile != null) {
+                response.put("success", true);
+                response.put("profile", profile);
+            } else {
+                response.put("success", false);
+                response.put("message", "User profile not found");
+            }
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    // Update user profile
+    @PostMapping("/profile")
+    public ResponseEntity<Map<String, Object>> updateUserProfile(@RequestBody Map<String, Object> profileData) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Validate required fields first
+            String fullName = (String) profileData.get("fullName");
+            String email = (String) profileData.get("email");
+            
+            if (fullName == null || fullName.trim().isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Họ tên không được để trống");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (email == null || email.trim().isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Email không được để trống");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Basic email validation
+            if (!email.contains("@") || !email.contains(".")) {
+                response.put("success", false);
+                response.put("message", "Email không hợp lệ");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Use email as identifier since it's unique and present in profileData
+            boolean updated = userService.updateUserProfile(email, profileData);
+            
+            if (updated) {
+                response.put("success", true);
+                response.put("message", "Cập nhật thông tin thành công");
+            } else {
+                response.put("success", false);
+                response.put("message", "Không thể cập nhật thông tin. Vui lòng kiểm tra lại.");
+            }
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi hệ thống: " + e.getMessage());
+        }
+        
+        return ResponseEntity.ok(response);
+    }
+    
+    // Change password
+    @PostMapping("/change-password")
+    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody Map<String, Object> passwordData) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            String username = (String) passwordData.get("username");
+            String currentPassword = (String) passwordData.get("currentPassword");
+            String newPassword = (String) passwordData.get("newPassword");
+            
+            if (username == null || currentPassword == null || newPassword == null) {
+                response.put("success", false);
+                response.put("message", "All fields are required");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            boolean changed = userService.changePassword(username, currentPassword, newPassword);
+            
+            if (changed) {
+                response.put("success", true);
+                response.put("message", "Password changed successfully");
+            } else {
+                response.put("success", false);
+                response.put("message", "Current password is incorrect");
+            }
+            
+        } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
         }

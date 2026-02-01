@@ -130,7 +130,7 @@ function toggleUserDropdown() {
 }
 
 function showUserInfo() {
-  alert("Chức năng Thông tin cá nhân đang được phát triển!");
+  window.location.href = "/html/profile.html";
   toggleUserDropdown();
 }
 

@@ -120,38 +120,43 @@ async function checkAuthStatus() {
 
 // User dropdown functions
 function toggleUserDropdown() {
-  const dropdown = document.getElementById('userDropdown');
-  const arrow = document.querySelector('.dropdown-arrow');
-  
+  const dropdown = document.getElementById("userDropdown");
+  const arrow = document.querySelector(".dropdown-arrow");
+
   if (dropdown) {
-    dropdown.classList.toggle('show');
-    arrow.classList.toggle('rotated');
+    dropdown.classList.toggle("show");
+    arrow.classList.toggle("rotated");
   }
 }
 
 function showUserInfo() {
-  alert('Chức năng Thông tin cá nhân đang được phát triển!');
+  alert("Chức năng Thông tin cá nhân đang được phát triển!");
   toggleUserDropdown();
 }
 
 function showTerms() {
-  alert('Chức năng Điều khoản dịch vụ đang được phát triển!');
+  alert("Chức năng Điều khoản dịch vụ đang được phát triển!");
   toggleUserDropdown();
 }
 
 function showPolicies() {
-  alert('Chức năng Quy định chung đang được phát triển!');
+  alert("Chức năng Quy định chung đang được phát triển!");
   toggleUserDropdown();
 }
 
 // Close dropdown when clicking outside
-document.addEventListener('click', function(event) {
-  const dropdown = document.getElementById('userDropdown');
-  const userProfile = document.querySelector('.user-profile');
-  
-  if (dropdown && userProfile && !userProfile.contains(event.target) && !dropdown.contains(event.target)) {
-    dropdown.classList.remove('show');
-    document.querySelector('.dropdown-arrow')?.classList.remove('rotated');
+document.addEventListener("click", function (event) {
+  const dropdown = document.getElementById("userDropdown");
+  const userProfile = document.querySelector(".user-profile");
+
+  if (
+    dropdown &&
+    userProfile &&
+    !userProfile.contains(event.target) &&
+    !dropdown.contains(event.target)
+  ) {
+    dropdown.classList.remove("show");
+    document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
   }
 });
 
@@ -736,7 +741,7 @@ function initSlider() {
 document.addEventListener("DOMContentLoaded", function () {
   // Initialize slider
   initSlider();
-  
+
   // Check authentication status and update UI
   if (typeof checkAuthStatus === "function") {
     checkAuthStatus();

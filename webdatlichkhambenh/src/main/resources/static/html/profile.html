@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thông Tin Cá Nhân - Đặt Lịch Khám Bệnh</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/profile.css" />
+  </head>
+  <body>
+    <div class="profile-container">
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <span id="avatarText">U</span>
+          </div>
+          <h3 id="profileName">Tên người dùng</h3>
+
+          <div class="profile-info">
+            <div class="info-item">
+              <i class="fas fa-phone"></i>
+              <span id="profilePhone">0901 234 567</span>
+            </div>
+            <div class="info-item">
+              <i class="fas fa-envelope"></i>
+              <span id="profileEmail">user@example.com</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item active" data-section="profile">
+            <i class="fas fa-user"></i>
+            <span>Thông Tin Cá Nhân</span>
+          </a>
+          <a href="#" class="nav-item" data-section="appointments">
+            <i class="fas fa-calendar-check"></i>
+            <span>Quy Định Sử Dụng</span>
+          </a>
+          <a href="#" class="nav-item" data-section="medical">
+            <i class="fas fa-file-medical"></i>
+            <span>Điều Khoản Dịch Vụ</span>
+          </a>
+          <a href="#" class="nav-item" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Đăng Xuất</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="content-header">
+          <h1>Thông Tin Cá Nhân</h1>
+          <p>Quản lý thông tin cá nhân của bạn</p>
+        </div>
+
+        <div class="content-body">
+          <!-- Tab Navigation -->
+          <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="info">
+              <i class="fas fa-user"></i>
+              Thông Tin Cá Nhân
+            </button>
+            <button class="tab-btn" data-tab="password">
+              <i class="fas fa-lock"></i>
+              Đổi Mật Khẩu
+            </button>
+          </div>
+
+          <!-- Profile Information Tab -->
+          <div class="tab-content active" id="info-tab">
+            <div class="form-container">
+              <form id="profileForm">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="fullName">Họ và tên:</label>
+                    <input
+                      type="text"
+                      id="fullName"
+                      name="fullName"
+                      required
+                      placeholder="Nguyễn Văn A"
+                    />
+                    <i class="fas fa-user form-icon"></i>
+                  </div>
+                  <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      required
+                      placeholder="user@example.com"
+                      readonly
+                    />
+                    <i class="fas fa-envelope form-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="phone">Số điện thoại:</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      required
+                      placeholder="0901 234 567"
+                    />
+                    <i class="fas fa-phone form-icon"></i>
+                  </div>
+                  <div class="form-group">
+                    <label for="birthDate">Ngày sinh:</label>
+                    <input type="date" id="birthDate" name="birthDate" />
+                    <i class="fas fa-birthday-cake form-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="gender">Giới tính:</label>
+                    <select id="gender" name="gender" required>
+                      <option value="">Chọn giới tính</option>
+                      <option value="Nam">Nam</option>
+                      <option value="Nữ">Nữ</option>
+                      <option value="Khác">Khác</option>
+                    </select>
+                    <i class="fas fa-venus-mars form-icon"></i>
+                    <i class="fas fa-chevron-down select-icon"></i>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="save-btn">
+                    <i class="fas fa-save"></i>
+                    Lưu Thay Đổi
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Change Password Tab -->
+          <div class="tab-content" id="password-tab">
+            <div class="form-container">
+              <form id="passwordForm">
+                <div class="form-group">
+                  <label for="currentPassword">Mật khẩu hiện tại:</label>
+                  <input
+                    type="password"
+                    id="currentPassword"
+                    name="currentPassword"
+                    required
+                  />
+                  <i class="fas fa-lock form-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="newPassword">Mật khẩu mới:</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    name="newPassword"
+                    required
+                    minlength="6"
+                  />
+                  <i class="fas fa-key form-icon"></i>
+                </div>
+
+                <div class="form-group">
+                  <label for="confirmPassword">Xác nhận mật khẩu mới:</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    required
+                    minlength="6"
+                  />
+                  <i class="fas fa-check form-icon"></i>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" class="save-btn">
+                    <i class="fas fa-save"></i>
+                    Đổi Mật Khẩu
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../javascript/profile.js"></script>
+  </body>
+</html>

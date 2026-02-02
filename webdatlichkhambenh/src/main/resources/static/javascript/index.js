@@ -135,7 +135,7 @@ function showUserInfo() {
 }
 
 function showTerms() {
-  window.location.href = "html/terms-of-service.html";
+  window.location.href = "html/service-terms.html";
   toggleUserDropdown();
 }
 

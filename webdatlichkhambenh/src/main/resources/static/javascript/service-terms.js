@@ -1,16 +1,16 @@
-// ====================== TERMS OF SERVICE PAGE FUNCTIONALITY ======================
+// ====================== SERVICE TERMS PAGE FUNCTIONALITY ======================
 
 document.addEventListener("DOMContentLoaded", function () {
-  initTermsPage();
+  initServiceTermsPage();
 });
 
 // Initialize page functionality
-function initTermsPage() {
+function initServiceTermsPage() {
   initAcceptButton();
   initAnimations();
   initScrollEffects();
   initUserDropdown();
-  console.log("Terms of service page initialized");
+  console.log("Service terms page initialized");
 }
 
 // ====================== USER DROPDOWN FUNCTIONALITY ======================
@@ -82,7 +82,7 @@ function handleAcceptTerms() {
   setTimeout(() => {
     // Show success message
     showNotification(
-      "Bạn đã chấp nhận điều khoản sử dụng thành công!",
+      "Bạn đã chấp nhận điều khoản dịch vụ thành công!",
       "success",
     );
 
@@ -116,7 +116,7 @@ function initAnimations() {
     },
   );
 
-  document.querySelectorAll(".terms-item").forEach((item) => {
+  document.querySelectorAll(".terms-section").forEach((item) => {
     item.style.opacity = "0";
     item.style.transform = "translateY(30px)";
     item.style.transition = "all 0.6s ease";
@@ -395,16 +395,13 @@ function throttle(func, limit) {
 
 // ====================== GLOBAL ERROR HANDLING ======================
 window.addEventListener("error", function (event) {
-  console.error("JavaScript error in terms-of-service:", event.error);
+  console.error("JavaScript error in service-terms:", event.error);
   showNotification("Có lỗi xảy ra. Vui lòng thử lại.", "error");
 });
 
 // Handle unhandled promise rejections
 window.addEventListener("unhandledrejection", function (event) {
-  console.error(
-    "Unhandled promise rejection in terms-of-service:",
-    event.reason,
-  );
+  console.error("Unhandled promise rejection in service-terms:", event.reason);
   showNotification("Có lỗi xảy ra. Vui lòng thử lại.", "error");
   event.preventDefault();
 });

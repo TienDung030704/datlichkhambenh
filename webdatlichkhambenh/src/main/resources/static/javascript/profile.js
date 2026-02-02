@@ -1,8 +1,8 @@
 // Profile Page JavaScript
 document.addEventListener("DOMContentLoaded", function () {
   initProfile();
-  initTabs();
   initForms();
+  initTabs();
   checkAuthentication();
 });
 
@@ -20,13 +20,17 @@ function loadUserData() {
       JSON.parse(sessionStorage.getItem("currentUser"));
 
     if (userData) {
-      // Update profile display
+      // Update profile card display
       document.getElementById("profileName").textContent =
         userData.fullName || userData.email || "Người dùng";
       document.getElementById("profileEmail").textContent =
         userData.email || "";
       document.getElementById("profilePhone").textContent =
         userData.phone || "0901 234 567";
+      document.getElementById("profileGender").textContent =
+        userData.gender || "Nam";
+      document.getElementById("profileBirthDate").textContent =
+        userData.birthDate || "03/07/2004";
 
       // Update avatar
       const avatarText = document.getElementById("avatarText");
@@ -38,8 +42,9 @@ function loadUserData() {
       } else if (userData.email) {
         avatarText.textContent = userData.email.charAt(0).toUpperCase();
       }
+      avatarText.style.display = "flex"; // Show avatar text initially
 
-      // Populate form fields - ALWAYS populate with stored data first
+      // Populate form fields
       document.getElementById("fullName").value = userData.fullName || "";
       document.getElementById("email").value =
         userData.email || userData.username || "";
@@ -65,7 +70,6 @@ async function fetchUserProfile() {
       return;
     }
 
-    // Use email or username for API call
     const identifier = userData.email || userData.username;
     if (!identifier) {
       return;
@@ -112,7 +116,6 @@ function populateProfile(profile) {
   if (profile.birthDate) {
     let dateValue = profile.birthDate;
     if (typeof dateValue === "string" && !dateValue.includes("-")) {
-      // Convert DD/MM/YYYY to YYYY-MM-DD
       const parts = dateValue.split("/");
       if (parts.length === 3) {
         dateValue = `${parts[2]}-${parts[1].padStart(2, "0")}-${parts[0].padStart(2, "0")}`;
@@ -121,12 +124,16 @@ function populateProfile(profile) {
     document.getElementById("birthDate").value = dateValue;
   }
 
-  // Update sidebar info
+  // Update profile card info
   document.getElementById("profileName").textContent =
     profile.fullName || profile.email || "Người dùng";
   document.getElementById("profilePhone").textContent =
     profile.phone || "0901 234 567";
   document.getElementById("profileEmail").textContent = profile.email || "";
+  document.getElementById("profileGender").textContent =
+    profile.gender || "Nam";
+  document.getElementById("profileBirthDate").textContent =
+    profile.birthDate || "03/07/2004";
 
   // Update avatar
   const avatarText = document.getElementById("avatarText");
@@ -136,26 +143,6 @@ function populateProfile(profile) {
       nameParts[0].charAt(0) +
       (nameParts[nameParts.length - 1]?.charAt(0) || "");
   }
-}
-
-// Initialize tabs functionality
-function initTabs() {
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const tabId = button.getAttribute("data-tab");
-
-      // Remove active class from all tabs
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
-
-      // Add active class to clicked tab
-      button.classList.add("active");
-      document.getElementById(`${tabId}-tab`).classList.add("active");
-    });
-  });
 }
 
 // Initialize form handlers
@@ -172,28 +159,59 @@ function initForms() {
   }
 }
 
+// Initialize tab functionality
+function initTabs() {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const targetTab = this.getAttribute("data-tab");
+
+      // Remove active class from all buttons and contents
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Add active class to clicked button and corresponding content
+      this.classList.add("active");
+      document.getElementById(targetTab).classList.add("active");
+    });
+  });
+}
+
+// Initialize tab functionality
+function initTabs() {
+  const tabButtons = document.querySelectorAll(".tab-btn");
+  const tabContents = document.querySelectorAll(".tab-content");
+
+  tabButtons.forEach((button) => {
+    button.addEventListener("click", function () {
+      const targetTab = this.getAttribute("data-tab");
+
+      // Remove active class from all buttons and contents
+      tabButtons.forEach((btn) => btn.classList.remove("active"));
+      tabContents.forEach((content) => content.classList.remove("active"));
+
+      // Add active class to clicked button and corresponding content
+      this.classList.add("active");
+      document.getElementById(targetTab).classList.add("active");
+    });
+  });
+}
+
 // Handle profile form submission
 async function handleProfileSubmit(e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
-
-  // Validate required fields
-  const fullName = formData.get("fullName");
-  const phone = formData.get("phone");
-  const gender = formData.get("gender");
-
-  if (!fullName || !phone || !gender) {
-    showMessage("Vui lòng điền đầy đủ thông tin bắt buộc!", "error");
-    return;
-  }
+  const form = e.target;
+  const formData = new FormData(form);
 
   const profileData = {
-    fullName: fullName,
+    fullName: formData.get("fullName"),
     email: formData.get("email"),
-    phone: phone,
+    phone: formData.get("phone"),
     birthDate: formData.get("birthDate"),
-    gender: gender,
+    gender: formData.get("gender"),
   };
 
   // Show loading state
@@ -235,7 +253,7 @@ async function handleProfileSubmit(e) {
         : sessionStorage;
       storage.setItem("currentUser", JSON.stringify(updatedUserData));
 
-      // Update sidebar display
+      // Update profile card display
       populateProfile(profileData);
     } else {
       showMessage(
@@ -252,28 +270,31 @@ async function handleProfileSubmit(e) {
   }
 }
 
-// Handle password form submission
+// Handle password change form submission
 async function handlePasswordSubmit(e) {
   e.preventDefault();
 
-  const formData = new FormData(e.target);
+  const form = e.target;
+  const formData = new FormData(form);
+
   const currentPassword = formData.get("currentPassword");
   const newPassword = formData.get("newPassword");
   const confirmPassword = formData.get("confirmPassword");
 
-  // Validate password
+  // Validate password match
   if (newPassword !== confirmPassword) {
-    showMessage("Mật khẩu xác nhận không khớp!", "error");
+    showMessage("Mật khẩu mới và xác nhận mật khẩu không khớp!", "error");
     return;
   }
 
+  // Validate password length
   if (newPassword.length < 6) {
     showMessage("Mật khẩu mới phải có ít nhất 6 ký tự!", "error");
     return;
   }
 
   // Show loading state
-  const submitBtn = e.target.querySelector(".save-btn");
+  const submitBtn = e.target.querySelector(".password-btn");
   const originalText = submitBtn.innerHTML;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang đổi...';
   submitBtn.disabled = true;
@@ -288,6 +309,7 @@ async function handlePasswordSubmit(e) {
       return;
     }
 
+    // TODO: Implement password change API endpoint
     const response = await fetch("/api/auth/change-password", {
       method: "POST",
       headers: {
@@ -300,18 +322,22 @@ async function handlePasswordSubmit(e) {
       }),
     });
 
-    const result = await response.json();
+    if (response.ok) {
+      const result = await response.json();
 
-    if (response.ok && result.success) {
-      showMessage("Đổi mật khẩu thành công!", "success");
-
-      // Clear form
-      e.target.reset();
+      if (result.success) {
+        showMessage("Đổi mật khẩu thành công!", "success");
+        form.reset(); // Clear form
+      } else {
+        showMessage(result.message || "Đổi mật khẩu thất bại!", "error");
+      }
     } else {
-      showMessage(result.message || "Đổi mật khẩu thất bại!", "error");
+      showMessage("Có lỗi xảy ra khi đổi mật khẩu!", "error");
     }
   } catch (error) {
-    showMessage("Có lỗi xảy ra! Vui lòng thử lại.", "error");
+    // For now, show success message since API endpoint doesn't exist yet
+    showMessage("Chức năng đổi mật khẩu sẽ được triển khai sớm!", "warning");
+    form.reset();
   } finally {
     // Restore button
     submitBtn.innerHTML = originalText;
@@ -319,66 +345,68 @@ async function handlePasswordSubmit(e) {
   }
 }
 
-// Show message to user
-function showMessage(message, type) {
-  // Remove existing messages
-  const existingMessages = document.querySelectorAll(
-    ".success-message, .error-message, .warning-message",
-  );
-  existingMessages.forEach((msg) => msg.remove());
+// Show toast notification
+function showMessage(message, type = "info") {
+  const toastContainer = document.getElementById("toast-container");
 
-  // Create new message
-  const messageDiv = document.createElement("div");
-  let iconClass;
+  // Create toast element
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
 
+  // Set icon based on type
+  let icon;
   switch (type) {
     case "success":
-      messageDiv.className = "success-message";
-      iconClass = "fa-check-circle";
+      icon = "fa-check-circle";
+      break;
+    case "error":
+      icon = "fa-times-circle";
       break;
     case "warning":
-      messageDiv.className = "warning-message";
-      iconClass = "fa-exclamation-triangle";
+      icon = "fa-exclamation-triangle";
       break;
     default:
-      messageDiv.className = "error-message";
-      iconClass = "fa-exclamation-circle";
-      break;
+      icon = "fa-info-circle";
   }
 
-  messageDiv.innerHTML = `
-        <i class="fas ${iconClass}"></i>
-        <span>${message}</span>
+  toast.innerHTML = `
+        <i class="fas ${icon}"></i>
+        <span class="toast-message">${message}</span>
+        <button class="toast-close" onclick="closeToast(this)">
+            <i class="fas fa-times"></i>
+        </button>
     `;
 
-  // Insert message
-  const contentBody = document.querySelector(".content-body");
-  contentBody.insertBefore(messageDiv, contentBody.firstChild);
+  // Add to container
+  toastContainer.appendChild(toast);
 
   // Auto remove after 5 seconds
   setTimeout(() => {
-    messageDiv.remove();
+    closeToast(toast.querySelector(".toast-close"));
   }, 5000);
+}
+
+// Close toast notification
+function closeToast(button) {
+  const toast = button.closest(".toast");
+  if (toast) {
+    toast.classList.add("hiding");
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }
 }
 
 // Check authentication
 function checkAuthentication() {
   const userData =
-    JSON.parse(localStorage.getItem("currentUser")) ||
-    JSON.parse(sessionStorage.getItem("currentUser"));
+    localStorage.getItem("currentUser") ||
+    sessionStorage.getItem("currentUser");
 
   if (!userData) {
     window.location.href = "/html/login.html";
-    return;
+    return false;
   }
-}
 
-// Logout function
-function logout() {
-  if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
-    localStorage.removeItem("currentUser");
-    sessionStorage.removeItem("currentUser");
-    sessionStorage.setItem("logoutSuccess", "true");
-    window.location.href = "/";
-  }
+  return true;
 }

@@ -1,16 +1,16 @@
-// ====================== SERVICE TERMS PAGE FUNCTIONALITY ======================
+// ====================== PRIVACY POLICY PAGE FUNCTIONALITY ======================
 
 document.addEventListener("DOMContentLoaded", function () {
-  initServiceTermsPage();
+  initPrivacyPage();
 });
 
 // Initialize page functionality
-function initServiceTermsPage() {
+function initPrivacyPage() {
   initAcceptButton();
   initAnimations();
   initScrollEffects();
   initUserDropdown();
-  console.log("Service terms page initialized");
+  console.log("Privacy policy page initialized");
 }
 
 // ====================== USER DROPDOWN FUNCTIONALITY ======================
@@ -30,12 +30,12 @@ function showUserInfo() {
 }
 
 function showTerms() {
-  window.location.href = "../html/service-terms.html";
+  window.location.href = "../html/terms-of-service.html";
   toggleUserDropdown();
 }
 
 function showPolicies() {
-  window.location.href = "../html/terms-of-service.html";
+  window.location.href = "../html/service-terms.html";
   toggleUserDropdown();
 }
 
@@ -71,11 +71,11 @@ function initAcceptButton() {
   const acceptBtn = document.querySelector(".accept-btn");
 
   if (acceptBtn) {
-    acceptBtn.addEventListener("click", handleAcceptTerms);
+    acceptBtn.addEventListener("click", handleAcceptPrivacyPolicy);
   }
 }
 
-function handleAcceptTerms() {
+function handleAcceptPrivacyPolicy() {
   // Show loading state
   const btn = document.querySelector(".accept-btn");
   const originalText = btn.innerHTML;
@@ -86,10 +86,7 @@ function handleAcceptTerms() {
   // Simulate acceptance process
   setTimeout(() => {
     // Show success message
-    showNotification(
-      "Bạn đã chấp nhận điều khoản dịch vụ thành công!",
-      "success",
-    );
+    showNotification("Bạn đã hiểu và chấp nhận chính sách bảo mật!", "success");
 
     // Reset button
     btn.innerHTML = originalText;
@@ -104,7 +101,7 @@ function handleAcceptTerms() {
 
 // ====================== ANIMATIONS ======================
 function initAnimations() {
-  // Animate terms items on scroll
+  // Animate privacy sections on scroll
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry, index) => {
@@ -121,56 +118,25 @@ function initAnimations() {
     },
   );
 
-  document.querySelectorAll(".terms-section").forEach((item) => {
-    item.style.opacity = "0";
-    item.style.transform = "translateY(30px)";
-    item.style.transition = "all 0.6s ease";
-    observer.observe(item);
+  document.querySelectorAll(".privacy-section").forEach((section) => {
+    section.style.opacity = "0";
+    section.style.transform = "translateY(30px)";
+    section.style.transition = "all 0.6s ease";
+    observer.observe(section);
   });
 
-  // Animate illustration elements
-  animateIllustrationElements();
-}
+  // Animate title
+  const title = document.querySelector(".privacy-title");
+  if (title) {
+    title.style.opacity = "0";
+    title.style.transform = "translateY(-20px)";
+    title.style.transition = "all 0.8s ease";
 
-function animateIllustrationElements() {
-  const clipboard = document.querySelector(".clipboard");
-  const securityBadge = document.querySelector(".security-badge");
-  const documents = document.querySelectorAll(".document");
-
-  // Clipboard hover animation
-  if (clipboard) {
-    clipboard.addEventListener("mouseenter", () => {
-      clipboard.style.transform = "rotate(-5deg) scale(1.05)";
-    });
-
-    clipboard.addEventListener("mouseleave", () => {
-      clipboard.style.transform = "rotate(-5deg) scale(1)";
-    });
+    setTimeout(() => {
+      title.style.opacity = "1";
+      title.style.transform = "translateY(0)";
+    }, 300);
   }
-
-  // Security badge pulse animation
-  if (securityBadge) {
-    setInterval(() => {
-      securityBadge.style.transform = "rotate(15deg) scale(1.1)";
-      setTimeout(() => {
-        securityBadge.style.transform = "rotate(15deg) scale(1)";
-      }, 500);
-    }, 3000);
-  }
-
-  // Documents shuffle animation
-  documents.forEach((doc, index) => {
-    setInterval(
-      () => {
-        const randomRotation = -20 + Math.random() * 10;
-        const randomTranslateY = -50 + Math.random() * 10;
-        const randomTranslateX = 10 + Math.random() * 5;
-
-        doc.style.transform = `rotate(${randomRotation}deg) translateY(${randomTranslateY}px) translateX(${randomTranslateX}px)`;
-      },
-      4000 + index * 1000,
-    );
-  });
 }
 
 // ====================== SCROLL EFFECTS ======================
@@ -179,14 +145,13 @@ function initScrollEffects() {
 
   function updateOnScroll() {
     const scrolled = window.pageYOffset;
-    const parallaxElements = document.querySelectorAll(
-      ".decoration-elements .element",
-    );
+    const privacySections = document.querySelectorAll(".privacy-section");
 
-    parallaxElements.forEach((element, index) => {
-      const speed = 0.1 + index * 0.05;
+    // Add subtle parallax effect to sections
+    privacySections.forEach((section, index) => {
+      const speed = 0.02 + index * 0.01;
       const yPos = -(scrolled * speed);
-      element.style.transform = `translateY(${yPos}px) rotate(${scrolled * 0.1}deg)`;
+      section.style.transform = `translateY(${yPos}px)`;
     });
 
     ticking = false;
@@ -200,6 +165,30 @@ function initScrollEffects() {
   }
 
   window.addEventListener("scroll", requestTick);
+
+  // Highlight current section in navigation
+  initSectionHighlight();
+}
+
+function initSectionHighlight() {
+  const sections = document.querySelectorAll(".privacy-section");
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("active-section");
+        } else {
+          entry.target.classList.remove("active-section");
+        }
+      });
+    },
+    {
+      threshold: 0.3,
+      rootMargin: "-20% 0px -20% 0px",
+    },
+  );
+
+  sections.forEach((section) => observer.observe(section));
 }
 
 // ====================== NOTIFICATION SYSTEM ======================
@@ -316,6 +305,60 @@ function removeNotification(notification) {
   }, 300);
 }
 
+// ====================== PRIVACY SPECIFIC FUNCTIONS ======================
+
+// Toggle section visibility
+function toggleSection(sectionId) {
+  const section = document.getElementById(sectionId);
+  if (section) {
+    section.classList.toggle("collapsed");
+  }
+}
+
+// Search functionality for privacy content
+function searchPrivacyContent(query) {
+  const sections = document.querySelectorAll(".privacy-section");
+  let found = false;
+
+  sections.forEach((section) => {
+    const content = section.textContent.toLowerCase();
+    if (content.includes(query.toLowerCase())) {
+      section.style.display = "block";
+      section.classList.add("search-highlight");
+      found = true;
+    } else {
+      section.style.display = "none";
+      section.classList.remove("search-highlight");
+    }
+  });
+
+  if (!found) {
+    showNotification(
+      "Không tìm thấy nội dung phù hợp với từ khóa tìm kiếm.",
+      "warning",
+    );
+  }
+}
+
+// Reset search results
+function resetSearch() {
+  const sections = document.querySelectorAll(".privacy-section");
+  sections.forEach((section) => {
+    section.style.display = "block";
+    section.classList.remove("search-highlight");
+  });
+}
+
+// Print privacy policy
+function printPrivacyPolicy() {
+  window.print();
+}
+
+// Export privacy policy as PDF (placeholder)
+function exportToPDF() {
+  showNotification("Chức năng xuất PDF đang được phát triển.", "info");
+}
+
 // ====================== UTILITY FUNCTIONS ======================
 
 // Smooth scroll to section
@@ -400,13 +443,91 @@ function throttle(func, limit) {
 
 // ====================== GLOBAL ERROR HANDLING ======================
 window.addEventListener("error", function (event) {
-  console.error("JavaScript error in service-terms:", event.error);
+  console.error("JavaScript error in privacy-policy:", event.error);
   showNotification("Có lỗi xảy ra. Vui lòng thử lại.", "error");
 });
 
 // Handle unhandled promise rejections
 window.addEventListener("unhandledrejection", function (event) {
-  console.error("Unhandled promise rejection in service-terms:", event.reason);
+  console.error("Unhandled promise rejection in privacy-policy:", event.reason);
   showNotification("Có lỗi xảy ra. Vui lòng thử lại.", "error");
   event.preventDefault();
 });
+
+// ====================== ACCESSIBILITY IMPROVEMENTS ======================
+
+// Keyboard navigation support
+document.addEventListener("keydown", function (event) {
+  // ESC key to close dropdown
+  if (event.key === "Escape") {
+    const dropdown = document.getElementById("userDropdown");
+    if (dropdown && dropdown.classList.contains("show")) {
+      toggleUserDropdown();
+    }
+  }
+
+  // Enter key to trigger buttons
+  if (event.key === "Enter" && event.target.matches(".accept-btn")) {
+    handleAcceptPrivacyPolicy();
+  }
+});
+
+// Focus management
+function manageFocus() {
+  const focusableElements = document.querySelectorAll(
+    'a, button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])',
+  );
+
+  focusableElements.forEach((element) => {
+    element.addEventListener("focus", function () {
+      this.setAttribute("data-focused", "true");
+    });
+
+    element.addEventListener("blur", function () {
+      this.removeAttribute("data-focused");
+    });
+  });
+}
+
+// Initialize accessibility features
+function initAccessibility() {
+  manageFocus();
+
+  // Add skip to content link
+  const skipLink = document.createElement("a");
+  skipLink.href = "#main-content";
+  skipLink.textContent = "Bỏ qua đến nội dung chính";
+  skipLink.className = "skip-link";
+  skipLink.style.cssText = `
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: #1976d2;
+    color: white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: 4px;
+    z-index: 10001;
+    transition: top 0.3s;
+  `;
+
+  skipLink.addEventListener("focus", function () {
+    this.style.top = "6px";
+  });
+
+  skipLink.addEventListener("blur", function () {
+    this.style.top = "-40px";
+  });
+
+  document.body.insertBefore(skipLink, document.body.firstChild);
+
+  // Add main content ID
+  const mainContent = document.querySelector(".privacy-container");
+  if (mainContent) {
+    mainContent.id = "main-content";
+    mainContent.setAttribute("tabindex", "-1");
+  }
+}
+
+// Initialize accessibility when page loads
+document.addEventListener("DOMContentLoaded", initAccessibility);

@@ -213,17 +213,26 @@ body {
 
 /* ====================== MAIN CONTENT ====================== */
 .terms-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 40px 20px;
   min-height: calc(100vh - 180px);
 }
 
 .terms-content {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: start;
+  display: flex;
+  justify-content: center;
+}
+
+.content-left {
+  width: 100%;
+  max-width: 1400px;
+  padding: 0;
+  background: transparent;
+}
+
+.content-right {
+  display: none;
 }
 
 /* ====================== USER MENU INITIAL ====================== */
@@ -243,20 +252,19 @@ body {
 /* ====================== TERMS SECTIONS ====================== */
 .terms-content {
   margin-bottom: 40px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
-  align-items: start;
+  display: block;
+  width: 100%;
 }
 
 .terms-section {
-  margin-bottom: 0;
-  padding: 20px;
+  margin-bottom: 30px;
+  padding: 25px;
   background: rgba(255, 255, 255, 0.8);
   border-radius: 15px;
-  border-left: 4px solid #42a5f5;
   transition: all 0.3s ease;
-  height: fit-content;
+  box-shadow: 0 4px 15px rgba(66, 165, 245, 0.08);
+  width: 100%;
+  display: block;
 }
 
 .terms-section:hover {
@@ -266,18 +274,18 @@ body {
 }
 
 .terms-section h2 {
-  font-size: 16px;
+  font-size: 22px;
   font-weight: 600;
   color: #1565c0;
-  margin-bottom: 12px;
-  padding-bottom: 6px;
+  margin-bottom: 15px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #e3f2fd;
 }
 
 .terms-section p {
   color: #555;
-  line-height: 1.6;
-  font-size: 13px;
+  line-height: 1.7;
+  font-size: 15px;
   margin-bottom: 10px;
   text-align: justify;
 }
@@ -290,7 +298,10 @@ body {
   font-size: 32px;
   font-weight: 700;
   color: #1565c0;
-  margin-bottom: 15px;
+  margin-bottom: 30px;
+  text-align: center;
+  border-bottom: 3px solid #e3f2fd;
+  padding-bottom: 20px;
 }
 
 .terms-subtitle {
@@ -311,7 +322,6 @@ body {
   padding: 20px;
   background: rgba(255, 255, 255, 0.7);
   border-radius: 15px;
-  border-left: 4px solid #42a5f5;
   transition: all 0.3s ease;
 }
 

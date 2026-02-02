@@ -39,6 +39,11 @@ function showPolicies() {
   toggleUserDropdown();
 }
 
+function showPrivacyPolicy() {
+  window.location.href = "../html/privacy-policy.html";
+  toggleUserDropdown();
+}
+
 function logout() {
   window.location.href = "../html/login.html";
 }

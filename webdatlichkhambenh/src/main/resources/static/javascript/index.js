@@ -56,8 +56,12 @@ async function checkAuthStatus() {
                   <i class="fas fa-file-contract"></i>
                   <span>Điều khoản dịch vụ</span>
                 </div>
-                <div class="dropdown-item" onclick="showPolicies()">
+               <div class="dropdown-item" onclick="showPrivacyPolicy()">
                   <i class="fas fa-shield-alt"></i>
+                  <span>Chính sách bảo mật</span>
+                </div>
+                <div class="dropdown-item" onclick="showPolicies()">
+                  <i class="fas fa-gavel"></i>
                   <span>Quy định chung</span>
                 </div>
                 <div class="dropdown-divider"></div>
@@ -97,8 +101,12 @@ async function checkAuthStatus() {
             <i class="fas fa-file-contract"></i>
             <span>Điều khoản dịch vụ</span>
           </div>
-          <div class="dropdown-item" onclick="showPolicies()">
+          <div class="dropdown-item" onclick="showPrivacyPolicy()">
             <i class="fas fa-shield-alt"></i>
+            <span>Chính sách bảo mật</span>
+          </div>
+          <div class="dropdown-item" onclick="showPolicies()">
+            <i class="fas fa-gavel"></i>
             <span>Quy định chung</span>
           </div>
           <div class="dropdown-divider"></div>
@@ -136,6 +144,11 @@ function showUserInfo() {
 
 function showTerms() {
   window.location.href = "html/service-terms.html";
+  toggleUserDropdown();
+}
+
+function showPrivacyPolicy() {
+  window.location.href = "html/privacy-policy.html";
   toggleUserDropdown();
 }
 

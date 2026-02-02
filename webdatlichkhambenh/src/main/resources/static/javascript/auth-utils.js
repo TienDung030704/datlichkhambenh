@@ -110,7 +110,6 @@ class AuthManager {
         );
         this.refreshSubscribers = [];
 
-        console.log("🔄 Token refreshed successfully");
         return result.accessToken;
       } else {
         throw new Error(result.message || "Failed to refresh token");
@@ -176,7 +175,6 @@ class AuthManager {
 
       // Set logout success flag for login page to show notification
       sessionStorage.setItem("justLoggedOut", "true");
-      console.log("Logout: Set justLoggedOut flag");
 
       // Redirect immediately
       this.redirectToLogin();
@@ -262,7 +260,6 @@ class AuthManager {
   // Redirect to login page
   redirectToLogin() {
     const currentPath = window.location.pathname;
-    console.log("Current path:", currentPath);
     if (!currentPath.includes("login.html")) {
       // Try different redirect approaches based on current location
       if (currentPath === "/" || currentPath.endsWith("index.html")) {

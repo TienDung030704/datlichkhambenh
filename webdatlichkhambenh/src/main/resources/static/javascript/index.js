@@ -40,6 +40,20 @@ async function checkAuthStatus() {
           const displayName = result.fullName;
           const avatarLetter = displayName.charAt(0).toUpperCase();
 
+          // Check if user is admin
+          const isAdmin =
+            user.role === "ADMIN" ||
+            user.username === "admin" ||
+            (user.username && user.username.toLowerCase().includes("admin"));
+
+          const adminMenuItem = isAdmin
+            ? `
+                <div class="dropdown-item" onclick="showAdminPanel()">
+                  <i class="fas fa-user-cog"></i>
+                  <span>Quản lý</span>
+                </div>`
+            : "";
+
           authButtons.innerHTML = `
             <div class="user-menu">
               <div class="user-profile" onclick="toggleUserDropdown()">
@@ -52,6 +66,7 @@ async function checkAuthStatus() {
                   <i class="fas fa-user"></i>
                   <span>Thông tin cá nhân</span>
                 </div>
+                ${adminMenuItem}
                 <div class="dropdown-item" onclick="showTerms()">
                   <i class="fas fa-file-contract"></i>
                   <span>Điều khoản dịch vụ</span>
@@ -84,6 +99,20 @@ async function checkAuthStatus() {
     const displayName = user.fullName || user.username || "Người dùng";
     const avatarLetter = displayName.charAt(0).toUpperCase();
 
+    // Check if user is admin
+    const isAdmin =
+      user.role === "ADMIN" ||
+      user.username === "admin" ||
+      (user.username && user.username.toLowerCase().includes("admin"));
+
+    const adminMenuItem = isAdmin
+      ? `
+          <div class="dropdown-item" onclick="showAdminPanel()">
+            <i class="fas fa-user-cog"></i>
+            <span>Quản lý</span>
+          </div>`
+      : "";
+
     // Cập nhật UI cho user đã đăng nhập với avatar và tên thật
     authButtons.innerHTML = `
       <div class="user-menu">
@@ -97,6 +126,7 @@ async function checkAuthStatus() {
             <i class="fas fa-user"></i>
             <span>Thông tin cá nhân</span>
           </div>
+          ${adminMenuItem}
           <div class="dropdown-item" onclick="showTerms()">
             <i class="fas fa-file-contract"></i>
             <span>Điều khoản dịch vụ</span>
@@ -154,6 +184,11 @@ function showPrivacyPolicy() {
 
 function showPolicies() {
   window.location.href = "html/terms-of-service.html";
+  toggleUserDropdown();
+}
+
+function showAdminPanel() {
+  window.location.href = "html/admin-panel.html";
   toggleUserDropdown();
 }
 

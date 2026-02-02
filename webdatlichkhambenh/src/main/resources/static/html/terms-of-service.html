@@ -36,14 +36,22 @@
           </a>
           <div class="user-menu">
             <div class="user-profile" onclick="toggleUserDropdown()">
-              <div class="user-avatar">N</div>
-              <span class="user-name">Nguyễn Tiến Dũng</span>
+              <div class="user-avatar" id="userAvatar">U</div>
+              <span class="user-name" id="userName">Loading...</span>
               <i class="fas fa-chevron-down dropdown-arrow"></i>
             </div>
             <div class="user-dropdown" id="userDropdown">
               <div class="dropdown-item" onclick="showUserInfo()">
                 <i class="fas fa-user"></i>
                 <span>Thông tin cá nhân</span>
+              </div>
+              <div
+                class="dropdown-item admin-only"
+                onclick="showAdminPanel()"
+                style="display: none"
+              >
+                <i class="fas fa-user-cog"></i>
+                <span>Quản lý</span>
               </div>
               <div class="dropdown-item" onclick="showTerms()">
                 <i class="fas fa-file-contract"></i>

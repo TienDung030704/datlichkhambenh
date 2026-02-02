@@ -1,13 +1,8 @@
 // Xử lý form đăng nhập
 document.addEventListener("DOMContentLoaded", function () {
   // Check if user just logged out and show notification
-  console.log(
-    "Login page: Checking justLoggedOut flag:",
-    sessionStorage.getItem("justLoggedOut"),
-  );
   if (sessionStorage.getItem("justLoggedOut") === "true") {
     sessionStorage.removeItem("justLoggedOut");
-    console.log("Showing logout success notification");
     showSuccess("Đăng xuất thành công!");
   }
 
@@ -63,11 +58,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const result = await response.json();
 
-      console.log("=== Login Response ===");
-      console.log("Full result:", result);
-      console.log("userId from backend:", result.userId);
-      console.log("username from backend:", result.username);
-
       if (response.ok && result.success) {
         // Đăng nhập thành công
         showSuccess(result.message || "Đăng nhập thành công!");
@@ -79,25 +69,15 @@ document.addEventListener("DOMContentLoaded", function () {
           refreshToken: result.refreshToken,
         };
 
-        console.log("userData to save:", userData);
-
         if (remember) {
           localStorage.setItem("accessToken", result.accessToken);
           localStorage.setItem("refreshToken", result.refreshToken);
           localStorage.setItem("currentUser", JSON.stringify(userData));
-          console.log("Saved to localStorage");
         } else {
           sessionStorage.setItem("accessToken", result.accessToken);
           sessionStorage.setItem("refreshToken", result.refreshToken);
           sessionStorage.setItem("currentUser", JSON.stringify(userData));
-          console.log("Saved to sessionStorage");
         }
-
-        // Verify saved data
-        const savedData =
-          localStorage.getItem("currentUser") ||
-          sessionStorage.getItem("currentUser");
-        console.log("Verified saved data:", savedData);
 
         // Chuyển hướng sau 1.5 giây để user thấy thông báo thành công
         setTimeout(() => {

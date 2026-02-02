@@ -1,0 +1,251 @@
+    <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điều Khoản Dịch Vụ - Đặt Lịch Khám Bệnh</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/service-terms.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo">
+                <i class="fas fa-plus-circle"></i>
+                <span>HealthCare</span>
+            </div>
+            <nav class="nav-menu">
+                <a href="../index.html" class="nav-item">
+                    <span>Trang Chủ</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span>Chức năng</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span>Thông báo</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span>Hướng dẫn</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <span>Liên Hệ</span>
+                </a>
+                <div class="user-menu">
+                    <div class="user-profile" onclick="toggleUserDropdown()">
+                        <div class="user-avatar">N</div>
+                        <span class="user-name">Nguyễn Tiến Dũng</span>
+                        <i class="fas fa-chevron-down dropdown-arrow"></i>
+                    </div>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item" onclick="showUserInfo()">
+                            <i class="fas fa-user"></i>
+                            <span>Thông tin cá nhân</span>
+                        </div>
+                        <div class="dropdown-item" onclick="showTerms()">
+                            <i class="fas fa-file-contract"></i>
+                            <span>Điều khoản dịch vụ</span>
+                        </div>
+                        <div class="dropdown-item" onclick="showPolicies()">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Quy định chung</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Đăng xuất</span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="terms-container">
+        <div class="terms-content">
+            <div class="content-left">
+                <h1 class="terms-title">ĐIỀU KHOẢN DỊCH VỤ ỨNG DỤNG ĐẶT LỊCH KHÁM BỆNH</h1>
+                
+                <div class="terms-content">
+                    <div class="terms-section">
+                        <h2>Giới thiệu chung</h2>
+                        <p>Điều khoản dịch vụ của Ứng dụng đặt lịch khám bệnh được xây dựng nhằm xác lập cơ sở pháp lý điều chỉnh mối quan hệ giữa đơn vị quản lý Ứng dụng với người sử dụng trong suốt quá trình truy cập, đăng ký và khai thác các dịch vụ được cung cấp. Văn bản này quy định rõ phạm vi dịch vụ, nguyên tắc cung cấp, quyền và nghĩa vụ của các bên, cũng như các giới hạn trách nhiệm liên quan đến việc sử dụng nền tảng công nghệ trong lĩnh vực y tế.</p>
+                        
+                        <p>Việc người dùng truy cập, đăng ký tài khoản hoặc sử dụng bất kỳ chức năng nào của Ứng dụng được xem là đã đọc, hiểu và chấp thuận toàn bộ nội dung của Điều khoản dịch vụ này. Trường hợp người dùng không đồng ý với bất kỳ nội dung nào, người dùng có quyền ngừng sử dụng Ứng dụng và các dịch vụ liên quan.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Phạm vi cung cấp dịch vụ</h2>
+                        <p>Ứng dụng đặt lịch khám bệnh đóng vai trò là nền tảng trung gian hỗ trợ kết nối giữa người có nhu cầu khám chữa bệnh và các cơ sở y tế hợp pháp. Thông qua Ứng dụng, người dùng có thể tiếp cận thông tin về cơ sở y tế, chuyên khoa, bác sĩ, thời gian khám, dịch vụ y tế và các thông tin hỗ trợ khác nhằm phục vụ cho việc đặt lịch khám bệnh một cách chủ động và thuận tiện.</p>
+                        
+                        <p>Các dịch vụ được cung cấp thông qua Ứng dụng bao gồm nhưng không giới hạn ở việc đăng ký tài khoản, quản lý thông tin cá nhân, đặt lịch khám bệnh, theo dõi tình trạng lịch hẹn, nhận thông báo liên quan đến lịch khám và hỗ trợ người dùng trong quá trình sử dụng. Ứng dụng không trực tiếp cung cấp dịch vụ khám chữa bệnh mà chỉ đóng vai trò hỗ trợ về mặt công nghệ thông tin.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Nguyên tắc cung cấp và sử dụng dịch vụ</h2>
+                        <p>Dịch vụ của Ứng dụng được cung cấp trên cơ sở tôn trọng quyền tự quyết của người dùng, đảm bảo tính minh bạch, chính xác và tuân thủ các quy định của pháp luật hiện hành. Đơn vị quản lý Ứng dụng nỗ lực duy trì hệ thống hoạt động ổn định, liên tục, tuy nhiên không cam kết tuyệt đối rằng dịch vụ sẽ không bị gián đoạn trong mọi trường hợp.</p>
+                        
+                        <p>Người dùng cam kết sử dụng dịch vụ đúng mục đích, không thực hiện các hành vi gây cản trở, phá hoại hệ thống hoặc xâm phạm quyền và lợi ích hợp pháp của tổ chức, cá nhân khác. Mọi hành vi sử dụng dịch vụ trái với đạo đức xã hội, thuần phong mỹ tục hoặc vi phạm pháp luật đều bị nghiêm cấm.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Điều kiện sử dụng dịch vụ</h2>
+                        <p>Để sử dụng dịch vụ của Ứng dụng, người dùng cần đáp ứng các điều kiện cơ bản về năng lực hành vi dân sự theo quy định của pháp luật. Đối với người chưa đủ tuổi hoặc không có đầy đủ năng lực hành vi dân sự, việc sử dụng dịch vụ phải thông qua sự đồng ý và giám sát của người đại diện hợp pháp.</p>
+                        
+                        <p>Người dùng có trách nhiệm cung cấp thông tin cá nhân và thông tin bệnh nhân một cách trung thực, chính xác và đầy đủ. Ứng dụng không chịu trách nhiệm đối với các rủi ro, thiệt hại phát sinh do việc cung cấp thông tin sai lệch, không đầy đủ hoặc không được cập nhật kịp thời.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Quyền và nghĩa vụ của người sử dụng dịch vụ</h2>
+                        <p>Người sử dụng dịch vụ có quyền truy cập và khai thác các chức năng của Ứng dụng theo đúng phạm vi dịch vụ đã công bố. Người dùng được hưởng các tiện ích do Ứng dụng mang lại trong việc tiết kiệm thời gian, chủ động lựa chọn dịch vụ y tế và nâng cao trải nghiệm khám chữa bệnh.</p>
+                        
+                        <p>Song song với quyền lợi, người dùng có nghĩa vụ tuân thủ nghiêm túc Điều khoản dịch vụ này, các quy định sử dụng liên quan và các quy định của cơ sở y tế nơi đăng ký khám bệnh. Người dùng chịu trách nhiệm trước pháp luật đối với mọi hành vi phát sinh trong quá trình sử dụng dịch vụ, bao gồm cả các hành vi được thực hiện thông qua tài khoản của mình.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Quyền và trách nhiệm của đơn vị cung cấp dịch vụ</h2>
+                        <p>Đơn vị quản lý Ứng dụng có quyền tổ chức, vận hành và điều chỉnh các dịch vụ nhằm đáp ứng nhu cầu thực tiễn và phù hợp với định hướng phát triển của hệ thống. Trong quá trình cung cấp dịch vụ, đơn vị quản lý có thể thực hiện việc nâng cấp, bảo trì hoặc tạm ngừng một số chức năng để đảm bảo chất lượng dịch vụ chung.</p>
+                        
+                        <p>Đơn vị quản lý có trách nhiệm bảo đảm tính an toàn, bảo mật của hệ thống thông tin, đồng thời hỗ trợ người dùng trong phạm vi khả năng kỹ thuật cho phép. Mọi nỗ lực được thực hiện nhằm hạn chế tối đa các sự cố kỹ thuật ảnh hưởng đến trải nghiệm sử dụng dịch vụ của người dùng.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Giới hạn trách nhiệm dịch vụ</h2>
+                        <p>Ứng dụng đặt lịch khám bệnh không chịu trách nhiệm đối với kết quả chẩn đoán, điều trị hoặc các quyết định chuyên môn y khoa được đưa ra bởi bác sĩ và cơ sở y tế. Mọi thông tin y tế hiển thị trên Ứng dụng chỉ mang tính chất tham khảo và hỗ trợ cho việc đặt lịch khám, không thay thế cho tư vấn, chẩn đoán và điều trị trực tiếp của nhân viên y tế có thẩm quyền.</p>
+                        
+                        <p>Trong các trường hợp xảy ra sự cố ngoài ý muốn như lỗi hệ thống, gián đoạn đường truyền, thiên tai, sự cố kỹ thuật hoặc các nguyên nhân khách quan khác, đơn vị quản lý không chịu trách nhiệm bồi thường thiệt hại phát sinh, nhưng sẽ nỗ lực khắc phục trong thời gian sớm nhất có thể.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Thanh toán dịch vụ và các chi phí liên quan</h2>
+                        <p>Một số dịch vụ trên Ứng dụng có thể phát sinh chi phí theo chính sách của từng cơ sở y tế hoặc theo thỏa thuận riêng giữa người dùng và đơn vị cung cấp dịch vụ. Các khoản phí, nếu có, sẽ được thông báo rõ ràng trước khi người dùng xác nhận sử dụng dịch vụ.</p>
+                        
+                        <p>Việc thanh toán được thực hiện thông qua các phương thức được Ứng dụng hỗ trợ. Người dùng có trách nhiệm kiểm tra thông tin thanh toán và lưu giữ chứng từ liên quan để phục vụ cho việc đối chiếu khi cần thiết.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Tạm ngừng, chấm dứt cung cấp dịch vụ</h2>
+                        <p>Đơn vị quản lý Ứng dụng có quyền tạm ngừng hoặc chấm dứt việc cung cấp dịch vụ đối với người dùng trong trường hợp phát hiện hành vi vi phạm Điều khoản dịch vụ, vi phạm pháp luật hoặc gây ảnh hưởng nghiêm trọng đến hoạt động của hệ thống.</p>
+                        
+                        <p>Người dùng cũng có quyền chấm dứt việc sử dụng dịch vụ bất kỳ lúc nào bằng cách ngừng truy cập hoặc yêu cầu xóa tài khoản theo quy định của Ứng dụng. Việc chấm dứt sử dụng dịch vụ không làm phát sinh trách nhiệm bồi thường giữa các bên, trừ trường hợp pháp luật có quy định khác.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Giải quyết tranh chấp và khiếu nại</h2>
+                        <p>Mọi tranh chấp phát sinh liên quan đến việc sử dụng dịch vụ của Ứng dụng sẽ được ưu tiên giải quyết thông qua thương lượng và hòa giải trên tinh thần hợp tác, tôn trọng lẫn nhau. Trường hợp không đạt được thỏa thuận, tranh chấp sẽ được giải quyết theo quy định của pháp luật Việt Nam tại cơ quan có thẩm quyền.</p>
+                        
+                        <p>Đơn vị quản lý khuyến khích người dùng gửi phản ánh, khiếu nại thông qua các kênh hỗ trợ chính thức để được tiếp nhận và xử lý kịp thời, góp phần nâng cao chất lượng dịch vụ.</p>
+                    </div>
+
+                    <div class="terms-section">
+                        <h2>Hiệu lực và điều khoản cuối cùng</h2>
+                        <p>Điều khoản dịch vụ này có hiệu lực kể từ thời điểm được công bố trên Ứng dụng và áp dụng đối với tất cả người dùng. Trong quá trình hoạt động, nội dung Điều khoản dịch vụ có thể được sửa đổi, bổ sung nhằm phù hợp với quy định pháp luật và định hướng phát triển của hệ thống. Các thay đổi sẽ được thông báo công khai để người dùng biết và thực hiện.</p>
+                        
+                        <p>Điều khoản dịch vụ là một phần không tách rời của hệ thống quy định áp dụng cho Ứng dụng đặt lịch khám bệnh, góp phần đảm bảo việc cung cấp và sử dụng dịch vụ được thực hiện một cách an toàn, minh bạch và hiệu quả.</p>
+                    </div>
+                </div>
+                
+                <button class="accept-btn">
+                    <i class="fas fa-check"></i>
+                    <span>Đồng Ý và Tiếp Tục</span>
+                </button>
+            </div>
+            
+            <div class="content-right">
+                <div class="illustration">
+                    <div class="clipboard-container">
+                        <div class="clipboard">
+                            <div class="clipboard-header"></div>
+                            <div class="clipboard-content">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line short"></div>
+                            </div>
+                            <div class="checkmark">
+                                <i class="fas fa-check"></i>
+                            </div>
+                        </div>
+                        <div class="security-badge">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="documents">
+                            <div class="document doc1"></div>
+                            <div class="document doc2"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Decorative Elements -->
+                    <div class="decoration-elements">
+                        <div class="element element-1">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="element element-2">
+                            <i class="fas fa-file-medical"></i>
+                        </div>
+                        <div class="element element-3">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="element element-4">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>Về Chúng Tôi</h3>
+                <ul>
+                    <li><a href="#">Giới thiệu</a></li>
+                    <li><a href="#">Đội ngũ</a></li>
+                    <li><a href="#">Tầm nhìn - Sứ mệnh</a></li>
+                    <li><a href="#">Liên hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Dịch Vụ</h3>
+                <ul>
+                    <li><a href="#">Đặt lịch khám</a></li>
+                    <li><a href="#">Tư vấn trực tuyến</a></li>
+                    <li><a href="#">Tra cứu kết quả</a></li>
+                    <li><a href="#">Thanh toán online</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Hỗ Trợ</h3>
+                <ul>
+                    <li><a href="#">Câu hỏi thường gặp</a></li>
+                    <li><a href="#">Hướng dẫn sử dụng</a></li>
+                    <li><a href="#">Quy định sử dụng</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Liên Hệ</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-phone"></i> Hotline: 1900 1234</p>
+                    <p><i class="fas fa-envelope"></i> support@datlichkham.vn</p>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</p>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Hệ Thống Đặt Lịch Khám Bệnh. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script src="../javascript/service-terms.js"></script>
+</body>
+</html>

@@ -14,21 +14,48 @@ function initTermsPage() {
 }
 
 // ====================== USER DROPDOWN FUNCTIONALITY ======================
-function initUserDropdown() {
-  // Close dropdown when clicking outside
-  document.addEventListener("click", function (event) {
-    const userMenu = document.querySelector(".user-menu");
-    if (userMenu && !userMenu.contains(event.target)) {
-      userMenu.classList.remove("active");
+function toggleUserDropdown() {
+    const dropdown = document.getElementById("userDropdown");
+    const arrow = document.querySelector(".dropdown-arrow");
+    
+    if (dropdown) {
+        dropdown.classList.toggle("show");
+        if (arrow) arrow.classList.toggle("rotated");
     }
-  });
 }
 
-function toggleUserDropdown() {
-  const userMenu = document.querySelector(".user-menu");
-  if (userMenu) {
-    userMenu.classList.toggle("active");
-  }
+function showUserInfo() {
+    window.location.href = "../html/profile.html";
+    toggleUserDropdown();
+}
+
+function showTerms() {
+    window.location.href = "../html/service-terms.html";
+    toggleUserDropdown();
+}
+
+function showPolicies() {
+    window.location.href = "../html/terms-of-service.html";
+    toggleUserDropdown();
+}
+
+function logout() {
+    window.location.href = "../html/login.html";
+}
+
+function initUserDropdown() {
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById("userDropdown");
+        const userProfile = document.querySelector(".user-profile");
+        
+        if (dropdown && userProfile && 
+            !userProfile.contains(event.target) && 
+            !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+            document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
+        }
+    });
 }
 
 // ====================== ACCEPT BUTTON FUNCTIONALITY ======================

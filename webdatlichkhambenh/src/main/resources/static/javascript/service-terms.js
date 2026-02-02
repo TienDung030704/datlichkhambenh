@@ -10,7 +10,41 @@ function initServiceTermsPage() {
   initAnimations();
   initScrollEffects();
   initUserDropdown();
-  console.log("Service terms page initialized");
+  checkAdminRole();
+  loadUserInfo();
+}
+
+function loadUserInfo() {
+  // Get user from localStorage or sessionStorage
+  const userData = JSON.parse(localStorage.getItem("currentUser")) || JSON.parse(sessionStorage.getItem("currentUser"));
+  
+  if (userData) {
+    const displayName = userData.fullName || userData.username || "User";
+    const avatarLetter = displayName.charAt(0).toUpperCase();
+    
+    // Update avatar and name
+    const userAvatar = document.getElementById("userAvatar");
+    const userName = document.getElementById("userName");
+    
+    if (userAvatar) userAvatar.textContent = avatarLetter;
+    if (userName) userName.textContent = displayName;
+  } else {
+    // If no user data, redirect to login
+    window.location.href = "../html/login.html";
+  }
+}
+
+function checkAdminRole() {
+  const userData = JSON.parse(localStorage.getItem("currentUser")) || JSON.parse(sessionStorage.getItem("currentUser"));
+  if (userData) {
+    const isAdmin = userData.role === 'ADMIN' || userData.username === 'admin' || (userData.username && userData.username.toLowerCase().includes('admin'));
+    if (isAdmin) {
+      const adminMenuItem = document.querySelector('.admin-only');
+      if (adminMenuItem) {
+        adminMenuItem.style.display = 'flex';
+      }
+    }
+  }
 }
 
 // ====================== USER DROPDOWN FUNCTIONALITY ======================
@@ -41,6 +75,11 @@ function showPolicies() {
 
 function showPrivacyPolicy() {
   window.location.href = "../html/privacy-policy.html";
+  toggleUserDropdown();
+}
+
+function showAdminPanel() {
+  window.location.href = "../html/admin-panel.html";
   toggleUserDropdown();
 }
 

@@ -135,12 +135,12 @@ function showUserInfo() {
 }
 
 function showTerms() {
-  alert("Chức năng Điều khoản dịch vụ đang được phát triển!");
+  window.location.href = "html/terms-of-service.html";
   toggleUserDropdown();
 }
 
 function showPolicies() {
-  alert("Chức năng Quy định chung đang được phát triển!");
+  window.location.href = "html/terms-of-service.html";
   toggleUserDropdown();
 }
 

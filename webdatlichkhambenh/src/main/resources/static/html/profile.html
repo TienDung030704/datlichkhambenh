@@ -12,191 +12,253 @@
   </head>
   <body>
     <div class="profile-container">
-      <!-- Sidebar -->
-      <div class="sidebar">
+      <!-- Left Profile Card -->
+      <div class="profile-card">
         <div class="profile-header">
           <div class="profile-avatar">
-            <span id="avatarText">U</span>
+            <img
+              src="../image/default-avatar.png"
+              alt="Avatar"
+              id="avatarImage"
+              onerror="
+                this.style.display = 'none';
+                document.getElementById('avatarText').style.display = 'flex';
+              "
+            />
+            <div class="avatar-fallback" id="avatarText">U</div>
           </div>
-          <h3 id="profileName">Tên người dùng</h3>
+          <h2 id="profileName" class="profile-name">Nguyễn Văn Nam</h2>
+        </div>
 
-          <div class="profile-info">
-            <div class="info-item">
-              <i class="fas fa-phone"></i>
-              <span id="profilePhone">0901 234 567</span>
+        <div class="profile-details">
+          <div class="detail-item">
+            <i class="fas fa-phone"></i>
+            <div class="detail-content">
+              <span class="detail-label">Số điện thoại:</span>
+              <span class="detail-value" id="profilePhone">0901 234 567</span>
             </div>
-            <div class="info-item">
-              <i class="fas fa-envelope"></i>
-              <span id="profileEmail">user@example.com</span>
+          </div>
+
+          <div class="detail-item">
+            <i class="fas fa-envelope"></i>
+            <div class="detail-content">
+              <span class="detail-label">Email:</span>
+              <span class="detail-value" id="profileEmail"
+                >nguyenvannam@gmail.com</span
+              >
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="fas fa-venus-mars"></i>
+            <div class="detail-content">
+              <span class="detail-label">Giới tính:</span>
+              <span class="detail-value" id="profileGender">Nam</span>
+            </div>
+          </div>
+
+          <div class="detail-item">
+            <i class="fas fa-calendar-alt"></i>
+            <div class="detail-content">
+              <span class="detail-label">Ngày sinh:</span>
+              <span class="detail-value" id="profileBirthDate">03/07/2004</span>
             </div>
           </div>
         </div>
-
-        <!-- Navigation Menu -->
-        <nav class="sidebar-nav">
-          <a href="#" class="nav-item active" data-section="profile">
-            <i class="fas fa-user"></i>
-            <span>Thông Tin Cá Nhân</span>
-          </a>
-          <a href="#" class="nav-item" data-section="appointments">
-            <i class="fas fa-calendar-check"></i>
-            <span>Quy Định Sử Dụng</span>
-          </a>
-          <a href="#" class="nav-item" data-section="medical">
-            <i class="fas fa-file-medical"></i>
-            <span>Điều Khoản Dịch Vụ</span>
-          </a>
-          <a href="#" class="nav-item" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Đăng Xuất</span>
-          </a>
-        </nav>
       </div>
 
-      <!-- Main Content -->
-      <div class="main-content">
-        <div class="content-header">
-          <h1>Thông Tin Cá Nhân</h1>
-          <p>Quản lý thông tin cá nhân của bạn</p>
+      <!-- Right Form Section -->
+      <div class="form-section">
+        <div class="form-header">
+          <h1 class="form-title">Quản Lý Tài Khoản</h1>
+          <p class="form-subtitle">Quản lý thông tin và bảo mật tài khoản</p>
         </div>
 
-        <div class="content-body">
-          <!-- Tab Navigation -->
-          <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="info">
-              <i class="fas fa-user"></i>
-              Thông Tin Cá Nhân
-            </button>
-            <button class="tab-btn" data-tab="password">
-              <i class="fas fa-lock"></i>
-              Đổi Mật Khẩu
-            </button>
-          </div>
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+          <button class="tab-btn active" data-tab="info-tab">
+            <i class="fas fa-user"></i>
+            Thông Tin Cá Nhân
+          </button>
+          <button class="tab-btn" data-tab="password-tab">
+            <i class="fas fa-lock"></i>
+            Đổi Mật Khẩu
+          </button>
+        </div>
 
-          <!-- Profile Information Tab -->
-          <div class="tab-content active" id="info-tab">
-            <div class="form-container">
-              <form id="profileForm">
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="fullName">Họ và tên:</label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      required
-                      placeholder="Nguyễn Văn A"
-                    />
-                    <i class="fas fa-user form-icon"></i>
-                  </div>
-                  <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      placeholder="user@example.com"
-                      readonly
-                    />
-                    <i class="fas fa-envelope form-icon"></i>
-                  </div>
+        <!-- Personal Information Tab -->
+        <div class="tab-content active" id="info-tab">
+          <form id="profileForm" class="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="fullName">Họ và tên</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-user input-icon"></i>
+                  <input
+                    type="text"
+                    id="fullName"
+                    name="fullName"
+                    placeholder="Nguyễn Văn Nam"
+                    required
+                  />
                 </div>
+              </div>
 
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="phone">Số điện thoại:</label>
-                    <input
-                      type="tel"
-                      id="phone"
-                      name="phone"
-                      required
-                      placeholder="0901 234 567"
-                    />
-                    <i class="fas fa-phone form-icon"></i>
-                  </div>
-                  <div class="form-group">
-                    <label for="birthDate">Ngày sinh:</label>
-                    <input type="date" id="birthDate" name="birthDate" />
-                    <i class="fas fa-birthday-cake form-icon"></i>
-                  </div>
+              <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-envelope input-icon"></i>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="nguyenvannam@gmail.com"
+                    readonly
+                  />
                 </div>
-
-                <div class="form-row">
-                  <div class="form-group">
-                    <label for="gender">Giới tính:</label>
-                    <select id="gender" name="gender" required>
-                      <option value="">Chọn giới tính</option>
-                      <option value="Nam">Nam</option>
-                      <option value="Nữ">Nữ</option>
-                      <option value="Khác">Khác</option>
-                    </select>
-                    <i class="fas fa-venus-mars form-icon"></i>
-                    <i class="fas fa-chevron-down select-icon"></i>
-                  </div>
-                </div>
-
-                <div class="form-actions">
-                  <button type="submit" class="save-btn">
-                    <i class="fas fa-save"></i>
-                    Lưu Thay Đổi
-                  </button>
-                </div>
-              </form>
+              </div>
             </div>
-          </div>
 
-          <!-- Change Password Tab -->
-          <div class="tab-content" id="password-tab">
-            <div class="form-container">
-              <form id="passwordForm">
-                <div class="form-group">
-                  <label for="currentPassword">Mật khẩu hiện tại:</label>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="phone">Số điện thoại</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-phone input-icon"></i>
+                  <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="0901 234 567"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="birthDate">Ngày sinh</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-calendar input-icon"></i>
+                  <input type="date" id="birthDate" name="birthDate" />
+                </div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="gender">Giới tính</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-venus-mars input-icon"></i>
+                  <select id="gender" name="gender">
+                    <option value="">Chọn giới tính</option>
+                    <option value="Nam">Nam</option>
+                    <option value="Nữ">Nữ</option>
+                    <option value="Khác">Khác</option>
+                  </select>
+                  <i class="fas fa-chevron-down select-arrow"></i>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <!-- Empty space for symmetry -->
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="save-btn">
+                <i class="fas fa-save"></i>
+                Lưu Thay Đổi
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Change Password Tab -->
+        <div class="tab-content" id="password-tab">
+          <form id="passwordForm" class="profile-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="currentPassword">Mật khẩu hiện tại</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-lock input-icon"></i>
                   <input
                     type="password"
                     id="currentPassword"
                     name="currentPassword"
+                    placeholder="Nhập mật khẩu hiện tại"
                     required
                   />
-                  <i class="fas fa-lock form-icon"></i>
                 </div>
+              </div>
 
-                <div class="form-group">
-                  <label for="newPassword">Mật khẩu mới:</label>
+              <div class="form-group">
+                <label for="newPassword">Mật khẩu mới</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-key input-icon"></i>
                   <input
                     type="password"
                     id="newPassword"
                     name="newPassword"
+                    placeholder="Nhập mật khẩu mới"
                     required
                     minlength="6"
                   />
-                  <i class="fas fa-key form-icon"></i>
                 </div>
+              </div>
+            </div>
 
-                <div class="form-group">
-                  <label for="confirmPassword">Xác nhận mật khẩu mới:</label>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-check input-icon"></i>
                   <input
                     type="password"
                     id="confirmPassword"
                     name="confirmPassword"
+                    placeholder="Nhập lại mật khẩu mới"
                     required
                     minlength="6"
                   />
-                  <i class="fas fa-check form-icon"></i>
                 </div>
+              </div>
 
-                <div class="form-actions">
-                  <button type="submit" class="save-btn">
-                    <i class="fas fa-save"></i>
-                    Đổi Mật Khẩu
-                  </button>
+              <div class="form-group">
+                <div class="password-requirements">
+                  <h4>Yêu cầu mật khẩu:</h4>
+                  <ul>
+                    <li>Tối thiểu 6 ký tự</li>
+                    <li>Nên có chữ hoa và chữ thường</li>
+                    <li>Nên có số và ký tự đặc biệt</li>
+                  </ul>
                 </div>
-              </form>
+              </div>
             </div>
-          </div>
+
+            <div class="form-actions">
+              <button type="submit" class="save-btn password-btn">
+                <i class="fas fa-shield-alt"></i>
+                Đổi Mật Khẩu
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
+
+    <!-- Background Medical Elements -->
+    <div class="medical-bg">
+      <div class="doctor-illustration">
+        <i class="fas fa-user-md"></i>
+      </div>
+      <div class="medical-icons">
+        <i class="fas fa-heartbeat"></i>
+        <i class="fas fa-stethoscope"></i>
+        <i class="fas fa-pills"></i>
+        <i class="fas fa-syringe"></i>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="../javascript/profile.js"></script>
   </body>

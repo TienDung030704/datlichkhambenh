@@ -15,47 +15,50 @@ function initTermsPage() {
 
 // ====================== USER DROPDOWN FUNCTIONALITY ======================
 function toggleUserDropdown() {
-    const dropdown = document.getElementById("userDropdown");
-    const arrow = document.querySelector(".dropdown-arrow");
-    
-    if (dropdown) {
-        dropdown.classList.toggle("show");
-        if (arrow) arrow.classList.toggle("rotated");
-    }
+  const dropdown = document.getElementById("userDropdown");
+  const arrow = document.querySelector(".dropdown-arrow");
+
+  if (dropdown) {
+    dropdown.classList.toggle("show");
+    if (arrow) arrow.classList.toggle("rotated");
+  }
 }
 
 function showUserInfo() {
-    window.location.href = "../html/profile.html";
-    toggleUserDropdown();
+  window.location.href = "../html/profile.html";
+  toggleUserDropdown();
 }
 
 function showTerms() {
-    window.location.href = "../html/service-terms.html";
-    toggleUserDropdown();
+  window.location.href = "../html/service-terms.html";
+  toggleUserDropdown();
 }
 
 function showPolicies() {
-    window.location.href = "../html/terms-of-service.html";
-    toggleUserDropdown();
+  window.location.href = "../html/terms-of-service.html";
+  toggleUserDropdown();
 }
 
 function logout() {
-    window.location.href = "../html/login.html";
+  window.location.href = "../html/login.html";
 }
 
 function initUserDropdown() {
-    // Close dropdown when clicking outside
-    document.addEventListener('click', function(event) {
-        const dropdown = document.getElementById("userDropdown");
-        const userProfile = document.querySelector(".user-profile");
-        
-        if (dropdown && userProfile && 
-            !userProfile.contains(event.target) && 
-            !dropdown.contains(event.target)) {
-            dropdown.classList.remove("show");
-            document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
-        }
-    });
+  // Close dropdown when clicking outside
+  document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("userDropdown");
+    const userProfile = document.querySelector(".user-profile");
+
+    if (
+      dropdown &&
+      userProfile &&
+      !userProfile.contains(event.target) &&
+      !dropdown.contains(event.target)
+    ) {
+      dropdown.classList.remove("show");
+      document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
+    }
+  });
 }
 
 // ====================== ACCEPT BUTTON FUNCTIONALITY ======================

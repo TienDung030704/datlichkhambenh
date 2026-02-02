@@ -39,17 +39,20 @@ async function checkAuthStatus() {
           // Force update UI immediately
           const displayName = result.fullName;
           const avatarLetter = displayName.charAt(0).toUpperCase();
-          
+
           // Check if user is admin
-          const isAdmin = user.role === 'ADMIN' || 
-                          user.username === 'admin' || 
-                          (user.username && user.username.toLowerCase().includes('admin'));
-          
-          const adminMenuItem = isAdmin ? `
+          const isAdmin =
+            user.role === "ADMIN" ||
+            user.username === "admin" ||
+            (user.username && user.username.toLowerCase().includes("admin"));
+
+          const adminMenuItem = isAdmin
+            ? `
                 <div class="dropdown-item" onclick="showAdminPanel()">
                   <i class="fas fa-user-cog"></i>
                   <span>Quản lý</span>
-                </div>` : '';
+                </div>`
+            : "";
 
           authButtons.innerHTML = `
             <div class="user-menu">
@@ -95,17 +98,20 @@ async function checkAuthStatus() {
     // Get display name - prioritize fullName
     const displayName = user.fullName || user.username || "Người dùng";
     const avatarLetter = displayName.charAt(0).toUpperCase();
-    
+
     // Check if user is admin
-    const isAdmin = user.role === 'ADMIN' || 
-                    user.username === 'admin' || 
-                    (user.username && user.username.toLowerCase().includes('admin'));
-    
-    const adminMenuItem = isAdmin ? `
+    const isAdmin =
+      user.role === "ADMIN" ||
+      user.username === "admin" ||
+      (user.username && user.username.toLowerCase().includes("admin"));
+
+    const adminMenuItem = isAdmin
+      ? `
           <div class="dropdown-item" onclick="showAdminPanel()">
             <i class="fas fa-user-cog"></i>
             <span>Quản lý</span>
-          </div>` : '';
+          </div>`
+      : "";
 
     // Cập nhật UI cho user đã đăng nhập với avatar và tên thật
     authButtons.innerHTML = `

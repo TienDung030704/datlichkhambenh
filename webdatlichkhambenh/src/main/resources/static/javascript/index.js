@@ -546,7 +546,7 @@ function navigateToPage(page) {
 }
 
 function initSlider() {
-  let currentSlide = 0;
+  let currentSlide = 1;
   let interval;
 
   const slides = document.querySelectorAll(".slide");
@@ -558,7 +558,7 @@ function initSlider() {
   slides.forEach((_, index) => {
     const dot = document.createElement("span");
     dot.classList.add("dot");
-    if (index === 0) dot.classList.add("active");
+    if (index === currentSlide) dot.classList.add("active");
 
     dot.addEventListener("click", () => {
       showSlide(index);

@@ -72,20 +72,8 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            Map<String, Object> stats = new HashMap<>();
-            
-            // Lấy số lượng bệnh nhân từ database thật
-            int totalPatients = adminService.getPatientsCount();
-            stats.put("totalPatients", totalPatients);
-            
-            // Lấy số lượng bác sĩ từ database thật
-            int totalDoctors = adminService.getDoctorsCount();
-            stats.put("totalDoctors", totalDoctors);
-            
-            // Các thống kê khác tạm thời dùng dữ liệu mẫu
-            // TODO: Implement khi có bảng appointments
-            stats.put("todayAppointments", 28);
-            stats.put("upcomingAppointments", 85);
+            // Sử dụng AdminService để lấy tất cả thống kê từ database
+            Map<String, Object> stats = adminService.getDashboardStatistics();
             
             response.put("success", true);
             response.put("statistics", stats);
@@ -227,7 +215,7 @@ public class AdminController {
     }
     
     /**
-     * Get recent appointments for dashboard (API sẽ return empty nếu chưa có bảng appointments)
+     * Get recent appointments for dashboard
      */
     @GetMapping("/appointments/recent")
     public ResponseEntity<Map<String, Object>> getRecentAppointments(
@@ -235,10 +223,10 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            // Hiện tại chưa có bảng appointments, return empty
+            List<Map<String, Object>> appointments = adminService.getRecentAppointments(limit);
+            
             response.put("success", true);
-            response.put("appointments", List.of()); // Empty list
-            response.put("message", "No appointments table available yet");
+            response.put("appointments", appointments);
             
         } catch (Exception e) {
             response.put("success", false);
@@ -258,13 +246,14 @@ public class AdminController {
         Map<String, Object> response = new HashMap<>();
         
         try {
-            // Hiện tại chưa có bảng appointments, return empty
+            List<Map<String, Object>> appointments = adminService.getAppointmentsList(offset, limit);
+            int totalCount = adminService.getAppointmentsCount();
+            
             response.put("success", true);
-            response.put("appointments", List.of()); // Empty list
-            response.put("total", 0);
+            response.put("appointments", appointments);
+            response.put("total", totalCount);
             response.put("offset", offset);
             response.put("limit", limit);
-            response.put("message", "No appointments table available yet");
             
         } catch (Exception e) {
             response.put("success", false);

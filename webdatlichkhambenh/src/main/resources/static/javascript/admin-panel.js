@@ -190,11 +190,11 @@ async function loadStatistics() {
   } catch (error) {
     console.error("Error loading statistics:", error);
 
-    // Fallback với dữ liệu mẫu
-    document.getElementById("todayAppointments").textContent = "28";
-    document.getElementById("upcomingAppointments").textContent = "85";
-    document.getElementById("totalDoctors").textContent = "24";
-    document.getElementById("totalPatients").textContent = "1,250";
+    // Fallback khi lỗi API - hiển thị 0 thay vì mock data
+    document.getElementById("todayAppointments").textContent = "0";
+    document.getElementById("upcomingAppointments").textContent = "0";
+    document.getElementById("totalDoctors").textContent = "0";
+    document.getElementById("totalPatients").textContent = "0";
   }
 }
 

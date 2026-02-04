@@ -197,9 +197,42 @@ public class AdminService {
             int monthPatients = jdbcTemplate.queryForObject(monthPatientsSql, Integer.class);
             stats.put("monthPatients", monthPatients);
             
-            // TODO: Add appointments, doctors statistics when tables are available
-            stats.put("todayAppointments", 28);
-            stats.put("upcomingAppointments", 85);
+            // Thay vì dùng mock data, tính toán từ bảng appointments thật
+            int todayAppointments = 0;
+            int upcomingAppointments = 0;
+            
+            try {
+                // Lịch hẹn hôm nay (appointments được đặt cho hôm nay)
+                String todayAppointmentsSql = """
+                    SELECT COUNT(*) FROM appointments 
+                    WHERE DATE(appointment_date) = CURDATE() 
+                    AND status IN ('booked', 'examined')
+                    """;
+                todayAppointments = jdbcTemplate.queryForObject(todayAppointmentsSql, Integer.class);
+                System.out.println("Today appointments from DB: " + todayAppointments);
+                
+                // Lịch hẹn sắp tới (trong vòng 7 ngày tới)
+                String upcomingAppointmentsSql = """
+                    SELECT COUNT(*) FROM appointments 
+                    WHERE appointment_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+                    AND status = 'booked'
+                    """;
+                upcomingAppointments = jdbcTemplate.queryForObject(upcomingAppointmentsSql, Integer.class);
+                System.out.println("Upcoming appointments from DB: " + upcomingAppointments);
+                
+            } catch (Exception appointmentError) {
+                // Log lỗi để debug
+                System.err.println("Error querying appointments table: " + appointmentError.getMessage());
+                appointmentError.printStackTrace();
+                
+                // Vẫn set về 0 thay vì dùng fallback
+                todayAppointments = 0;
+                upcomingAppointments = 0;
+            }
+            
+            stats.put("todayAppointments", todayAppointments);
+            stats.put("upcomingAppointments", upcomingAppointments);
+            
             stats.put("totalDoctors", getDoctorsCount());
             
         } catch (Exception e) {
@@ -354,6 +387,110 @@ public class AdminService {
         } catch (Exception e) {
             System.err.println("Error getting specialties list: " + e.getMessage());
             return List.of();
+        }
+    }
+    
+    /**
+     * Get recent appointments for dashboard
+     */
+    public List<Map<String, Object>> getRecentAppointments(int limit) {
+        try {
+            String sql = """
+                SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
+                       u.full_name as patient_name, u.phone_number as patient_phone,
+                       d.full_name as doctor_name, s.specialty_name
+                FROM appointments a
+                JOIN users u ON a.patient_id = u.id
+                JOIN doctors d ON a.doctor_id = d.id
+                JOIN specialties s ON a.specialty_id = s.id
+                WHERE a.appointment_date >= CURDATE()
+                ORDER BY a.appointment_date ASC, a.appointment_time ASC
+                LIMIT ?
+                """;
+            
+            List<Map<String, Object>> appointments = jdbcTemplate.queryForList(sql, limit);
+            
+            // Convert to frontend format
+            for (Map<String, Object> appointment : appointments) {
+                appointment.put("patientName", appointment.get("patient_name"));
+                appointment.put("patientPhone", appointment.get("patient_phone"));
+                appointment.put("doctorName", appointment.get("doctor_name"));
+                appointment.put("specialtyName", appointment.get("specialty_name"));
+                appointment.put("appointmentDate", appointment.get("appointment_date"));
+                appointment.put("appointmentTime", appointment.get("appointment_time"));
+                
+                // Remove snake_case keys
+                appointment.remove("patient_name");
+                appointment.remove("patient_phone");
+                appointment.remove("doctor_name");
+                appointment.remove("specialty_name");
+                appointment.remove("appointment_date");
+                appointment.remove("appointment_time");
+            }
+            
+            return appointments;
+            
+        } catch (Exception e) {
+            System.err.println("Error getting recent appointments: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
+    /**
+     * Get all appointments with pagination
+     */
+    public List<Map<String, Object>> getAppointmentsList(int offset, int limit) {
+        try {
+            String sql = """
+                SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
+                       u.full_name as patient_name, u.phone_number as patient_phone,
+                       d.full_name as doctor_name, s.specialty_name
+                FROM appointments a
+                JOIN users u ON a.patient_id = u.id
+                JOIN doctors d ON a.doctor_id = d.id
+                JOIN specialties s ON a.specialty_id = s.id
+                ORDER BY a.appointment_date DESC, a.appointment_time DESC
+                LIMIT ? OFFSET ?
+                """;
+            
+            List<Map<String, Object>> appointments = jdbcTemplate.queryForList(sql, limit, offset);
+            
+            // Convert to frontend format
+            for (Map<String, Object> appointment : appointments) {
+                appointment.put("patientName", appointment.get("patient_name"));
+                appointment.put("patientPhone", appointment.get("patient_phone"));
+                appointment.put("doctorName", appointment.get("doctor_name"));
+                appointment.put("specialtyName", appointment.get("specialty_name"));
+                appointment.put("appointmentDate", appointment.get("appointment_date"));
+                appointment.put("appointmentTime", appointment.get("appointment_time"));
+                
+                // Remove snake_case keys
+                appointment.remove("patient_name");
+                appointment.remove("patient_phone");
+                appointment.remove("doctor_name");
+                appointment.remove("specialty_name");
+                appointment.remove("appointment_date");
+                appointment.remove("appointment_time");
+            }
+            
+            return appointments;
+            
+        } catch (Exception e) {
+            System.err.println("Error getting appointments list: " + e.getMessage());
+            return List.of();
+        }
+    }
+    
+    /**
+     * Get total appointments count
+     */
+    public int getAppointmentsCount() {
+        try {
+            String sql = "SELECT COUNT(*) FROM appointments";
+            return jdbcTemplate.queryForObject(sql, Integer.class);
+        } catch (Exception e) {
+            System.err.println("Error getting appointments count: " + e.getMessage());
+            return 0;
         }
     }
 }

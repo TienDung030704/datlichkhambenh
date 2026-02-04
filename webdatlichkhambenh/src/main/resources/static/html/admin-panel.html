@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Medical Admin - Quản lý hệ thống</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/admin-panel.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo">
+          <i class="fas fa-plus-circle"></i>
+          <span>Medical Admin</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item active">
+            <a href="#" class="nav-link" data-section="dashboard">
+              <i class="fas fa-tachometer-alt"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="appointments">
+              <i class="fas fa-calendar-check"></i>
+              <span>Quản lý đặt lịch</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="doctors">
+              <i class="fas fa-user-md"></i>
+              <span>Bác sĩ & Chuyên khoa</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="patients">
+              <i class="fas fa-users"></i>
+              <span>Bệnh nhân</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="settings">
+              <i class="fas fa-cog"></i>
+              <span>Cài đặt</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Admin User Info -->
+      <div class="admin-user-info">
+        <div class="admin-avatar">
+          <div class="avatar-fallback">A</div>
+        </div>
+        <div class="admin-details">
+          <div class="admin-name">Admin</div>
+          <div class="admin-email">admin@example.com</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Header -->
+      <header class="main-header">
+        <div class="header-left">
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 class="page-title">Dashboard</h1>
+        </div>
+
+        <div class="header-right">
+          <div class="notification-wrapper">
+            <button class="notification-btn">
+              <i class="fas fa-bell"></i>
+              <span class="notification-badge">2</span>
+            </button>
+          </div>
+
+          <div class="user-menu">
+            <div class="user-profile" onclick="toggleUserDropdown()">
+              <div class="user-avatar">
+                <div class="avatar-fallback">A</div>
+              </div>
+              <span class="user-name admin-name">Admin</span>
+              <i class="fas fa-chevron-down dropdown-arrow"></i>
+            </div>
+            <div class="user-dropdown" id="userDropdown">
+              <div class="dropdown-item" onclick="showUserInfo()">
+                <i class="fas fa-user"></i>
+                <span>Thông tin cá nhân</span>
+              </div>
+              <div class="dropdown-item" onclick="showDashboard()">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Bảng điều khiển</span>
+              </div>
+              <div class="dropdown-item" onclick="showSettings()">
+                <i class="fas fa-cog"></i>
+                <span>Cài đặt hệ thống</span>
+              </div>
+              <div class="dropdown-item" onclick="showBackupRestore()">
+                <i class="fas fa-database"></i>
+                <span>Sao lưu & Phục hồi</span>
+              </div>
+              <div class="dropdown-divider"></div>
+              <div class="dropdown-item logout-item" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Đăng xuất</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content" id="dashboardSection">
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="todayAppointments">--</div>
+              <div class="stat-label">Lịch hẹn hôm nay</div>
+              <div class="stat-sublabel">Đang chờ khám</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="upcomingAppointments">--</div>
+              <div class="stat-label">Lịch hẹn sắp tới</div>
+              <div class="stat-sublabel">Lịch hẹn mới</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="totalDoctors">--</div>
+              <div class="stat-label">Bác sĩ</div>
+              <div class="stat-sublabel">Tổng số bác sĩ</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-number" id="totalPatients">--</div>
+              <div class="stat-label">Bệnh nhân</div>
+              <div class="stat-sublabel">Tổng số bệnh nhân</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appointments Table -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2>Lịch hẹn chờ khám</h2>
+            <button class="btn btn-primary" onclick="refreshAppointments()">
+              <i class="fas fa-sync-alt"></i>
+              Làm mới
+            </button>
+          </div>
+
+          <div class="table-container">
+            <table class="appointments-table">
+              <thead>
+                <tr>
+                  <th>Bệnh nhân</th>
+                  <th>Bác sĩ</th>
+                  <th>Chuyên khoa</th>
+                  <th>Ngày hẹn</th>
+                  <th>Thời gian</th>
+                  <th>Trạng thái</th>
+                  <th>Hành động</th>
+                </tr>
+              </thead>
+              <tbody id="appointmentsTableBody">
+                <!-- Dữ liệu sẽ được load từ database -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Statistics Chart -->
+        <div class="content-section">
+          <div class="section-header">
+            <h2>Thống kê Lịch hẹn</h2>
+            <select id="chartPeriod" onchange="updateChart()">
+              <option value="week">Tuần này</option>
+              <option value="month">Tháng này</option>
+              <option value="year">Năm này</option>
+            </select>
+          </div>
+
+          <div class="chart-container">
+            <canvas id="appointmentsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appointments Management Section -->
+      <div
+        class="appointments-content section-content"
+        id="appointmentsSection"
+        style="display: none"
+      >
+        <div class="section-header">
+          <h2>Quản lý đặt lịch</h2>
+          <div class="section-actions">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Tìm kiếm lịch hẹn..."
+                id="searchAppointments"
+              />
+            </div>
+            <select id="statusFilter" onchange="filterAppointments()">
+              <option value="">Tất cả trạng thái</option>
+              <option value="pending">Chờ xác nhận</option>
+              <option value="confirmed">Đã xác nhận</option>
+              <option value="completed">Hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" id="selectAll" /></th>
+                <th>ID</th>
+                <th>Bệnh nhân</th>
+                <th>Bác sĩ</th>
+                <th>Chuyên khoa</th>
+                <th>Ngày hẹn</th>
+                <th>Thời gian</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="allAppointmentsTableBody">
+              <!-- Dữ liệu sẽ được load từ database -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+          <button class="btn-pagination" onclick="previousPage()">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <div class="page-numbers" id="pageNumbers">
+            <!-- Page numbers will be generated here -->
+          </div>
+          <button class="btn-pagination" onclick="nextPage()">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Other sections (Doctors, Patients, Settings) -->
+      <div class="section-content" id="doctorsSection" style="display: none">
+        <h2>Bác sĩ & Chuyên khoa</h2>
+        <p>Chức năng này đang được phát triển...</p>
+      </div>
+
+      <div class="section-content" id="patientsSection" style="display: none">
+        <h2>Quản lý bệnh nhân</h2>
+        <p>Chức năng này đang được phát triển...</p>
+      </div>
+
+      <div class="section-content" id="settingsSection" style="display: none">
+        <h2>Cài đặt hệ thống</h2>
+        <p>Chức năng này đang được phát triển...</p>
+      </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+      <div class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Đang tải dữ liệu...</p>
+      </div>
+    </div>
+
+    <script src="../javascript/admin-panel.js"></script>
+  </body>
+</html>

@@ -1,0 +1,178 @@
+/* ================= STEPPER ================= */
+
+.booking-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 20px 0 30px;
+}
+
+.step {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e6effa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1da1f2;
+  font-size: 18px;
+}
+
+.step.active {
+  background: #1da1f2;
+  color: white;
+}
+
+.line {
+  width: 70px;
+  height: 6px;
+  background: linear-gradient(
+    to right,
+    #cfd9e6 0%,
+    #cfd9e6 35%,
+    transparent 50%,
+    transparent 50%,
+    #cfd9e6 55%,
+    #cfd9e6 90%
+  );
+  border-radius: 4px;
+}
+
+/* ================= PROFILE HEADER ================= */
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.profile-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* ================= ADD PROFILE BUTTON ================= */
+
+.add-profile-btn {
+  background: #eaf4ff;
+  color: #1da1f2;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-profile-btn:hover {
+  background: #dbeaff;
+}
+
+/* ================= PROFILE LIST ================= */
+
+.profile-list {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+.profile-item {
+  text-align: center;
+  cursor: pointer;
+}
+
+.profile-item p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.profile-item.active p {
+  color: #1da1f2;
+}
+
+.profile-item.active .avatar {
+  border: 3px solid #1da1f2;
+  background: #eaf4ff;
+}
+
+/* ================= HEADER ICON ALIGN ================= */
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;            
+  padding: 20px 30px;
+  color: #1da1f2;                
+  font-size: 24px;               
+  font-weight: 600;
+  border-bottom: 1px solid #e5eaf2;
+}
+
+.booking-header i {
+  font-size: 28px;             
+  color: #1da1f2;
+  cursor: pointer;
+}
+
+.booking-header span {
+  flex: 1;
+  text-align: center;
+}
+
+/* ================= BIG MAIN CARD ================= */
+.booking-main-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 22px 26px;              
+  max-width: 900px;               
+  margin: 0 auto;                 
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+
+.booking-submit {
+  max-width: 220px;
+  margin-top: 25px;
+}
+
+.booking-stepper {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.profile-list {
+  margin-bottom: 25px;
+}
+
+/* ================= AVATAR ================= */
+
+.avatar {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: #eef4ff;              /* nền xanh nhạt */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  margin-bottom: 8px;
+
+  border: 2px solid #e2e8f2;        /* viền xám nhạt */
+  box-shadow: inset 0 0 0 6px #f7faff; /* vòng trong */
+  transition: all 0.25s ease;
+}
+
+/* avatar đang chọn */
+
+.profile-item.active .avatar {
+  background: #eaf4ff;
+  border-color: #1da1f2;
+  box-shadow: inset 0 0 0 6px #ffffff;
+}
+

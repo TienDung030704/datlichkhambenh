@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thêm hồ sơ bệnh nhân</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/add-profile.css" />
+  </head>
+
+  <body>
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" onclick="history.back()"></i>
+      <span>Thêm hồ sơ</span>
+      <div></div>
+    </header>
+
+    <div class="form-container">
+      <!-- CARD 1: THÔNG TIN BỆNH NHÂN -->
+      <div class="card">
+        <h2>Thông tin bệnh nhân</h2>
+
+        <div classzvdiv class="form-group">
+          <label>Họ và chữ lót <span>*</span></label>
+          <input type="text" id="lastname" placeholder="VD: Nguyễn Văn" />
+        </div>
+
+        <div class="form-group">
+          <label>Tên người bệnh <span>*</span></label>
+          <input type="text" id="firstname" placeholder="VD: An" />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Ngày sinh <span>*</span></label>
+            <input type="date" id="birthday" />
+          </div>
+
+          <div class="form-group">
+            <label>Giới tính <span>*</span></label>
+            <div class="gender-box">
+              <label class="gender-item">
+                <input type="radio" name="gender" />
+                Nam
+              </label>
+              <label class="gender-item">
+                <input type="radio" name="gender" />
+                Nữ
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Dân tộc <span>*</span></label>
+            <select id="ethnic">
+              <option value="">Chọn...</option>
+              <option>Kinh</option>
+              <option>Tày</option>
+              <option>Thái</option>
+              <option>Hoa</option>
+              <option>Khác</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Nghề nghiệp <span>*</span></label>
+            <select id="job">
+              <option value="">Chọn...</option>
+              <option>Sinh viên</option>
+              <option>Nhân viên</option>
+              <option>Kinh doanh</option>
+              <option>Khác</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2: THÔNG TIN LIÊN LẠC -->
+      <div class="card">
+        <h2>Thông tin liên lạc</h2>
+
+        <div class="form-group">
+          <label>Số điện thoại <span>*</span></label>
+          <input type="tel" id="phone" placeholder="Số điện thoại" />
+        </div>
+
+        <div class="form-group">
+          <label>Địa chỉ <span>*</span></label>
+          <input type="text" id="address" placeholder="Địa chỉ" />
+        </div>
+      </div>
+
+      <!-- BUTTON -->
+      <button id="btnSave">Tạo hồ sơ bệnh nhân</button>
+    </div>
+    <script src="../../javascript/add-profile.js"></script>
+  </body>
+</html>

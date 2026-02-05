@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt Khám</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <!-- BOOKING CSS -->
+    <link rel="stylesheet" href="../../css/booking.css" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" id="btnBack"></i>
+      <span>Đặt khám</span>
+      <i class="fas fa-home" id="btnHome"></i>
+    </header>
+
+    <!-- MAIN -->
+    <div class="booking-container">
+      <!-- BIG CARD -->
+      <div class="booking-main-card">
+        <!-- STEPPER -->
+        <div class="booking-stepper">
+          <div class="step active">
+            <i class="fas fa-user"></i>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="step">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="step">
+            <i class="fas fa-calendar-alt"></i>
+          </div>
+
+          <div class="line"></div>
+
+          <div class="step">
+            <i class="fas fa-file-medical"></i>
+          </div>
+        </div>
+
+        <!-- PROFILE HEADER -->
+        <div class="profile-header">
+          <h3>Chọn hồ sơ</h3>
+
+          <button class="add-profile-btn" id="btnAddProfile">
+            <i class="fas fa-plus-circle"></i>
+            Thêm mới hồ sơ
+          </button>
+        </div>
+
+        <!-- PROFILE LIST -->
+        <div class="profile-list">
+          <div class="profile-item active">
+            <div class="avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <p>Lợi</p>
+          </div>
+
+          <div class="profile-item">
+            <div class="avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <p>Lệ</p>
+          </div>
+
+          <div class="profile-item">
+            <div class="avatar">
+              <i class="fas fa-user"></i>
+            </div>
+            <p>Minh</p>
+          </div>
+        </div>
+
+        <!-- NEXT BUTTON -->
+        <button class="booking-submit">Tiếp tục</button>
+      </div>
+    </div>
+    <script src="../../javascript/booking.js"></script>
+  </body>
+</html>

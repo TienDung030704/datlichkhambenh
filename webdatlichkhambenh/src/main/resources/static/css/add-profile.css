@@ -1,0 +1,174 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background: #f4f8ff;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 16px 22px;
+  color: #1da1f2;
+  font-size: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.booking-header i {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.booking-header span {
+  flex: 1;
+  text-align: center;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  max-width: 520px;
+  margin: 16px auto;
+  padding: 0;
+  background: transparent;
+}
+
+/* CARD */
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 16px 16px 18px;
+  margin-bottom: 14px;
+  border: 1px solid #eef2f7;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+}
+
+/* CARD TITLE */
+.card h2 {
+  font-size: 15.5px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #1f2937;
+}
+
+/* FORM GROUP */
+.form-group {
+  margin-bottom: 12px;
+}
+
+.form-group label {
+  font-size: 13.5px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.form-group label span {
+  color: #ef4444;
+}
+
+/* INPUT & SELECT */
+.form-group input,
+.form-group select {
+  width: 100%;
+  height: 42px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1.8px solid #e2e8f2;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+  background: #ffffff;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #1da1f2;
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.12);
+}
+
+/* ROW (2 cột) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* GENDER BOX */
+/* GENDER BOX */
+.gender-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+/* khung nam nữ */
+.gender-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 42px;
+  border: 1.8px solid #e2e8f2;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151; /* fix màu chữ */
+  background: #fff;
+  transition: 0.2s;
+}
+
+/* ẩn radio */
+.gender-item input {
+  display: none;
+}
+
+/* hover */
+.gender-item:hover {
+  border-color: #1da1f2;
+}
+
+/* khi chọn */
+.gender-item:has(input:checked) {
+  border-color: #1da1f2;
+  background: rgba(29, 161, 242, 0.08);
+  color: #1da1f2; /* màu xanh cố định */
+  font-weight: 600;
+}
+
+/* không cho bị đỏ bởi css khác */
+.gender-item span {
+  color: inherit !important;
+}
+
+
+/* BUTTON */
+#btnSave {
+  width: 100%;
+  margin-top: 6px;
+  background: linear-gradient(135deg, #1da1f2, #0d8ae0);
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(29, 161, 242, 0.35);
+  transition: 0.2s;
+}
+
+#btnSave:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(29, 161, 242, 0.45);
+}

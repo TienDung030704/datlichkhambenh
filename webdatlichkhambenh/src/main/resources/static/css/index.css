@@ -603,7 +603,7 @@ body {
 
 /* ================= FOOTER MEDICAL ================= */
 .footer {
-  background-color: #0b5a75;
+  background-color: #1976d2;
   color: #ffffff;
   padding: 0;
   font-size: 14px;
@@ -611,7 +611,8 @@ body {
 
 .footer-top {
   height: 6px;
-  background-color: #f7931e;
+  background-color: #26a69a;
+
 }
 
 .footer-container {
@@ -624,9 +625,9 @@ body {
 }
 
 .footer-col h3 {
-  color: #00c3ff;
-  font-size: 16px;
-  font-weight: 600;
+  color: #ffffff;
+  border-bottom: 2px solid rgba(255,255,255,0.3);
+  padding-bottom: 6px;
   margin-bottom: 12px;
 }
 
@@ -637,12 +638,34 @@ body {
 }
 
 .footer-col a {
-  color: #00c3ff;
+  color: #bbdefb;
   text-decoration: none;
 }
 
 .footer-col a:hover {
+  color: #ffffff;
   text-decoration: underline;
+}
+
+
+.footer-copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  padding: 12px 20px;
+  background-color: #1976d2;
+  color: #9fd3ff;
+  font-size: 0.9rem;
+}
+
+.footer-copyright::before,
+.footer-copyright::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.35);
 }
 
 /* Responsive */
@@ -657,7 +680,6 @@ body {
     grid-template-columns: 1fr;
   }
 }
-
 
 .contact-info {
   display: flex;

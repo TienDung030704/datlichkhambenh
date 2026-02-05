@@ -35,32 +35,45 @@
       <div class="card">
         <h2>Thông tin bệnh nhân</h2>
 
-        <div classzvdiv class="form-group">
-          <label>Họ và chữ lót <span>*</span></label>
-          <input type="text" id="lastname" placeholder="VD: Nguyễn Văn" />
+        <div class="form-group">
+          <label>Họ và chữ lót <span class="required">*</span></label>
+          <input type="text" id="lastname" placeholder="VD: Ngô Dịch..." />
         </div>
 
         <div class="form-group">
-          <label>Tên người bệnh <span>*</span></label>
-          <input type="text" id="firstname" placeholder="VD: An" />
+          <label>Tên người bệnh <span class="required">*</span></label>
+          <input type="text" id="firstname" placeholder="VD: Phong..." />
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Ngày sinh <span>*</span></label>
-            <input type="date" id="birthday" />
+            <label>Ngày sinh <span class="required">*</span></label>
+            <input
+              type="text"
+              id="birthday"
+              placeholder="DD/MM/YYYY"
+              inputmode="numeric"
+            />
           </div>
 
           <div class="form-group">
-            <label>Giới tính <span>*</span></label>
+            <label>Giới tính <span class="required">*</span></label>
+
             <div class="gender-box">
               <label class="gender-item">
-                <input type="radio" name="gender" />
-                Nam
+                <input type="radio" name="gender" value="Nam" required />
+                <div class="radio-box">
+                  <span class="dot"></span>
+                  <span>Nam</span>
+                </div>
               </label>
+
               <label class="gender-item">
-                <input type="radio" name="gender" />
-                Nữ
+                <input type="radio" name="gender" value="Nữ" />
+                <div class="radio-box">
+                  <span class="dot"></span>
+                  <span>Nữ</span>
+                </div>
               </label>
             </div>
           </div>
@@ -68,21 +81,70 @@
 
         <div class="form-row">
           <div class="form-group">
-            <label>Dân tộc <span>*</span></label>
-            <select id="ethnic">
-              <option value="">Chọn...</option>
+            <label>Dân tộc <span class="required">*</span></label>
+            <select id="ethnic" required>
+              <option value="" disabled selected hidden>Chọn...</option>
               <option>Kinh</option>
               <option>Tày</option>
               <option>Thái</option>
+              <option>Mường</option>
               <option>Hoa</option>
-              <option>Khác</option>
+              <option>Khơ-me</option>
+              <option>Nùng</option>
+              <option>H’Mông</option>
+              <option>Dao</option>
+              <option>Gia-rai</option>
+              <option>Ê-đê</option>
+              <option>Ba-na</option>
+              <option>Xơ-đăng</option>
+              <option>Sán Chay</option>
+              <option>Cơ-ho</option>
+              <option>Chăm</option>
+              <option>Sán Dìu</option>
+              <option>Hrê</option>
+              <option>Mnông</option>
+              <option>Ra-glai</option>
+              <option>Xtiêng</option>
+              <option>Bru-Vân Kiều</option>
+              <option>Thổ</option>
+              <option>Giáy</option>
+              <option>Cơ-tu</option>
+              <option>Gié Triêng</option>
+              <option>Mạ</option>
+              <option>Khơ-mú</option>
+              <option>Co</option>
+              <option>Tà-ôi</option>
+              <option>Chơ-ro</option>
+              <option>Kháng</option>
+              <option>Xinh-mun</option>
+              <option>Hà Nhì</option>
+              <option>Chu-ru</option>
+              <option>Lào</option>
+              <option>La Chí</option>
+              <option>Phù Lá</option>
+              <option>La Hủ</option>
+              <option>La Ha</option>
+              <option>Pà Thẻn</option>
+              <option>Lự</option>
+              <option>Ngái</option>
+              <option>Chứt</option>
+              <option>Lô Lô</option>
+              <option>Mảng</option>
+              <option>Cờ Lao</option>
+              <option>Bố Y</option>
+              <option>Cống</option>
+              <option>Si La</option>
+              <option>Pu Péo</option>
+              <option>Rơ-măm</option>
+              <option>Brâu</option>
+              <option>Ơ-đu</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Nghề nghiệp <span>*</span></label>
-            <select id="job">
-              <option value="">Chọn...</option>
+            <label>Nghề nghiệp <span class="required">*</span></label>
+            <select id="job" required>
+              <option value="" disabled selected hidden>Chọn...</option>
               <option>Sinh viên</option>
               <option>Nhân viên</option>
               <option>Kinh doanh</option>
@@ -97,18 +159,167 @@
         <h2>Thông tin liên lạc</h2>
 
         <div class="form-group">
-          <label>Số điện thoại <span>*</span></label>
-          <input type="tel" id="phone" placeholder="Số điện thoại" />
+          <label>Số điện thoại <span class="required">*</span></label>
+          <input type="tel" id="phone" placeholder="Số điện thoại..." />
         </div>
 
         <div class="form-group">
-          <label>Địa chỉ <span>*</span></label>
-          <input type="text" id="address" placeholder="Địa chỉ" />
+          <label>Email <span class="required">*</span></label>
+          <input type="email" id="email" placeholder="Email..." required />
+        </div>
+      </div>
+
+      <!-- CARD 3: ĐỊA CHỈ -->
+      <div class="card">
+        <h2>Địa chỉ</h2>
+
+        <div class="form-group">
+          <label>Quốc gia <span class="required"></span></label>
+          <input type="text" value="Việt Nam" disabled />
+        </div>
+
+        <div class="form-group">
+          <label>Tỉnh thành <span class="required">*</span></label>
+          <select id="province" required>
+            <option value="" disabled selected hidden>
+              Chọn tỉnh thành...
+            </option>
+
+            <option>Hà Nội</option>
+            <option>TP Hồ Chí Minh</option>
+            <option>Đà Nẵng</option>
+            <option>Hải Phòng</option>
+            <option>Cần Thơ</option>
+
+            <option>An Giang</option>
+            <option>Bà Rịa - Vũng Tàu</option>
+            <option>Bắc Giang</option>
+            <option>Bắc Kạn</option>
+            <option>Bạc Liêu</option>
+            <option>Bắc Ninh</option>
+            <option>Bến Tre</option>
+            <option>Bình Định</option>
+            <option>Bình Dương</option>
+            <option>Bình Phước</option>
+            <option>Bình Thuận</option>
+            <option>Cà Mau</option>
+            <option>Cao Bằng</option>
+            <option>Đắk Lắk</option>
+            <option>Đắk Nông</option>
+            <option>Điện Biên</option>
+            <option>Đồng Nai</option>
+            <option>Đồng Tháp</option>
+            <option>Gia Lai</option>
+            <option>Hà Giang</option>
+            <option>Hà Nam</option>
+            <option>Hà Tĩnh</option>
+            <option>Hải Dương</option>
+            <option>Hậu Giang</option>
+            <option>Hòa Bình</option>
+            <option>Hưng Yên</option>
+            <option>Khánh Hòa</option>
+            <option>Kiên Giang</option>
+            <option>Kon Tum</option>
+            <option>Lai Châu</option>
+            <option>Lâm Đồng</option>
+            <option>Lạng Sơn</option>
+            <option>Lào Cai</option>
+            <option>Long An</option>
+            <option>Nam Định</option>
+            <option>Nghệ An</option>
+            <option>Ninh Bình</option>
+            <option>Ninh Thuận</option>
+            <option>Phú Thọ</option>
+            <option>Phú Yên</option>
+            <option>Quảng Bình</option>
+            <option>Quảng Nam</option>
+            <option>Quảng Ngãi</option>
+            <option>Quảng Ninh</option>
+            <option>Quảng Trị</option>
+            <option>Sóc Trăng</option>
+            <option>Sơn La</option>
+            <option>Tây Ninh</option>
+            <option>Thái Bình</option>
+            <option>Thái Nguyên</option>
+            <option>Thanh Hóa</option>
+            <option>Thừa Thiên Huế</option>
+            <option>Tiền Giang</option>
+            <option>Trà Vinh</option>
+            <option>Tuyên Quang</option>
+            <option>Vĩnh Long</option>
+            <option>Vĩnh Phúc</option>
+            <option>Yên Bái</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quận huyện</label>
+            <input type="text" id="district" placeholder="VD: Quận 1" />
+          </div>
+
+          <div class="form-group">
+            <label>Phường xã <span class="required">*</span></label>
+            <input
+              type="text"
+              id="ward"
+              placeholder="VD: Phường Bến Nghé"
+              required
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Địa chỉ thường trú <span class="required">*</span></label>
+          <textarea
+            id="fullAddress"
+            rows="3"
+            placeholder="Số nhà, tên đường..."
+            required
+          ></textarea>
+        </div>
+      </div>
+
+      <!-- CARD 4: GIẤY TỜ ĐỊNH DANH -->
+      <div class="card">
+        <h2>
+          <i class="fa-solid fa-shield-halved"></i>
+          Giấy tờ định danh
+        </h2>
+
+        <div class="form-group">
+          <label>Số CCCD</label>
+          <input
+            type="text"
+            id="cccd"
+            placeholder="Nhập số CCCD..."
+            inputmode="numeric"
+            maxlength="12"
+          />
+          <small class="note">
+            (Nếu chưa có CCCD, vui lòng nhập Số định danh cá nhân hoặc Hộ chiếu)
+          </small>
+        </div>
+
+        <div class="form-group">
+          <label>Số Hộ chiếu</label>
+          <input type="text" id="passport" placeholder="Hộ chiếu..." />
+        </div>
+
+        <div class="form-group">
+          <label>Số định danh cá nhân</label>
+          <input
+            type="text"
+            id="personalId"
+            placeholder="Số định danh..."
+            inputmode="numeric"
+            maxlength="12"
+          />
         </div>
       </div>
 
       <!-- BUTTON -->
-      <button id="btnSave">Tạo hồ sơ bệnh nhân</button>
+      <button id="btnSave" type="button">Tạo hồ sơ bệnh nhân</button>
     </div>
     <script src="../../javascript/add-profile.js"></script>
   </body>

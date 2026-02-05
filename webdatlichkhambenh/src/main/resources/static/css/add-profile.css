@@ -49,6 +49,9 @@ body {
   margin-bottom: 14px;
   border: 1px solid #eef2f7;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+
+  max-height: 540px;    
+  overflow: hidden;     
 }
 
 /* CARD TITLE */
@@ -72,9 +75,10 @@ body {
   color: #374151;
 }
 
-.form-group label span {
+.form-group label .required {
   color: #ef4444;
 }
+
 
 /* INPUT & SELECT */
 .form-group input,
@@ -104,53 +108,85 @@ body {
   margin-bottom: 8px;
 }
 
-/* GENDER BOX */
-/* GENDER BOX */
+/* ===== GENDER ===== */
 .gender-box {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 12px;
 }
 
-/* khung nam nữ */
 .gender-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 42px;
-  border: 1.8px solid #e2e8f2;
-  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
-  font-weight: 500;
-  color: #374151; /* fix màu chữ */
-  background: #fff;
-  transition: 0.2s;
 }
 
-/* ẩn radio */
 .gender-item input {
   display: none;
 }
 
+.radio-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  height: 42px;
+  padding: 0 14px;
+
+  border: 1.8px solid #e2e8f2;
+  border-radius: 12px;
+  background: #fff;
+
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+
+  transition: 0.2s;
+}
+
+/* vòng tròn */
+.radio-box .dot {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #9ca3af;
+  border-radius: 50%;
+  position: relative;
+}
+
+.radio-box .dot::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background: #1da1f2;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 0.2s;
+}
+
 /* hover */
-.gender-item:hover {
+.gender-item:hover .radio-box {
   border-color: #1da1f2;
 }
 
-/* khi chọn */
-.gender-item:has(input:checked) {
+/* khi được chọn */
+.gender-item input:checked + .radio-box {
   border-color: #1da1f2;
   background: rgba(29, 161, 242, 0.08);
-  color: #1da1f2; /* màu xanh cố định */
+}
+
+.gender-item input:checked + .radio-box .dot {
+  border-color: #1da1f2;
+}
+
+.gender-item input:checked + .radio-box .dot::after {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.gender-item input:checked + .radio-box span:last-child {
+  color: #1da1f2;
   font-weight: 600;
 }
-
-/* không cho bị đỏ bởi css khác */
-.gender-item span {
-  color: inherit !important;
-}
-
 
 /* BUTTON */
 #btnSave {
@@ -171,4 +207,82 @@ body {
 #btnSave:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(29, 161, 242, 0.45);
+}
+
+/* ===== FIX RED RADIO REQUIRED ===== */
+input[type="radio"]:invalid {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Không cho radio-box bị đỏ theo */
+.gender-item input:invalid + .radio-box {
+  border-color: #e2e8f2;
+  background: #fff;
+}
+
+/* Placeholder input */
+.form-group input::placeholder {
+  color: #9ca3af;       /* xám nhạt */
+  font-weight: 400;
+}
+
+/* Mặc định: khi chưa chọn → xám */
+.form-group select {
+  color: #9ca3af;
+}
+
+/* Khi đã chọn option thật → chữ đen */
+.form-group select:required:valid {
+  color: #111827;
+}
+
+/* Danh sách dropdown luôn chữ đen */
+.form-group select option {
+  color: #111827;
+}
+
+/* TEXTAREA */
+.form-group textarea {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1.8px solid #e2e8f2;
+  font-size: 14px;
+  resize: none;
+  outline: none;
+  transition: 0.2s;
+  font-family: "Inter", sans-serif;
+}
+
+.form-group textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-group textarea:focus {
+  border-color: #1da1f2;
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.12);
+}
+
+.card h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.card h2 i {
+  color: #1e88e5;
+  font-size: 20px;
+}
+
+.note {
+  display: block;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  font-style: italic;
+}
+
+input::placeholder {
+  color: #b0b7c3;
 }

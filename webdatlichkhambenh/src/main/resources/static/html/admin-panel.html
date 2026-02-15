@@ -9,6 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/admin-panel.css" />
+    <link rel="stylesheet" href="../css/admin-chat.css" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -45,6 +46,18 @@
             <a href="#" class="nav-link" data-section="patients">
               <i class="fas fa-users"></i>
               <span>Bệnh nhân</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="contacts">
+              <i class="fas fa-envelope"></i>
+              <span>Liên hệ & Hỗ trợ</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="livechat">
+              <i class="fas fa-comments"></i>
+              <span>Live Chat Support</span>
             </a>
           </li>
           <li class="nav-item">
@@ -280,6 +293,100 @@
         </div>
       </div>
 
+
+
+      <!-- Contacts Management Section -->
+      <div
+        class="contacts-content section-content"
+        id="contactsSection"
+        style="display: none"
+      >
+        <div class="section-header">
+          <h2>Quản lý Liên hệ & Hỗ trợ</h2>
+          <div class="section-actions">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input
+                type="text"
+                placeholder="Tìm kiếm tin nhắn..."
+                id="searchContacts"
+              />
+            </div>
+            <select id="contactStatusFilter" onchange="filterContacts()">
+              <option value="">Tất cả trạng thái</option>
+              <option value="NEW">Mới</option>
+              <option value="READ">Đã xem</option>
+              <option value="REPLIED">Đã phản hồi</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Họ tên</th>
+                <th>Email</th>
+                <th>Chủ đề</th>
+                <th>Ngày gửi</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="contactsTableBody">
+              <!-- Dữ liệu sẽ được load từ database -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Live Chat Section (NEW) -->
+      <div class="chat-content section-content" id="livechatSection" style="display: none">
+          <div class="section-header">
+              <h2>Trung tâm Live Chat</h2>
+              <div class="reply-target-indicator" id="replyTarget" style="display: none; align-items: center; gap: 5px;">
+                  <span id="replyTargetLabel">Đang trả lời: ...</span>
+                  <i class="fas fa-times-circle" id="clearRecipient" style="cursor: pointer;" title="Hủy"></i>
+              </div>
+          </div>
+          
+          <div class="chat-console-container">
+              <!-- Left Panel: Active Users -->
+              <div class="chat-users-panel">
+                  <div class="chat-users-header">
+                      Khách hàng đang Chat
+                  </div>
+                  <div class="user-list" id="chatUserList">
+                      <!-- Users will be added here dynamically -->
+                      <div class="user-item" style="justify-content: center; color: #94a3b8; font-style: italic; font-size: 13px;" id="noUsersLabel">
+                          Chưa có ai nhắn tin
+                      </div>
+                  </div>
+              </div>
+              
+              <!-- Right Panel: Chat Area -->
+              <div class="chat-main-panel">
+                  <div class="chat-main-header">
+                      <div id="chatHeaderTitle" style="font-weight: 600;">Chọn một khách hàng để chat</div>
+                      <div class="chat-controls">
+                          <button class="btn btn-sm btn-danger" id="endChatBtn" style="display: none;">kết thúc</button>
+                      </div>
+                  </div>
+                  <div class="chat-console-messages" id="consoleMessages">
+                      <div class="console-message bot">Hệ thống sẵn sàng. Bấm vào tin nhắn của khách để trả lời riêng.</div>
+                  </div>
+                  
+                  <div class="chat-input-toolbar">
+                      <input type="text" id="consoleInput" class="console-input" placeholder="Nhập tin nhắn..." autocomplete="off">
+                      <button id="sendConsoleBtn" class="console-btn-send">
+                          <i class="fas fa-paper-plane"></i> Gửi
+                      </button>
+                  </div>
+              </div>
+          </div>
+      </div>
+
       <!-- Other sections (Doctors, Patients, Settings) -->
       <div class="section-content" id="doctorsSection" style="display: none">
         <h2>Bác sĩ & Chuyên khoa</h2>
@@ -305,6 +412,77 @@
       </div>
     </div>
 
+    <!-- Contact Details Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Chi tiết tin nhắn (Latest)</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="detail-group">
+                    <label>Người gửi:</label>
+                    <p id="modalSenderInfo"></p>
+                </div>
+                <div class="detail-group">
+                    <label>Email:</label>
+                    <p id="modalEmail"></p>
+                </div>
+                <div class="detail-group">
+                    <label>Ngày gửi:</label>
+                    <p id="modalDate"></p>
+                </div>
+                 <div class="detail-group">
+                    <label>Chủ đề:</label>
+                    <p id="modalSubject" style="font-weight: 600;"></p>
+                </div>
+                <div class="detail-group">
+                    <label>Nội dung:</label>
+                    <div id="modalMessage" class="message-box"></div>
+                </div>
+                 <div class="detail-group" id="modalImageGroup" style="display: none;">
+                    <label>Hình ảnh đính kèm:</label>
+                    <div class="image-box">
+                        <img id="modalImage" src="" alt="Attachment" style="max-width: 100%; max-height: 300px; border-radius: 4px; cursor: pointer;" onclick="window.open(this.src, '_blank')">
+                    </div>
+                </div>
+                <div class="detail-group">
+                    <label>Trạng thái:</label>
+                    <span id="modalStatus"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!-- Email Reply removed as requested -->
+                <button id="btnResetStatus" class="btn btn-warning" title="Dùng để test lại"><i class="fas fa-undo"></i> Reset</button>
+                <button id="btnReplyChat" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Gửi xác nhận & Chat</button>
+                <button id="btnClose" class="btn btn-secondary">Đóng</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div id="replyModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="closeReplyModal">&times;</span>
+            <h2>Phản hồi Liên hệ</h2>
+            <div class="form-group">
+                <label>Người nhận:</label>
+                <div id="replyToName" style="font-weight: bold; margin-bottom: 10px;"></div>
+            </div>
+            <div class="form-group">
+                <label>Nội dung phản hồi:</label>
+                <textarea id="replyContent" rows="5" class="form-control" placeholder="Nhập nội dung phản hồi..."></textarea>
+            </div>
+            <div style="text-align: right; margin-top: 15px;">
+                <button class="btn btn-secondary" id="cancelReplyBtn">Hủy</button>
+                <button class="btn btn-primary" id="sendReplyBtn">Gửi Phản Hồi</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../javascript/admin-panel.js"></script>
-  </body>
+    <script src="../javascript/admin-chat.js"></script>
+</body>
 </html>

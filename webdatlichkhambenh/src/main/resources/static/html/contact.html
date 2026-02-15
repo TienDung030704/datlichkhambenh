@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Liên Hệ - HealthCare</title>
+    <link rel="stylesheet" href="../css/contact.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="contact-container">
+      <a href="../index.html" class="back-link"
+        ><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a
+      >
+
+      <div class="section-header">
+        <h1>Liên Hệ Với Chúng Tôi</h1>
+        <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn</p>
+      </div>
+
+      <div class="contact-content">
+        <!-- Contact Info -->
+        <div class="contact-info-section">
+          <h2>Thông Tin Liên Hệ</h2>
+
+          <div class="info-item">
+            <i class="fas fa-map-marker-alt"></i>
+            <p>215 Hồng Bàng, Phường 11, Quận 5, TP.HCM</p>
+          </div>
+
+          <div class="info-item">
+            <i class="fas fa-phone-alt"></i>
+            <p>1900 2115</p>
+          </div>
+
+          <div class="info-item">
+            <i class="fas fa-envelope"></i>
+            <p>support@healthcare.vn</p>
+          </div>
+
+          <div class="social-media">
+            <a href="#"><i class="fab fa-facebook-f"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-youtube"></i></a>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-section">
+          <h2>Gửi Tin Nhắn Cho Chúng Tôi</h2>
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="fullName">Họ và Tên *</label>
+              <input
+                type="text"
+                id="fullName"
+                placeholder="Nhập họ và tên của bạn"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input
+                type="email"
+                id="email"
+                placeholder="Nhập địa chỉ email"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="phoneNumber">Số Điện Thoại</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                placeholder="Nhập số điện thoại"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="subject">Chủ Đề</label>
+              <input
+                type="text"
+                id="subject"
+                placeholder="Bạn cần hỗ trợ về vấn đề gì?"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="image">Đính kèm ảnh (Tùy chọn)</label>
+              <input type="file" id="image" accept="image/*" />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Nội Dung *</label>
+              <textarea
+                id="message"
+                rows="5"
+                placeholder="Nhập nội dung tin nhắn..."
+                required
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">Gửi Tin Nhắn</button>
+
+            <div id="notification" class="notification"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Widget Integration -->
+    <div id="chatWidgetBtn" class="chat-widget-btn" title="Chat với chúng tôi">
+        <i class="fas fa-comments" style="font-size: 28px;"></i>
+    </div>
+    
+    <div id="chatBox" class="chat-box">
+        <div class="chat-header">
+            <div class="chat-header-info">
+                <div class="online-dot"></div>
+                <span>Trợ lý Y tế Online</span>
+            </div>
+            <div class="chat-header-actions" style="display: flex; gap: 10px;">
+                <span id="clearChatBtn" style="cursor: pointer;" title="Xóa lịch sử chat"><i class="fas fa-trash"></i></span>
+                <span id="closeChatBtn" style="cursor: pointer;" title="Đóng"><i class="fas fa-times"></i></span>
+            </div>
+        </div>
+        
+        <!-- Login Overlay -->
+        <div id="chatLoginOverlay" class="chat-login-overlay">
+            <div class="chat-login-title">Thông tin của bạn</div>
+            <div class="chat-login-desc">Vui lòng nhập tên để bắt đầu chat</div>
+            <input type="text" id="chatGuestName" class="chat-login-input" placeholder="Tên của bạn...">
+            <button id="chatLoginBtn" class="chat-login-btn">Bắt đầu chat</button>
+        </div>
+
+        <!-- Delete Confirmation Modal -->
+        <div id="deleteConfirmModal" class="chat-modal">
+            <div class="chat-modal-content">
+                <div class="chat-modal-text">Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện?</div>
+                <div class="chat-modal-actions">
+                    <button id="cancelDeleteBtn" class="modal-btn cancel">Hủy</button>
+                    <button id="confirmDeleteBtn" class="modal-btn confirm">Xóa</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="chatMessages" class="chat-messages">
+            <div class="message received">
+                <strong>Medical Bot</strong><br>
+                Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?<br>
+                <span class="message-time">Vừa xong</span>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <button class="quick-btn">🕒 Giờ làm việc</button>
+            <button class="quick-btn">💰 Bảng giá</button>
+            <button class="quick-btn">📍 Địa chỉ</button>
+            <button class="quick-btn">📞 Tư vấn dặt lịch</button>
+        </div>
+        
+        <div class="chat-input-area">
+            <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." disabled>
+            <button class="send-btn" id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <!-- Chat Dependencies -->
+    <link rel="stylesheet" href="../css/chat-widget.css?v=1.1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+    <script src="../javascript/chat-widget.js?v=1.9"></script>
+    <script src="../javascript/auth-utils.js?v=1.1"></script> <!-- Verify auth for name -->
+
+    <script src="../javascript/contact.js"></script>
+  </body>
+</html>

@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Lưu tokens và user info
         const userData = {
           username: result.username,
+          fullName: result.fullName,
           accessToken: result.accessToken,
           refreshToken: result.refreshToken,
         };

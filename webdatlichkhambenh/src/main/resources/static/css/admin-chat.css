@@ -1,0 +1,197 @@
+/* Admin Chat Console Styles */
+.chat-console-container {
+    display: flex;
+    height: 70vh; /* Occupy good amount of screen */
+    gap: 20px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+/* User List (Left Panel) - Optional for MVP but good structure */
+.chat-users-panel {
+    width: 280px;
+    border-right: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    background: #f8fafc;
+}
+
+.chat-users-header {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    font-weight: 600;
+    color: #475569;
+}
+
+.user-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.user-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-item:hover, .user-item.active {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    background: #cbd5e1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+}
+
+/* Chat Area (Right Panel) */
+.chat-main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-main-header {
+    padding: 15px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.chat-console-messages {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    background: #f8fafc;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.console-message {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    position: relative;
+}
+
+.console-message.received {
+    background: white;
+    align-self: flex-start; /* From Users */
+    border: 1px solid #e2e8f0;
+    cursor: pointer; /* Click to reply */
+}
+
+.console-message.received:hover {
+    border-color: #007bff;
+}
+
+.console-message.sent {
+    background: #eff6ff;
+    align-self: flex-end; /* From Admin */
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+}
+
+.console-message.bot {
+    background: #f0fdf4;
+    align-self: center;
+    border: 1px dashed #86efac;
+    color: #166534;
+    font-size: 13px;
+    max-width: 90%;
+}
+
+.message-meta {
+    font-size: 11px;
+    color: #94a3b8;
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.reply-badge {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: #3b82f6;
+    color: white;
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    display: none;
+}
+
+.console-message.received.selected {
+    border: 2px solid #007bff;
+    background: #f0f9ff;
+}
+
+.chat-input-toolbar {
+    padding: 15px;
+    background: white;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.reply-target-indicator {
+    font-size: 12px;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: none;
+}
+
+.reply-target-indicator.visible {
+    display: inline-block;
+}
+
+.console-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    outline: none;
+}
+
+.console-input:focus {
+    border-color: #007bff;
+}
+
+.console-btn-send {
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.console-btn-send:hover {
+    background: #0069d9;
+}

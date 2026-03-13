@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt Lịch Khám Bệnh</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/booking.css" />
+    <link rel="stylesheet" href="../../css/specialty-selection.css" />
+  </head>
+
+  <body>
+    <!-- HEADER -->
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" id="btnBack"></i>
+      <span id="headerTitle">Chọn hồ sơ</span>
+      <i class="fas fa-home" id="btnHome"></i>
+    </header>
+
+    <!-- MAIN -->
+    <div class="container">
+      <!-- STEPPER -->
+      <div class="booking-stepper">
+        <div class="step active" id="step1">👤</div>
+        <div class="line"></div>
+        <div class="step" id="step2">👨‍⚕️</div>
+        <div class="line"></div>
+        <div class="step">📅</div>
+        <div class="line"></div>
+        <div class="step">⏰</div>
+        <div class="line"></div>
+        <div class="step">📋</div>
+      </div>
+
+      <!-- STEP 1: SELECT PROFILE -->
+      <div id="step1Container" class="booking-main-card">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          "
+        >
+          <h2
+            style="margin: 0; font-size: 18px; font-weight: 700; color: #1f2937"
+          >
+            Chọn hồ sơ bệnh nhân
+          </h2>
+          <button class="add-profile-btn" id="btnAddProfile">
+            <i class="fas fa-plus"></i>
+            Thêm
+          </button>
+        </div>
+
+        <!-- PROFILE CARDS -->
+        <div
+          id="profileDetailCards"
+          style="display: flex; flex-direction: column; gap: 10px"
+        >
+          <!-- Profile cards will be inserted here -->
+        </div>
+
+        <!-- NEXT BUTTON -->
+        <button class="next-btn" id="btnProfileNext" style="margin-top: 20px">
+          Tiếp tục <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- STEP 2: SELECT SPECIALTY -->
+      <div id="step2Container" class="booking-main-card" style="display: none">
+        <h2>Chọn chuyên khoa</h2>
+        <p style="color: #6b7280; margin: 0 0 16px 0">
+          Vui lòng chọn chuyên khoa mà bạn muốn khám
+        </p>
+
+        <!-- SPECIALTY LIST -->
+        <div class="specialty-list" id="specialtyList">
+          <div class="loading">Đang tải danh sách chuyên khoa...</div>
+        </div>
+      </div>
+
+      <!-- SELECTED INFO -->
+      <div class="selected-info" id="selectedInfo" style="display: none">
+        <h3>Thông tin đã chọn</h3>
+        <p>Chuyên khoa: <strong id="selectedSpecialtyName"></strong></p>
+        <button class="next-btn" id="btnSpecialtyNext">
+          Tiếp tục <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../../javascript/booking.js"></script>
+  </body>
+</html>

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn ngày khám</title>
+
+    <link rel="stylesheet" href="../../css/select-doctor.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header class="booking-header">
+        <i class="fas fa-arrow-left" onclick="history.back()"></i>
+        <span>Chọn ngày khám</span>
+        <i class="fas fa-home" onclick="location.href = '../../index.html'"></i>
+      </header>
+
+      <!-- stepper -->
+      <div class="booking-stepper">
+        <div class="step active">👤</div>
+        <div class="line"></div>
+        <div class="step active">📅</div>
+        <div class="line"></div>
+        <div class="step">👨‍⚕️</div>
+        <div class="line"></div>
+        <div class="step">⏰</div>
+        <div class="line"></div>
+        <div class="step">📋</div>
+      </div>
+
+      <div class="booking-main-card">
+        <h2>Chọn ngày khám</h2>
+
+        <div class="days-tabs">
+          <button onclick="selectDate('Thứ 2')">Thứ 2</button>
+          <button onclick="selectDate('Thứ 3')">Thứ 3</button>
+          <button onclick="selectDate('Thứ 4')">Thứ 4</button>
+          <button onclick="selectDate('Thứ 5')">Thứ 5</button>
+          <button onclick="selectDate('Thứ 6')">Thứ 6</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function selectDate(day) {
+        localStorage.setItem("selectedDay", day);
+
+        window.location.href = "select-doctor.html";
+      }
+    </script>
+    <script src="../../javascript/select-date.js"></script>
+  </body>
+</html>

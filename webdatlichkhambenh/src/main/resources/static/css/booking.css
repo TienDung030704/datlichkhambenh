@@ -1,0 +1,818 @@
+/* ================= STEPPER ================= */
+
+.booking-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 0 30px;
+  background: white;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.step {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f0f5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 20px;
+  transition: 0.3s;
+}
+
+.step.active {
+  background: #1da1f2;
+  color: white;
+}
+
+.line {
+  width: 50px;
+  height: 3px;
+  background: #e2e8f2;
+  border-radius: 2px;
+}
+
+/* ================= CONTAINER ================= */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 16px 22px;
+  color: #1da1f2;
+  font-size: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.booking-header i {
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.booking-header i:hover {
+  opacity: 0.7;
+}
+
+.booking-header span {
+  flex: 1;
+  text-align: center;
+}
+
+/* ================= MAIN CARD ================= */
+.booking-main-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.booking-main-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* ================= ADD PROFILE BUTTON ================= */
+.add-profile-btn {
+  background: #eaf4ff;
+  color: #1da1f2;
+  border: none;
+  padding: 9px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: 0.2s;
+}
+
+.add-profile-btn:hover {
+  background: #dbeaff;
+}
+
+.add-profile-btn i {
+  font-size: 14px;
+}
+
+/* ================= PROFILE DETAIL CARDS ================= */
+.profile-detail-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: #ffffff;
+  border: 1.8px solid #e2e8f2;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.profile-detail-card:hover {
+  border-color: #1da1f2;
+  background: #f6f9ff;
+}
+
+.profile-detail-card.active {
+  border-color: #1da1f2;
+  background: #eaf4ff;
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.15);
+}
+
+.profile-detail-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e6f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1da1f2;
+  font-size: 18px;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.profile-detail-info {
+  flex: 1;
+}
+
+.profile-detail-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 6px;
+}
+
+.profile-detail-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.profile-detail-id,
+.profile-detail-phone {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.profile-detail-id i,
+.profile-detail-phone i {
+  color: #1da1f2;
+  font-size: 11px;
+}
+
+.profile-detail-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  color: #1da1f2;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* ================= NEXT BUTTON ================= */
+.next-btn {
+  width: 100%;
+  padding: 13px;
+  background: linear-gradient(135deg, #1da1f2, #0d8ae0);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 18px rgba(29, 161, 242, 0.35);
+  transition: 0.2s;
+}
+
+.next-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(29, 161, 242, 0.45);
+}
+
+.next-btn:active {
+  transform: translateY(0);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 640px) {
+  .container {
+    padding: 12px;
+  }
+
+  .booking-main-card {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  .booking-stepper {
+    padding: 16px 0 20px;
+    gap: 6px;
+  }
+
+  .step {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  .line {
+    width: 40px;
+  }
+
+  .profile-detail-card {
+    padding: 12px 14px;
+  }
+
+  .profile-detail-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+
+  .profile-detail-name {
+    font-size: 14px;
+  }
+
+  .profile-detail-meta {
+    gap: 10px;
+    font-size: 12px;
+  }
+}
+
+/* ================= PROFILE HEADER ================= */
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 22px;
+}
+
+.profile-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+/* ================= ADD PROFILE BUTTON ================= */
+
+.add-profile-btn {
+  background: #eaf4ff;
+  color: #1da1f2;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.add-profile-btn:hover {
+  background: #dbeaff;
+}
+
+/* ================= PROFILE LIST ================= */
+
+.profile-list {
+  display: flex;
+  gap: 22px;
+  margin-bottom: 35px;
+}
+
+.profile-item {
+  text-align: center;
+  cursor: pointer;
+}
+
+.profile-item p {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+}
+
+.profile-item.active p {
+  color: #1da1f2;
+}
+
+.profile-item.active .avatar {
+  border: 3px solid #1da1f2;
+  background: #eaf4ff;
+}
+
+/* ================= HEADER ICON ALIGN ================= */
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: white;            
+  padding: 20px 30px;
+  color: #1da1f2;                
+  font-size: 24px;               
+  font-weight: 600;
+  border-bottom: 1px solid #e5eaf2;
+}
+
+.booking-header i {
+  font-size: 28px;             
+  color: #1da1f2;
+  cursor: pointer;
+}
+
+.booking-header span {
+  flex: 1;
+  text-align: center;
+}
+
+/* ================= BIG MAIN CARD ================= */
+.booking-main-card {
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 22px 26px;              
+  max-width: 900px;               
+  margin: 0 auto;                 
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+}
+
+.booking-submit {
+  max-width: 220px;
+  margin-top: 25px;
+}
+
+.booking-stepper {
+  padding-top: 10px;
+  padding-bottom: 20px;
+}
+
+.profile-list {
+  margin-bottom: 25px;
+}
+
+/* ================= AVATAR ================= */
+
+.avatar {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  background: #eef4ff;              /* nền xanh nhạt */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  margin-bottom: 8px;
+
+  border: 2px solid #e2e8f2;        /* viền xám nhạt */
+  box-shadow: inset 0 0 0 6px #f7faff; /* vòng trong */
+  transition: all 0.25s ease;
+}
+
+/* avatar đang chọn */
+
+.profile-item.active .avatar {
+  background: #eaf4ff;
+  border-color: #1da1f2;
+  box-shadow: inset 0 0 0 6px #ffffff;
+}
+
+.profile-detail {
+  margin-top: 20px;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: #f6f9ff;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  border: 2px solid transparent;
+}
+
+.profile-card:hover {
+  background: #eef4ff;
+}
+
+.profile-card.active {
+  border-color: #1da1f2;
+  background: #eef4ff;
+}
+
+.profile-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #e6f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1da1f2;
+  font-size: 18px;
+  margin-right: 14px;
+}
+
+.profile-info {
+  flex: 1;
+  font-weight: 600;
+  color: #1677ff;
+  font-size: 16px;
+}
+
+.profile-arrow {
+  color: #a0a0a0;
+  font-size: 18px;
+}
+
+/* ================= AVATAR LIST (TOP) ================= */
+
+.profile-avatar-list {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+  margin: 30px 0;
+  flex-wrap: wrap;
+  padding-left: 28px;
+}
+
+.avatar-item {
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.avatar-item .avatar-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #eef4ff;
+  border: 2px solid #d4d4d4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  color: #1da1f2;
+  margin: 0 auto 8px;
+  transition: all 0.3s ease;
+}
+
+.avatar-item.active .avatar-circle {
+  background: #eaf4ff;
+  border-color: #1da1f2;
+  box-shadow: 0 0 0 3px rgba(29, 161, 242, 0.2);
+}
+
+.avatar-item p {
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+  padding: 0 5px;
+}
+
+/* ================= PROFILE DETAIL CARDS (BOTTOM) ================= */
+
+.profile-detail-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 30px 0;
+}
+
+.profile-detail-card {
+  padding: 16px;
+  background: #f6f9ff;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.profile-detail-card:hover {
+  background: #eef4ff;
+  border-color: #1da1f2;
+}
+
+.profile-detail-card.active {
+  background: #eaf4ff;
+  border-color: #1da1f2;
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.15);
+}
+
+.profile-detail-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e6f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1da1f2;
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.profile-detail-info {
+  flex: 1;
+}
+
+.profile-detail-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1677ff;
+  margin: 0 0 8px 0;
+}
+
+.profile-detail-meta {
+  display: flex;
+  gap: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.profile-detail-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-detail-id i {
+  color: #1da1f2;
+  font-size: 12px;
+}
+
+.profile-detail-phone {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.profile-detail-phone i {
+  color: #1da1f2;
+  font-size: 12px;
+}
+
+.profile-detail-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  color: #a0a0a0;
+  font-size: 18px;
+}
+
+/* ================= NEXT BUTTON ================= */
+
+.profile-nav-button {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.next-btn {
+  padding: 12px 30px;
+  background: #1da1f2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.next-btn:hover {
+  background: #1691d4;
+  transform: translateX(3px);
+}
+
+.next-btn:active {
+  transform: translateX(1px);
+}
+/* ================= SPECIALTY SELECTION STYLES ================= */
+
+.specialty-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.specialty-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  background: #ffffff;
+  border: 1.8px solid #e2e8f2;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.specialty-item:hover {
+  border-color: #1da1f2;
+  background: #f6f9ff;
+}
+
+.specialty-item.selected {
+  border-color: #1da1f2;
+  background: #eaf4ff;
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.15);
+}
+
+.specialty-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #f0f5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: #1da1f2;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.specialty-info {
+  flex: 1;
+}
+
+.specialty-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 4px;
+}
+
+.specialty-description {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.specialty-details {
+  text-align: right;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.specialty-count {
+  font-weight: 600;
+  color: #1da1f2;
+}
+
+.specialty-arrow {
+  font-size: 18px;
+  color: #1da1f2;
+  margin-left: 12px;
+}
+
+.detail-btn {
+  background: #eaf4ff;
+  color: #1da1f2;
+  border: 1px solid #1da1f2;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.detail-btn:hover {
+  background: #1da1f2;
+  color: white;
+}
+
+/* ================= SELECTED PROFILE (SPECIALTY PAGE) ================= */
+
+.selected-profile {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  background: #f6f9ff;
+  border-radius: 14px;
+  margin-bottom: 20px;
+  border: 2px solid transparent;
+}
+
+.profile-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #e6f0ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1da1f2;
+  font-size: 20px;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-info .name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.profile-info .sub {
+  font-size: 12px;
+  color: #9ca3af;
+  margin: 2px 0 0 0;
+}
+
+/* ================= LOADING ANIMATION ================= */
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  color: #9ca3af;
+  font-size: 15px;
+}
+
+.loading::after {
+  content: "";
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-left: 8px;
+  border: 2.5px solid #eaf4ff;
+  border-top-color: #1da1f2;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ================= SELECTED INFO ================= */
+
+.selected-info {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 18px;
+  margin-top: 20px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  border-left: 4px solid #10b981;
+}
+
+.selected-info h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 12px 0;
+}
+
+.selected-info p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 8px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.selected-info strong {
+  color: #1f2937;
+  font-weight: 600;
+}

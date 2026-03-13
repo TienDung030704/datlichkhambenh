@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: "Inter", sans-serif;
+  font-family: "Noto Sans", sans-serif;
   line-height: 1.6;
   color: #333;
   background: #eef7fb;
@@ -601,44 +601,84 @@ body {
   margin-top: 50px;
 }
 
-/* Footer */
+/* ================= FOOTER MEDICAL ================= */
 .footer {
-  background: #1565c0;
-  color: white;
-  padding: 60px 0 20px;
+  background-color: #1976d2;
+  color: #ffffff;
+  padding: 0;
+  font-size: 14px;
+}
+
+.footer-top {
+  height: 6px;
+  background-color: #26a69a;
+
 }
 
 .footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  max-width: 1300px;
+  margin: auto;
+  padding: 30px 20px 40px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
 }
 
-.footer-section h3 {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+.footer-col h3 {
+  color: #ffffff;
+  border-bottom: 2px solid rgba(255,255,255,0.3);
+  padding-bottom: 6px;
+  margin-bottom: 12px;
 }
 
-.footer-section ul {
-  list-style: none;
+.footer-col p {
+  margin: 6px 0;
+  line-height: 1.6;
+  color: #ffffff;
 }
 
-.footer-section ul li {
-  margin-bottom: 10px;
-}
-
-.footer-section ul li a {
-  color: #e3f2fd;
+.footer-col a {
+  color: #bbdefb;
   text-decoration: none;
-  transition: color 0.3s;
 }
 
-.footer-section ul li a:hover {
-  color: white;
+.footer-col a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+
+.footer-copyright {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+
+  padding: 12px 20px;
+  background-color: #1976d2;
+  color: #9fd3ff;
+  font-size: 0.9rem;
+}
+
+.footer-copyright::before,
+.footer-copyright::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 576px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 .contact-info {

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn thông tin khám - Đặt Lịch Khám Bệnh</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/chon-thong-tin-kham.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="page-wrapper">
+      <div class="container">
+        <!-- ===== HEADER ===== -->
+        <header class="booking-header">
+          <button class="btn-icon" id="btnBack">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <span class="header-title">Chọn thông tin khám</span>
+          <button class="btn-icon" id="btnHome">
+            <i class="fas fa-home"></i>
+          </button>
+        </header>
+
+        <!-- ===== STEPPER ===== -->
+        <div class="stepper">
+          <div class="step-item done">
+            <div class="step-dot"><i class="fas fa-user"></i></div>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step-item current">
+            <div class="step-dot"><i class="fas fa-stethoscope"></i></div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step-item">
+            <div class="step-dot"><i class="fas fa-file-alt"></i></div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step-item">
+            <div class="step-dot"><i class="fas fa-wallet"></i></div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step-item">
+            <div class="step-dot"><i class="fas fa-clipboard-list"></i></div>
+          </div>
+        </div>
+
+        <!-- ===== MAIN INFO CARD ===== -->
+        <div class="info-card">
+          <!-- Chuyên khoa -->
+          <div class="info-row" onclick="goSelectSpecialty()">
+            <div class="info-icon-wrap specialty">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="info-text">
+              <div class="info-label">Chuyên khoa</div>
+              <div class="info-value empty" id="valSpecialty">Chưa chọn</div>
+            </div>
+            <div class="info-check" id="checkSpecialty"></div>
+          </div>
+          <div class="row-divider"></div>
+
+          <!-- Ngày khám -->
+          <div class="info-row" onclick="goSelectDoctor()">
+            <div class="info-icon-wrap date">
+              <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="info-text">
+              <div class="info-label">Ngày khám</div>
+              <div class="info-value empty" id="valDate">Chưa chọn</div>
+            </div>
+            <div class="info-check" id="checkDate"></div>
+          </div>
+          <div class="row-divider"></div>
+
+          <!-- Giờ khám -->
+          <div class="info-row" onclick="goSelectDoctor()">
+            <div class="info-icon-wrap time">
+              <i class="fas fa-clock"></i>
+            </div>
+            <div class="info-text">
+              <div class="info-label">Giờ khám</div>
+              <div class="info-value empty" id="valTime">Chưa chọn</div>
+            </div>
+            <div class="info-check" id="checkTime"></div>
+          </div>
+          <div class="row-divider"></div>
+
+          <!-- Bác sĩ -->
+          <div class="info-row" onclick="goSelectDoctor()">
+            <div class="info-icon-wrap doctor">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="info-text">
+              <div class="info-label">Bác sĩ</div>
+              <div class="info-value empty" id="valDoctor">Chưa chọn</div>
+            </div>
+            <div class="info-check" id="checkDoctor"></div>
+          </div>
+        </div>
+
+        <!-- ===== BẢO HIỂM Y TẾ ===== -->
+        <div class="insurance-card">
+          <div class="ins-label-wrap">
+            <div class="ins-label">
+              Bảo hiểm Y tế <span class="required">*</span>
+            </div>
+          </div>
+          <div class="ins-options">
+            <button class="ins-btn" data-ins="bhyt" data-val="true">
+              <span class="radio-dot"></span>Có
+            </button>
+            <button class="ins-btn" data-ins="bhyt" data-val="false">
+              <span class="radio-dot"></span>Không
+            </button>
+          </div>
+        </div>
+
+        <!-- ===== BẢO HIỂM TƯ NHÂN ===== -->
+        <div class="insurance-card">
+          <div class="ins-label-wrap">
+            <div class="ins-label">
+              Bảo hiểm tư nhân <span class="required">*</span>
+            </div>
+            <div class="ins-sub">(Bảo lãnh viện phí tại bệnh viện)</div>
+          </div>
+          <div class="ins-options">
+            <button class="ins-btn" data-ins="bhtn" data-val="true">
+              <span class="radio-dot"></span>Có
+            </button>
+            <button class="ins-btn" data-ins="bhtn" data-val="false">
+              <span class="radio-dot"></span>Không
+            </button>
+          </div>
+        </div>
+
+        <div class="spacer-bottom"></div>
+      </div>
+
+      <!-- ===== BOTTOM BAR ===== -->
+      <div class="bottom-bar">
+        <div class="fee-row">
+          <span class="fee-label">Tiền khám</span>
+          <span class="fee-amount">150.000đ</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn-secondary" onclick="goSelectSpecialty()">
+            <i class="fas fa-stethoscope"></i> Thêm chuyên khoa
+          </button>
+          <button class="btn-primary" onclick="proceedToConfirm()">
+            Tiếp tục <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../javascript/chon-thong-tin-kham.js"></script>
+  </body>
+</html>

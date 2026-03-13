@@ -103,12 +103,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isValid = true;
 
-    // Validate email
+    // Validate username/email
     if (!email) {
-      showFieldError(emailInput, "Vui lòng nhập email");
-      isValid = false;
-    } else if (!isValidEmail(email)) {
-      showFieldError(emailInput, "Email không hợp lệ");
+      showFieldError(emailInput, "Vui lòng nhập email hoặc tên đăng nhập");
       isValid = false;
     }
 
@@ -122,12 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     return isValid;
-  }
-
-  // Kiểm tra email hợp lệ
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   }
 
   // Hiển thị lỗi cho field

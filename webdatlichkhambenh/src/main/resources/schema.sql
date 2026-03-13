@@ -12,6 +12,7 @@ SET utf8mb4
 COLLATE utf8mb4_unicode_ci,
     doctor_count INT DEFAULT 10,
     total_doctors INT DEFAULT 10,
+    price INT DEFAULT 150000,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON

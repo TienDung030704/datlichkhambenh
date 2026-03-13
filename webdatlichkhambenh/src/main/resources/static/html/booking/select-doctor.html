@@ -32,15 +32,15 @@
 
       <!-- ===== STEPPER ===== -->
       <div class="booking-stepper">
-        <div class="step active">👤</div>
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-stethoscope"></i></div>
         <div class="line"></div>
-        <div class="step active">📅</div>
+        <div class="step"><i class="fas fa-file-alt"></i></div>
         <div class="line"></div>
-        <div class="step active">👨‍⚕️</div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
         <div class="line"></div>
-        <div class="step">⏰</div>
-        <div class="line"></div>
-        <div class="step">📋</div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
       </div>
 
       <!-- ===== MAIN CARD ===== -->
@@ -57,17 +57,32 @@
         <div class="doctors-list" id="doctorsList">
           <div class="loading">Đang tải danh sách bác sĩ...</div>
         </div>
-      </div>
 
-      <!-- ===== SELECTED INFO ===== -->
-      <div class="selected-info" id="selectedInfo" style="display: none">
-        <h3>Thông tin đã chọn</h3>
-        <p>Chuyên khoa: <strong id="selectedSpecialtyName"></strong></p>
-        <p>Bác sĩ: <strong id="selectedDoctorName"></strong></p>
-        <p>Ngày khám: <strong id="selectedDay"></strong></p>
-        <button class="next-btn" onclick="proceedToNextStep()">
-          Tiếp tục <i class="fas fa-chevron-right"></i>
-        </button>
+        <div
+          class="time-slot-section inline-time-slot"
+          id="inlineTimeSlotSection"
+          style="display: none"
+        >
+          <div class="time-slot-title">Chọn khung giờ khám</div>
+          <div class="session-switch" id="sessionSwitch">
+            <button type="button" class="session-btn" data-session="morning">
+              Buổi sáng
+            </button>
+            <button type="button" class="session-btn" data-session="afternoon">
+              Buổi chiều
+            </button>
+          </div>
+          <div class="time-range-grid" id="timeSlotGrid"></div>
+
+          <button
+            class="next-btn"
+            id="inlineNextBtn"
+            style="display: none"
+            onclick="proceedToNextStep()"
+          >
+            Tiếp tục <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
       </div>
     </div>
 

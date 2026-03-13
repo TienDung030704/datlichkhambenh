@@ -3,15 +3,15 @@ let selectedSpecialtyId = null;
 let selectedSpecialty = null;
 
 const specialtyIcons = {
-  1: "🩹",   // Da Liễu
-  2: "💉",   // Nội Tiết
-  3: "🦴",   // Xương Khớp
-  4: "🏥",   // Tổng Quát
-  5: "🤰",   // Sản - Phụ Khoa
-  6: "👂",   // Tai Mũi Họng
-  7: "🍽️",  // Tiêu Hóa Gan Mật
-  8: "🔬",   // Ung Bướu
-  9: "⚠️",   // Viêm Gan
+  1: "🩹", // Da Liễu
+  2: "💉", // Nội Tiết
+  3: "🦴", // Xương Khớp
+  4: "🏥", // Tổng Quát
+  5: "🤰", // Sản - Phụ Khoa
+  6: "👂", // Tai Mũi Họng
+  7: "🍽️", // Tiêu Hóa Gan Mật
+  8: "🔬", // Ung Bướu
+  9: "⚠️", // Viêm Gan
   10: "👶", // Nhi Khoa
 };
 
@@ -35,11 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("btnProfileNext")?.addEventListener("click", () => {
-    const selectedProfile = JSON.parse(
-      localStorage.getItem("selectedProfile")
-    );
+    const selectedProfile = getSelectedProfile();
     if (selectedProfile) {
-      goToSpecialty();
+      clearCurrentBookingSelections();
+      window.location.href = "/html/booking/chon-thong-tin-kham.html";
     } else {
       alert("Vui lòng chọn hồ sơ");
     }
@@ -47,17 +46,177 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.getElementById("btnSpecialtyNext")?.addEventListener("click", () => {
     if (selectedSpecialtyId) {
-      window.location.href = "/html/booking/select-doctor.html";
+      window.location.href = "/html/booking/select-date.html";
     } else {
       alert("Vui lòng chọn chuyên khoa");
     }
   });
 
   /* ===== LOAD DATA ===== */
-  renderProfiles();
+  initializeBookingPage();
 });
 
 /* ================= HELPERS ================= */
+function getCurrentUser() {
+  try {
+    return (
+      JSON.parse(localStorage.getItem("currentUser")) ||
+      JSON.parse(sessionStorage.getItem("currentUser"))
+    );
+  } catch (error) {
+    return null;
+  }
+}
+
+function clearCurrentBookingSelections() {
+  [
+    "selectedSpecialty",
+    "selectedDoctor",
+    "selectedDay",
+    "bookingInsurance",
+    "selectedAppointmentDate",
+    "returnTo",
+  ].forEach((key) => localStorage.removeItem(key));
+}
+
+function getProfileStorageKey() {
+  const currentUser = getCurrentUser();
+  return currentUser?.username
+    ? `profiles:${currentUser.username}`
+    : "profiles";
+}
+
+function getStoredProfiles() {
+  const scopedProfiles = localStorage.getItem(getProfileStorageKey());
+  if (scopedProfiles) {
+    try {
+      return JSON.parse(scopedProfiles) || [];
+    } catch (error) {
+      console.error("Error parsing scoped profiles:", error);
+    }
+  }
+
+  try {
+    return JSON.parse(localStorage.getItem("profiles")) || [];
+  } catch (error) {
+    console.error("Error parsing legacy profiles:", error);
+    return [];
+  }
+}
+
+function setStoredProfiles(profiles) {
+  localStorage.setItem(getProfileStorageKey(), JSON.stringify(profiles));
+}
+
+function getSelectedProfile() {
+  try {
+    return JSON.parse(localStorage.getItem("selectedProfile"));
+  } catch (error) {
+    return null;
+  }
+}
+
+function setSelectedProfile(profile) {
+  localStorage.setItem("selectedProfile", JSON.stringify(profile));
+}
+
+function normalizeProfile(profile, currentUser) {
+  if (!profile) {
+    return null;
+  }
+
+  return {
+    id: profile.id || profile.email || currentUser?.username || Date.now(),
+    fullName:
+      profile.fullName ||
+      currentUser?.fullName ||
+      currentUser?.username ||
+      "Người dùng",
+    email: profile.email || currentUser?.email || currentUser?.username || "",
+    phone: profile.phone || currentUser?.phone || "",
+    birthDate: profile.birthDate || currentUser?.birthDate || "",
+    gender: profile.gender || currentUser?.gender || "",
+    cccd: profile.cccd || "",
+    address: profile.address || currentUser?.address || "",
+    isAccountProfile: Boolean(profile.isAccountProfile ?? true),
+  };
+}
+
+function mergeAccountProfile(accountProfile) {
+  const profiles = getStoredProfiles();
+  const filteredProfiles = profiles.filter(
+    (profile) =>
+      !profile.isAccountProfile && profile.email !== accountProfile.email,
+  );
+
+  filteredProfiles.unshift(accountProfile);
+  setStoredProfiles(filteredProfiles);
+
+  const selectedProfile = getSelectedProfile();
+  if (!selectedProfile || selectedProfile.isAccountProfile) {
+    setSelectedProfile(accountProfile);
+  }
+
+  const currentUser = getCurrentUser();
+  if (currentUser) {
+    const updatedUser = { ...currentUser, ...accountProfile };
+    if (localStorage.getItem("currentUser")) {
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    } else {
+      sessionStorage.setItem("currentUser", JSON.stringify(updatedUser));
+    }
+  }
+}
+
+async function initializeBookingPage() {
+  const currentUser = getCurrentUser();
+
+  if (!currentUser?.username) {
+    alert("Vui lòng đăng nhập để đặt lịch khám.");
+    window.location.href = "/login";
+    return;
+  }
+
+  await syncAccountProfile(currentUser);
+  renderProfiles();
+}
+
+async function syncAccountProfile(currentUser) {
+  try {
+    const response = await fetch(
+      `/api/auth/profile?username=${encodeURIComponent(currentUser.username)}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error("Không thể tải hồ sơ người dùng");
+    }
+
+    const result = await response.json();
+    if (result.success && result.profile) {
+      const accountProfile = normalizeProfile(
+        { ...result.profile, isAccountProfile: true },
+        currentUser,
+      );
+      mergeAccountProfile(accountProfile);
+      return;
+    }
+  } catch (error) {
+    console.error("Error syncing account profile:", error);
+  }
+
+  const fallbackProfile = normalizeProfile(
+    { ...currentUser, isAccountProfile: true },
+    currentUser,
+  );
+  mergeAccountProfile(fallbackProfile);
+}
+
 function maskPhone(phone) {
   if (!phone) return "Chưa có";
   const digits = String(phone).replace(/\D/g, "");
@@ -73,21 +232,32 @@ function maskPhone(phone) {
 /* ================= RENDER PROFILE CARDS ================= */
 function renderProfiles() {
   const detailCardsContainer = document.getElementById("profileDetailCards");
-  const profiles = JSON.parse(localStorage.getItem("profiles")) || [];
+  const profiles = getStoredProfiles();
 
   if (!detailCardsContainer) return;
 
   if (profiles.length === 0) {
-    alert("Chưa có hồ sơ nào. Vui lòng thêm hồ sơ.");
+    alert(
+      "Tài khoản của bạn chưa có hồ sơ. Vui lòng cập nhật hồ sơ trước khi đặt lịch.",
+    );
     window.location.href = "add-profile.html";
     return;
   }
 
   detailCardsContainer.innerHTML = "";
+  const selectedProfile = getSelectedProfile();
 
   profiles.forEach((profile) => {
     const card = document.createElement("div");
     card.className = "profile-detail-card";
+
+    if (
+      selectedProfile &&
+      (selectedProfile.email === profile.email ||
+        selectedProfile.id === profile.id)
+    ) {
+      card.classList.add("active");
+    }
 
     const phone = profile.phone || "Chưa có";
     const id = profile.cccd || profile.id || "N/A";
@@ -125,9 +295,11 @@ function renderProfiles() {
 }
 
 function selectProfile(cardElement, profile) {
-  document.querySelectorAll(".profile-detail-card").forEach(el => el.classList.remove("active"));
+  document
+    .querySelectorAll(".profile-detail-card")
+    .forEach((el) => el.classList.remove("active"));
   cardElement.classList.add("active");
-  localStorage.setItem("selectedProfile", JSON.stringify(profile));
+  setSelectedProfile(profile);
 }
 
 function calculateAge(birthDate) {
@@ -155,8 +327,9 @@ function goToSpecialty() {
   step2Container.style.display = "block";
 
   // Update stepper
-  step1.classList.remove("active");
-  step2.classList.add("active");
+  step1.classList.remove("current");
+  step1.classList.add("done");
+  step2.classList.add("current");
 
   // Update header
   headerTitle.textContent = "Chọn chuyên khoa";
@@ -181,8 +354,9 @@ function goBackToProfile() {
   step2Container.style.display = "none";
 
   // Update stepper
-  step1.classList.add("active");
-  step2.classList.remove("active");
+  step1.classList.remove("done");
+  step1.classList.add("current");
+  step2.classList.remove("current");
 
   // Update header
   headerTitle.textContent = "Chọn hồ sơ";
@@ -292,7 +466,7 @@ function selectSpecialty(specialtyId, specialtyName, doctorCount) {
   });
 
   const selectedItem = document.querySelector(
-    `.specialty-item[data-specialty-id="${specialtyId}"]`
+    `.specialty-item[data-specialty-id="${specialtyId}"]`,
   );
   if (selectedItem) {
     selectedItem.classList.add("selected");
@@ -320,7 +494,7 @@ function selectSpecialty(specialtyId, specialtyName, doctorCount) {
       id: specialtyId,
       name: specialtyName,
       doctorCount: doctorCount,
-    })
+    }),
   );
 
   console.log("Selected specialty:", selectedSpecialty);

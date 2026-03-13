@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("profiles", JSON.stringify(profiles));
 
     // Lưu ID hồ sơ vừa tạo (để trang đặt lịch auto chọn)
-    localStorage.setItem("selectedProfileId", newProfile.id);
+    localStorage.setItem("selectedProfile", JSON.stringify(newProfile));
 
     // === Quay về trang đặt lịch ===
     window.location.href = "book-appointment.html";

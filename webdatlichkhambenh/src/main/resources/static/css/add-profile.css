@@ -2,7 +2,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: "Inter", sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 
 body {
@@ -252,7 +252,7 @@ input[type="radio"]:invalid {
   resize: none;
   outline: none;
   transition: 0.2s;
-  font-family: "Inter", sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 
 .form-group textarea::placeholder {

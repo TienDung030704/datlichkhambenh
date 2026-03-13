@@ -24,9 +24,26 @@
   transition: 0.3s;
 }
 
-.step.active {
+.step.done {
   background: #1da1f2;
   color: white;
+}
+
+.step.current {
+  background: #1e2a5e;
+  color: white;
+  clip-path: polygon(
+    50% 0%,
+    93.3% 25%,
+    93.3% 75%,
+    50% 100%,
+    6.7% 75%,
+    6.7% 25%
+  );
+  border-radius: 0;
+  width: 46px;
+  height: 46px;
+  font-size: 17px;
 }
 
 .line {
@@ -34,6 +51,10 @@
   height: 3px;
   background: #e2e8f2;
   border-radius: 2px;
+}
+
+.line.active {
+  background: #1da1f2;
 }
 
 /* ================= CONTAINER ================= */
@@ -237,6 +258,12 @@
     font-size: 16px;
   }
 
+  .step.current {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
   .line {
     width: 40px;
   }
@@ -329,16 +356,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: white;            
+  background: white;
   padding: 20px 30px;
-  color: #1da1f2;                
-  font-size: 24px;               
+  color: #1da1f2;
+  font-size: 24px;
   font-weight: 600;
   border-bottom: 1px solid #e5eaf2;
 }
 
 .booking-header i {
-  font-size: 28px;             
+  font-size: 28px;
   color: #1da1f2;
   cursor: pointer;
 }
@@ -352,10 +379,10 @@
 .booking-main-card {
   background: #ffffff;
   border-radius: 22px;
-  padding: 22px 26px;              
-  max-width: 900px;               
-  margin: 0 auto;                 
-  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+  padding: 22px 26px;
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
 }
 
 .booking-submit {
@@ -378,14 +405,14 @@
   width: 78px;
   height: 78px;
   border-radius: 50%;
-  background: #eef4ff;              /* nền xanh nhạt */
+  background: #eef4ff; /* nền xanh nhạt */
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 34px;
   margin-bottom: 8px;
 
-  border: 2px solid #e2e8f2;        /* viền xám nhạt */
+  border: 2px solid #e2e8f2; /* viền xám nhạt */
   box-shadow: inset 0 0 0 6px #f7faff; /* vòng trong */
   transition: all 0.25s ease;
 }

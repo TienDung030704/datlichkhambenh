@@ -122,4 +122,81 @@ public class SpecialtyController {
             return ResponseEntity.internalServerError().body(response);
         }
     }
+
+    // Update specialty price
+    @PutMapping("/{id}/price")
+    public ResponseEntity<Map<String, Object>> updateSpecialtyPrice(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Object priceObj = body.get("price");
+            if (priceObj == null) {
+                response.put("success", false);
+                response.put("message", "Thiếu giá trị price");
+                return ResponseEntity.badRequest().body(response);
+            }
+            Integer price = Integer.parseInt(priceObj.toString());
+            boolean updated = specialtyService.updateSpecialtyPrice(id, price);
+            if (updated) {
+                response.put("success", true);
+                response.put("message", "Cập nhật giá thành công");
+            } else {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy chuyên khoa");
+            }
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi khi cập nhật giá: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    // Create specialty
+    @PostMapping
+    public ResponseEntity<Map<String, Object>> createSpecialty(@RequestBody Map<String, Object> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String name = (String) body.get("name");
+            String description = (String) body.getOrDefault("description", "");
+            Object priceObj = body.get("price");
+            Integer price = priceObj != null ? Integer.parseInt(priceObj.toString()) : 150000;
+            if (name == null || name.isBlank()) {
+                response.put("success", false);
+                response.put("message", "Tên chuyên khoa không được để trống");
+                return ResponseEntity.badRequest().body(response);
+            }
+            boolean created = specialtyService.createSpecialty(name, description, price);
+            response.put("success", created);
+            response.put("message", created ? "Tạo chuyên khoa thành công" : "Lỗi khi tạo chuyên khoa");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
+
+    // Update specialty
+    @PutMapping("/{id}")
+    public ResponseEntity<Map<String, Object>> updateSpecialty(
+            @PathVariable Integer id,
+            @RequestBody Map<String, Object> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String name = (String) body.get("name");
+            String description = (String) body.getOrDefault("description", "");
+            Object priceObj = body.get("price");
+            Integer price = priceObj != null ? Integer.parseInt(priceObj.toString()) : 150000;
+            boolean updated = specialtyService.updateSpecialty(id, name, description, price);
+            response.put("success", updated);
+            response.put("message", updated ? "Cập nhật thành công" : "Không tìm thấy chuyên khoa");
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(response);
+        }
+    }
 }

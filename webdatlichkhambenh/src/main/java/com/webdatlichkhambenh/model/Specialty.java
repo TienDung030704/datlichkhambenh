@@ -6,6 +6,7 @@ public class Specialty {
     private String description;
     private Integer doctorCount;
     private Integer totalDoctors;
+    private Integer price;
     private Boolean isActive;
 
     // Constructors
@@ -67,5 +68,13 @@ public class Specialty {
 
     public void setIsActive(Boolean isActive) {
         this.isActive = isActive;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 }

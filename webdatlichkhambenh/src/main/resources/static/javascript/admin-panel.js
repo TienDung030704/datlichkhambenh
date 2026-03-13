@@ -383,7 +383,7 @@ function createAppointmentRow(appointment, showCheckbox = false) {
             </div>
         </td>
         <td>${appointment.doctorName}</td>
-        <td>${appointment.specialty}</td>
+      <td>${appointment.specialtyName || appointment.specialty || "--"}</td>
         <td>${formatDate(appointment.appointmentDate)}</td>
         <td>${appointment.appointmentTime}</td>
         <td><span class="status-badge status-${appointment.status.toLowerCase()}">${getStatusText(appointment.status)}</span></td>
@@ -443,8 +443,120 @@ async function loadAllAppointments() {
 
 // Load doctors data
 function loadDoctorsData() {
-  console.log("Loading doctors data...");
-  // TODO: Implement doctors data loading from database
+  fetch("/api/specialties")
+    .then((res) => res.json())
+    .then((data) => {
+      if (!data.success) return;
+      const tbody = document.getElementById("specialtyTableBody");
+      if (!tbody) return;
+      if (data.data.length === 0) {
+        tbody.innerHTML =
+          '<tr><td colspan="5" style="text-align:center;padding:30px;color:#9ca3af;">Chưa có chuyên khoa nào</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.data
+        .map(
+          (s, i) => `
+        <tr style="border-bottom:1px solid #f3f4f6;">
+          <td style="padding:12px 14px;color:#9ca3af;">${i + 1}</td>
+          <td style="padding:12px 14px;font-weight:600;color:#1f2937;">${s.name}</td>
+          <td style="padding:12px 14px;text-align:right;color:#1da1f2;font-weight:700;">
+            ${s.price ? s.price.toLocaleString("vi-VN") + "đ" : "150.000đ"}
+          </td>
+          <td style="padding:12px 14px;text-align:center;color:#6b7280;">${s.doctorCount || 0}</td>
+          <td style="padding:12px 14px;text-align:center;">
+            <button onclick="openEditSpecialtyModal(${s.id}, '${s.name.replace(/'/g, "\\'")}', ${s.price || 150000})"
+              style="background:#eff6ff;color:#1da1f2;border:none;border-radius:7px;padding:6px 14px;font-size:13px;font-weight:600;cursor:pointer;">
+              Sửa giá
+            </button>
+          </td>
+        </tr>
+      `,
+        )
+        .join("");
+    })
+    .catch((err) => console.error("Error loading specialties:", err));
+}
+
+// ===== SPECIALTY MODAL =====
+let _specialtyModalMode = "edit"; // "edit" | "add"
+
+function openEditSpecialtyModal(id, name, price) {
+  _specialtyModalMode = "edit";
+  document.getElementById("specialtyModalTitle").textContent =
+    "Sửa giá chuyên khoa";
+  document.getElementById("modalSpecialtyId").value = id;
+  document.getElementById("modalSpecialtyName").value = name;
+  document.getElementById("modalSpecialtyName").disabled = true;
+  document.getElementById("modalSpecialtyPrice").value = price;
+  document.getElementById("specialtyModal").style.display = "flex";
+}
+
+function openAddSpecialtyModal() {
+  _specialtyModalMode = "add";
+  document.getElementById("specialtyModalTitle").textContent =
+    "Thêm chuyên khoa";
+  document.getElementById("modalSpecialtyId").value = "";
+  document.getElementById("modalSpecialtyName").value = "";
+  document.getElementById("modalSpecialtyName").disabled = false;
+  document.getElementById("modalSpecialtyPrice").value = 150000;
+  document.getElementById("specialtyModal").style.display = "flex";
+}
+
+function closeSpecialtyModal() {
+  document.getElementById("specialtyModal").style.display = "none";
+}
+
+function saveSpecialtyModal() {
+  const name = document.getElementById("modalSpecialtyName").value.trim();
+  const price = parseInt(
+    document.getElementById("modalSpecialtyPrice").value,
+    10,
+  );
+
+  if (!price || price < 0) {
+    alert("Vui lòng nhập giá hợp lệ");
+    return;
+  }
+
+  if (_specialtyModalMode === "edit") {
+    const id = document.getElementById("modalSpecialtyId").value;
+    fetch(`/api/specialties/${id}/price`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ price }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          closeSpecialtyModal();
+          loadDoctorsData();
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      })
+      .catch(() => alert("Lỗi kết nối server"));
+  } else {
+    if (!name) {
+      alert("Vui lòng nhập tên chuyên khoa");
+      return;
+    }
+    fetch("/api/specialties", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, price }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          closeSpecialtyModal();
+          loadDoctorsData();
+        } else {
+          alert("Lỗi: " + data.message);
+        }
+      })
+      .catch(() => alert("Lỗi kết nối server"));
+  }
 }
 
 // Load patients data từ database thật

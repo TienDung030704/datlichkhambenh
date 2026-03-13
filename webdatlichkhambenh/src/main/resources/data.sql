@@ -1,16 +1,21 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE doctors;
+TRUNCATE TABLE specialties;
+SET FOREIGN_KEY_CHECKS = 1;
+
 INSERT INTO specialties
-    (name, description, doctor_count, total_doctors, is_active)
+    (specialty_name, description, is_active)
 VALUES
-    ('Da Liễu', 'Chuyên khám và điều trị các bệnh ngoài da thương gặp như: chàm, mề đay, bạch biến, lang ben, vảy nến. Các bệnh lâu tính, dị ứng, mụn (viêm nang lông, rụng tóc, nấm tóc, nấm móng). Các bệnh miễn dịch, lưới (chốc mép, viêm lưới, dẻ). Các bệnh lây qua đường tính dục (giang mai, mộng gà, lậu). Thực hiện tiêu phẩu: Laser, đốt điện - Mụn rưỡi, Mụn cóc - U lành da, U tuyến mỡ hội - Tàn nhang.', 10, 10, TRUE),
-    ('Nội Tiết', 'Chuyên khám và điều trị các bệnh về nội tiết tố như: tiểu đường, bệnh tuyến giáp, béo phì, loãng xương, rối loạn hormone. Tư vấn về chế độ ăn, luyện tập phù hợp với các bệnh về nội tiết.', 10, 10, TRUE),
-    ('Xương Khớp', 'Chuyên khám và điều trị các bệnh về xương khớp, cột sống. Điều trị các chấn thương, gãy xương, trật khớp, thoát vị đĩa đệm, thoái hóa khớp, viêm khớp dạ thấp, loãng xương. Cung cấp các phương pháp vật lý trị liệu.', 10, 10, TRUE),
-    ('Tổng Quát', 'Khám sức khỏe tổng quát, tư vấn sức khỏe, đo huyết áp, khám bệnh thông thường, tiêm chủng. Cung cấp dịch vụ chăm sóc sức khỏe cơ bản cho các bệnh nhân.', 10, 10, TRUE),
-    ('Sản - Phụ Khoa', 'Khám thai, chăm sóc phụ nữ mang thai, theo dõi sức khỏe mẹ và thai nhi. Điều trị các bệnh phụ khoa, vô sinh, rối loạn kinh nguyệt. Tư vấn kế hoạch sinh đẻ.', 10, 10, TRUE),
-    ('Tai Mũi Họng', 'Khám và điều trị các bệnh về tai như: viêm tai, điếc, ù tai. Khám và điều trị các bệnh về mũi như: viêm mũi, viêm xoang, polip mũi, tắc mũi. Khám và điều trị các bệnh về họng như: viêm họng, viêm amidan, khàn tiếng.', 10, 10, TRUE),
-    ('Tiêu Hóa Gan Mật', 'Chuyên khám và điều trị các bệnh về tiêu hóa như: loét dạ dày, tá tràng, viêm dạ dày, ợn chua, táo bón, tiêu chảy. Điều trị các bệnh về gan: viêm gan, xơ gan, gan nhiễm mỡ. Điều trị các bệnh về mật: sỏi mật, viêm túi mật, viêm tuyến tụy.', 10, 10, TRUE),
-    ('Ung Bướu', 'Khám sàng lọc và điều trị các loại ung thư. Tư vấn về các phương pháp hóa trị, xạ trị, phẫu thuật. Chăm sóc và hỗ trợ bệnh nhân ung thư. Cung cấp các liệu pháp điều trị hiện đại.', 10, 10, TRUE),
-    ('Viêm Gan', 'Chuyên khám và điều trị các loại viêm gan do virus (viêm gan A, B, C, D, E), viêm gan do rượu, viêm gan tự miễn. Khám theo dõi, chẩn đoán và điều trị viêm gan. Tư vấn về phòng ngừa viêm gan.', 10, 10, TRUE),
-    ('Nhi Khoa', 'Khám sức khỏe trẻ em, tiêm chủng, tư vấn dinh dưỡng cho trẻ. Điều trị các bệnh thường gặp ở trẻ em như: sốt, ho, cúm, các bệnh truyền nhiễm. Phát triển và theo dõi sức khỏe trẻ em.', 10, 10, TRUE);
+    ('Da Liễu', 'Chuyên khám và điều trị các bệnh ngoài da thương gặp như: chàm, mề đay, bạch biến, lang ben, vảy nến. Các bệnh lâu tính, dị ứng, mụn (viêm nang lông, rụng tóc, nấm tóc, nấm móng). Các bệnh miễn dịch, lưới (chốc mép, viêm lưới, dẻ). Các bệnh lây qua đường tính dục (giang mai, mộng gà, lậu). Thực hiện tiêu phẩu: Laser, đốt điện - Mụn rưỡi, Mụn cóc - U lành da, U tuyến mỡ hội - Tàn nhang.', TRUE),
+    ('Nội Tiết', 'Chuyên khám và điều trị các bệnh về nội tiết tố như: tiểu đường, bệnh tuyến giáp, béo phì, loãng xương, rối loạn hormone. Tư vấn về chế độ ăn, luyện tập phù hợp với các bệnh về nội tiết.', TRUE),
+    ('Xương Khớp', 'Chuyên khám và điều trị các bệnh về xương khớp, cột sống. Điều trị các chấn thương, gãy xương, trật khớp, thoát vị đĩa đệm, thoái hóa khớp, viêm khớp dạ thấp, loãng xương. Cung cấp các phương pháp vật lý trị liệu.', TRUE),
+    ('Tổng Quát', 'Khám sức khỏe tổng quát, tư vấn sức khỏe, đo huyết áp, khám bệnh thông thường, tiêm chủng. Cung cấp dịch vụ chăm sóc sức khỏe cơ bản cho các bệnh nhân.', TRUE),
+    ('Sản - Phụ Khoa', 'Khám thai, chăm sóc phụ nữ mang thai, theo dõi sức khỏe mẹ và thai nhi. Điều trị các bệnh phụ khoa, vô sinh, rối loạn kinh nguyệt. Tư vấn kế hoạch sinh đẻ.', TRUE),
+    ('Tai Mũi Họng', 'Khám và điều trị các bệnh về tai như: viêm tai, điếc, ù tai. Khám và điều trị các bệnh về mũi như: viêm mũi, viêm xoang, polip mũi, tắc mũi. Khám và điều trị các bệnh về họng như: viêm họng, viêm amidan, khàn tiếng.', TRUE),
+    ('Tiêu Hóa Gan Mật', 'Chuyên khám và điều trị các bệnh về tiêu hóa như: loét dạ dày, tá tràng, viêm dạ dày, ợn chua, táo bón, tiêu chảy. Điều trị các bệnh về gan: viêm gan, xơ gan, gan nhiễm mỡ. Điều trị các bệnh về mật: sỏi mật, viêm túi mật, viêm tuyến tụy.', TRUE),
+    ('Ung Bướu', 'Khám sàng lọc và điều trị các loại ung thư. Tư vấn về các phương pháp hóa trị, xạ trị, phẫu thuật. Chăm sóc và hỗ trợ bệnh nhân ung thư. Cung cấp các liệu pháp điều trị hiện đại.', TRUE),
+    ('Viêm Gan', 'Chuyên khám và điều trị các loại viêm gan do virus (viêm gan A, B, C, D, E), viêm gan do rượu, viêm gan tự miễn. Khám theo dõi, chẩn đoán và điều trị viêm gan. Tư vấn về phòng ngừa viêm gan.', TRUE),
+    ('Nhi Khoa', 'Khám sức khỏe trẻ em, tiêm chủng, tư vấn dinh dưỡng cho trẻ. Điều trị các bệnh thường gặp ở trẻ em như: sốt, ho, cúm, các bệnh truyền nhiễm. Phát triển và theo dõi sức khỏe trẻ em.', TRUE);
 
 INSERT INTO doctors
     (specialty_id, full_name, email, phone_number, address, license_number, experience, is_active)

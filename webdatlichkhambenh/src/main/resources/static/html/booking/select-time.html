@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Thông tin đặt khám</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="../../css/select-doctor.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        background: #f4f8ff;
+      }
+
+      .booking-main-card {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+
+      .summary-title {
+        font-size: 33px;
+        font-weight: 700;
+        margin-bottom: 4px;
+      }
+
+      .summary-subtitle {
+        font-size: 15px;
+        color: #374151;
+        margin-bottom: 10px;
+      }
+
+      .booking-detail-card {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 14px;
+        border: 1px solid #e5edf7;
+        box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+      }
+
+      .booking-detail-row {
+        display: grid;
+        grid-template-columns: 210px 1fr;
+        gap: 10px;
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+
+      .booking-detail-row .label {
+        color: #111827;
+      }
+
+      .booking-detail-row .value {
+        color: #1f2937;
+        font-weight: 600;
+      }
+
+      .booking-detail-row .value.highlight {
+        color: #145bcc;
+        text-transform: uppercase;
+      }
+
+      .total-row {
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 28px;
+        font-weight: 700;
+      }
+
+      .total-row .total-label {
+        color: #111827;
+      }
+
+      .total-row .total-value {
+        color: #145bcc;
+      }
+
+      .action-row {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+
+      .btn-outline {
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        border: 2px solid #145bcc;
+        background: #ffffff;
+        color: #145bcc;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        border: none;
+        background: #145bcc;
+        color: #ffffff;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary[disabled] {
+        opacity: 0.65;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 768px) {
+        .summary-title {
+          font-size: 26px;
+        }
+
+        .booking-detail-row {
+          grid-template-columns: 1fr;
+          gap: 4px;
+          margin-bottom: 14px;
+          font-size: 17px;
+        }
+
+        .total-row {
+          font-size: 22px;
+        }
+
+        .action-row {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="booking-header">
+        <i class="fas fa-arrow-left" id="btnBack"></i>
+        <span>Thông tin đặt khám</span>
+        <i class="fas fa-home" id="btnHome"></i>
+      </header>
+
+      <div class="booking-stepper">
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step done"><i class="fas fa-stethoscope"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-file-alt"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
+      </div>
+
+      <div class="booking-main-card">
+        <div class="summary-title">Thông tin đặt khám</div>
+        <p class="summary-subtitle">
+          Vui lòng kiểm tra thông tin đặt khám bên dưới. Hoặc “Thêm chuyên khoa”
+          mới.
+        </p>
+
+        <div class="booking-detail-card">
+          <div class="booking-detail-row">
+            <div class="label">Chuyên khoa:</div>
+            <div class="value highlight" id="summarySpecialty">--</div>
+          </div>
+          <div class="booking-detail-row">
+            <div class="label">Ngày khám:</div>
+            <div class="value" id="summaryDate">--</div>
+          </div>
+          <div class="booking-detail-row">
+            <div class="label">Phòng - Giờ khám:</div>
+            <div class="value" id="summaryRoomTime">--</div>
+          </div>
+          <div class="booking-detail-row">
+            <div class="label">Tiền khám:</div>
+            <div class="value" id="summaryFee">150.000đ</div>
+          </div>
+          <div class="booking-detail-row">
+            <div class="label">BHYT:</div>
+            <div class="value">Không</div>
+          </div>
+          <div class="booking-detail-row">
+            <div class="label">BLVP:</div>
+            <div class="value">Không</div>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <div class="total-label">Tổng tiền khám</div>
+          <div class="total-value" id="summaryTotal">150.000đ</div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn-outline" id="btnAddSpecialty">
+            Thêm chuyên khoa
+          </button>
+          <button class="btn-primary" id="btnSubmit">Tiếp tục</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../javascript/select-time.js"></script>
+  </body>
+</html>

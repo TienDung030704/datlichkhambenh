@@ -398,7 +398,7 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.specialty_name
+                       d.full_name as doctor_name, s.name as specialty_name
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id
@@ -444,7 +444,7 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.specialty_name
+                       d.full_name as doctor_name, s.name as specialty_name
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id

@@ -32,15 +32,15 @@
 
       <!-- ===== STEPPER ===== -->
       <div class="booking-stepper">
-        <div class="step active">👤</div>
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-stethoscope"></i></div>
         <div class="line"></div>
-        <div class="step active">👨‍⚕️</div>
+        <div class="step"><i class="fas fa-file-alt"></i></div>
         <div class="line"></div>
-        <div class="step">📅</div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
         <div class="line"></div>
-        <div class="step">⏰</div>
-        <div class="line"></div>
-        <div class="step">📋</div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
       </div>
 
       <!-- ===== MAIN CARD ===== -->
@@ -68,5 +68,29 @@
 
     <!-- JS -->
     <script src="../../javascript/specialty-selection.js"></script>
+
+    <!-- ===== SPECIALTY INFO OVERLAY ===== -->
+    <div
+      id="specialtyInfoOverlay"
+      style="display: none"
+      onclick="if (event.target === this) closeSpecialtyInfo();"
+    >
+      <div class="specialty-info-panel">
+        <header class="info-panel-header">
+          <i class="fas fa-arrow-left" onclick="closeSpecialtyInfo()"></i>
+          <span>Chức năng chuyên khoa</span>
+          <i class="fas fa-home" onclick="goHome()"></i>
+        </header>
+        <div class="info-panel-body">
+          <h2 id="infoSpecialtyName"></h2>
+          <p id="infoSpecialtyDesc"></p>
+        </div>
+        <div class="info-panel-footer">
+          <button id="infoSelectBtn" class="info-select-btn">
+            Chọn chuyên khoa
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

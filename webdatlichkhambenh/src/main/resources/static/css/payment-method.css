@@ -1,14 +1,4 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: "Noto Sans", sans-serif;
-  background: #e6ebf4;
-  color: #1f2937;
-}
+/* payment-method page-specific styles */
 
 .page-wrap {
   max-width: 760px;
@@ -16,83 +6,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f0f4fb;
-}
-
-.booking-header {
-  height: 64px;
-  background: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 18px;
-  border-bottom: 1px solid #e7edf8;
-  color: #1d9bf0;
-  font-size: 24px;
-}
-
-.booking-header span {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-.booking-header i {
-  cursor: pointer;
-}
-
-.booking-stepper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 16px 0 20px;
-  background: #f0f4fb;
-}
-
-.step {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: #f0f5ff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #9ca3af;
-  font-size: 18px;
-  transition: 0.3s;
-}
-
-.step.done {
-  background: #1da1f2;
-  color: #ffffff;
-}
-
-.step.current {
-  background: #1e2a5e;
-  color: #ffffff;
-  clip-path: polygon(
-    50% 0%,
-    93.3% 25%,
-    93.3% 75%,
-    50% 100%,
-    6.7% 75%,
-    6.7% 25%
-  );
-  border-radius: 0;
-  width: 46px;
-  height: 46px;
-  font-size: 17px;
-}
-
-.line {
-  width: 50px;
-  height: 3px;
-  background: #e2e8f2;
-  border-radius: 2px;
-}
-
-.line.active {
-  background: #1da1f2;
+  background: #f4f8ff;
 }
 
 .payment-content {

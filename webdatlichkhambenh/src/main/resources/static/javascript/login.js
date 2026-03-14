@@ -62,6 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Đăng nhập thành công
         showSuccess(result.message || "Đăng nhập thành công!");
 
+        // Xóa dữ liệu auth cũ khỏi localStorage để tránh xung đột tài khoản
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
         // Lưu tokens và user info
         const userData = {
           username: result.username,

@@ -1,38 +1,3 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Noto Sans", sans-serif;
-}
-
-body {
-  background: #f4f8ff;
-  min-height: 100vh;
-}
-
-/* HEADER */
-.booking-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: #ffffff;
-  padding: 16px 22px;
-  color: #1da1f2;
-  font-size: 20px;
-  font-weight: 600;
-  border-bottom: 1px solid #e6edf5;
-}
-
-.booking-header i {
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.booking-header span {
-  flex: 1;
-  text-align: center;
-}
-
 /* FORM CONTAINER */
 .form-container {
   max-width: 520px;
@@ -50,8 +15,8 @@ body {
   border: 1px solid #eef2f7;
   box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
 
-  max-height: 540px;    
-  overflow: hidden;     
+  max-height: 540px;
+  overflow: hidden;
 }
 
 /* CARD TITLE */
@@ -78,7 +43,6 @@ body {
 .form-group label .required {
   color: #ef4444;
 }
-
 
 /* INPUT & SELECT */
 .form-group input,
@@ -223,7 +187,7 @@ input[type="radio"]:invalid {
 
 /* Placeholder input */
 .form-group input::placeholder {
-  color: #9ca3af;       /* xám nhạt */
+  color: #9ca3af; /* xám nhạt */
   font-weight: 400;
 }
 

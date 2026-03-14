@@ -1,0 +1,190 @@
+/* ================================================
+   BOOKING COMMON STYLES
+   Shared across all booking pages.
+   Load this BEFORE any page-specific CSS.
+   ================================================ */
+
+/* ── RESET ── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── BODY ── */
+body {
+  font-family: "Noto Sans", sans-serif;
+  background: #f4f8ff;
+  min-height: 100vh;
+  color: #1f2937;
+}
+
+/* ── CONTAINER ── */
+.container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ── HEADER (full-width, outside .container) ── */
+.booking-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 16px 22px;
+  color: #1da1f2;
+  font-size: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #e6edf5;
+}
+
+.booking-header i,
+.booking-header .btn-icon {
+  font-size: 24px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #1da1f2;
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.booking-header i:hover,
+.booking-header .btn-icon:hover {
+  opacity: 0.7;
+}
+
+.booking-header span,
+.booking-header .header-title {
+  flex: 1;
+  text-align: center;
+  color: #1da1f2;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+/* ── STEPPER ── */
+.booking-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 0 30px;
+  background: #ffffff;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.step {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #f0f5ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.step.done {
+  background: #1da1f2;
+  color: white;
+}
+
+.step.current {
+  background: #1e2a5e;
+  color: white;
+  clip-path: polygon(
+    50% 0%,
+    93.3% 25%,
+    93.3% 75%,
+    50% 100%,
+    6.7% 75%,
+    6.7% 25%
+  );
+  border-radius: 0;
+  width: 46px;
+  height: 46px;
+  font-size: 17px;
+}
+
+.line {
+  width: 50px;
+  height: 3px;
+  background: #e2e8f2;
+  border-radius: 2px;
+}
+
+.line.active {
+  background: #1da1f2;
+}
+
+/* ── MAIN CARD ── */
+.booking-main-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
+  margin-bottom: 20px;
+}
+
+.booking-main-card h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* ── NEXT / PRIMARY BUTTON ── */
+.next-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #1da1f2, #0d8ae0);
+  color: white;
+  border: none;
+  border-radius: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(29, 161, 242, 0.35);
+  transition: 0.2s;
+}
+
+.next-btn:hover {
+  background: linear-gradient(135deg, #0d8ae0, #09aaf5);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE STEPPER ── */
+@media (max-width: 480px) {
+  .booking-stepper {
+    padding: 14px 0 20px;
+    gap: 6px;
+  }
+
+  .step {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .step.current {
+    width: 40px;
+    height: 40px;
+    font-size: 14px;
+  }
+
+  .line {
+    width: 36px;
+  }
+}

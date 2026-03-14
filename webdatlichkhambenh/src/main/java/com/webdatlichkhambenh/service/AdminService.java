@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.ArrayList;
+import java.time.LocalDate;
 
 @Service
 public class AdminService {
@@ -326,8 +328,9 @@ public class AdminService {
     public List<Map<String, Object>> getDoctorsList(int offset, int limit) {
         try {
             String sql = """
-                SELECT d.id, d.full_name, d.specialization, d.email, d.phone, 
-                       d.is_active, d.created_at, s.specialty_name
+                SELECT d.id, d.full_name, d.email, d.phone_number,
+                       d.experience, d.license_number, d.is_active, d.created_at,
+                       s.specialty_name
                 FROM doctors d
                 LEFT JOIN specialties s ON d.specialty_id = s.id
                 WHERE d.is_active = 1
@@ -341,11 +344,13 @@ public class AdminService {
             for (Map<String, Object> doctor : doctors) {
                 doctor.put("fullName", doctor.get("full_name"));
                 doctor.put("specialtyName", doctor.get("specialty_name"));
+                doctor.put("phoneNumber", doctor.get("phone_number"));
                 doctor.put("isActive", doctor.get("is_active"));
                 doctor.put("createdAt", doctor.get("created_at"));
                 
                 doctor.remove("full_name");
                 doctor.remove("specialty_name");
+                doctor.remove("phone_number");
                 doctor.remove("is_active");
                 doctor.remove("created_at");
             }
@@ -354,6 +359,184 @@ public class AdminService {
             
         } catch (Exception e) {
             System.err.println("Error getting doctors list: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    // ===================== DOCTOR DUTY SCHEDULE =====================
+
+    private void ensureDutyTable() {
+        jdbcTemplate.execute("""
+            CREATE TABLE IF NOT EXISTS doctor_duty_schedules (
+                id           INT PRIMARY KEY AUTO_INCREMENT,
+                doctor_id    INT NOT NULL,
+                schedule_date DATE NOT NULL,
+                time_slot     VARCHAR(20) NOT NULL,
+                created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                UNIQUE KEY uk_duty (doctor_id, schedule_date, time_slot),
+                FOREIGN KEY (doctor_id) REFERENCES doctors(id) ON DELETE CASCADE
+            )
+            """);
+    }
+
+    // Default time slots used throughout the hospital
+    private static final String[] DEFAULT_TIME_SLOTS = {
+        "06:30 - 07:30", "07:30 - 08:30", "08:30 - 09:30", "09:30 - 10:30", "10:30 - 11:30",
+        "13:00 - 14:00", "14:00 - 15:00", "15:00 - 16:00"
+    };
+
+    /**
+     * Auto-generate a balanced Mon–Sat duty schedule for a doctor+week.
+     * 10 groups (doctorId % 10) ensure:
+     *  - No doctor works all 6 days — each works 3–4 days/week
+     *  - Monday & Tuesday always have the most doctors on duty
+     *  - Each day is split into AM (06:30–11:30) and PM (13:00–16:00) sessions
+     *
+     * dayOffset: 0=Mon 1=Tue 2=Wed 3=Thu 4=Fri 5=Sat
+     * session:   0=AM  1=PM
+     */
+    private void autoInitDutyWeek(Integer doctorId, String weekStart) {
+        List<Object[]> batch = new ArrayList<>();
+        LocalDate monday = LocalDate.parse(weekStart);
+
+        // For each group, define which [dayOffset][session] pairs are active.
+        // Row = dayOffset (0–5), Col = session (0=AM, 1=PM)
+        boolean[][] s = new boolean[6][2];
+        switch (doctorId % 10) {
+            case 0 -> { // Mon AM+PM, Tue AM, Wed AM
+                s[0][0]=true; s[0][1]=true; s[1][0]=true; s[2][0]=true; }
+            case 1 -> { // Mon AM, Tue AM+PM, Thu AM
+                s[0][0]=true; s[1][0]=true; s[1][1]=true; s[3][0]=true; }
+            case 2 -> { // Mon AM+PM, Wed AM, Fri AM
+                s[0][0]=true; s[0][1]=true; s[2][0]=true; s[4][0]=true; }
+            case 3 -> { // Mon AM, Tue AM, Fri AM+PM
+                s[0][0]=true; s[1][0]=true; s[4][0]=true; s[4][1]=true; }
+            case 4 -> { // Mon AM, Tue AM, Sat AM
+                s[0][0]=true; s[1][0]=true; s[5][0]=true; }
+            case 5 -> { // Tue AM+PM, Wed AM+PM, Thu AM
+                s[1][0]=true; s[1][1]=true; s[2][0]=true; s[2][1]=true; s[3][0]=true; }
+            case 6 -> { // Mon AM, Wed AM, Sat AM+PM
+                s[0][0]=true; s[2][0]=true; s[5][0]=true; s[5][1]=true; }
+            case 7 -> { // Tue AM, Thu AM+PM, Fri AM
+                s[1][0]=true; s[3][0]=true; s[3][1]=true; s[4][0]=true; }
+            case 8 -> { // Wed AM+PM, Thu AM, Sat AM
+                s[2][0]=true; s[2][1]=true; s[3][0]=true; s[5][0]=true; }
+            case 9 -> { // Mon AM, Fri AM+PM, Sat AM
+                s[0][0]=true; s[4][0]=true; s[4][1]=true; s[5][0]=true; }
+        }
+
+        for (int dayOffset = 0; dayOffset < 6; dayOffset++) {
+            String dateStr = monday.plusDays(dayOffset).toString();
+            for (String slot : DEFAULT_TIME_SLOTS) {
+                boolean isMorning = slot.compareTo("12:00") < 0;
+                if (s[dayOffset][isMorning ? 0 : 1]) {
+                    batch.add(new Object[]{doctorId, dateStr, slot});
+                }
+            }
+        }
+        jdbcTemplate.batchUpdate(
+            "INSERT IGNORE INTO doctor_duty_schedules (doctor_id, schedule_date, time_slot) VALUES (?,?,?)",
+            batch);
+    }
+
+    /**
+     * Returns duty slots + appointments for the week.
+     * Auto-initialises default duty schedule if the doctor has no slots for this week.
+     */
+    public Map<String, Object> getDoctorDutySchedule(Integer doctorId, String weekStart) {
+        ensureDutyTable();
+
+        String dutySql = """
+            SELECT DATE_FORMAT(schedule_date,'%Y-%m-%d') AS scheduleDate, time_slot AS timeSlot
+            FROM doctor_duty_schedules
+            WHERE doctor_id = ?
+              AND schedule_date BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)
+            ORDER BY schedule_date, time_slot
+            """;
+        List<Map<String, Object>> dutySlots = jdbcTemplate.queryForList(dutySql, doctorId, weekStart, weekStart);
+
+        // If no slots exist — or if old logic assigned too many (>30) — regenerate
+        if (dutySlots.isEmpty() || dutySlots.size() > 30) {
+            if (!dutySlots.isEmpty()) {
+                // Delete over-assigned old slots before re-generating
+                jdbcTemplate.update(
+                    "DELETE FROM doctor_duty_schedules WHERE doctor_id = ? " +
+                    "AND schedule_date BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)",
+                    doctorId, weekStart, weekStart);
+            }
+            autoInitDutyWeek(doctorId, weekStart);
+            dutySlots = jdbcTemplate.queryForList(dutySql, doctorId, weekStart, weekStart);
+        }
+
+        String apptSql = """
+            SELECT DATE_FORMAT(a.appointment_date,'%Y-%m-%d') AS appointmentDate,
+                   a.appointment_time                          AS appointmentTime,
+                   a.status,
+                   u.full_name    AS patientName,
+                   u.phone_number AS patientPhone
+            FROM appointments a
+            JOIN users u ON a.patient_id = u.id
+            WHERE a.doctor_id = ?
+              AND a.appointment_date BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)
+              AND a.status != 'cancelled'
+            ORDER BY a.appointment_date, a.appointment_time
+            """;
+        List<Map<String, Object>> appointments = jdbcTemplate.queryForList(apptSql, doctorId, weekStart, weekStart);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("dutySlots", dutySlots);
+        result.put("appointments", appointments);
+        return result;
+    }
+
+    public void assignDutySlot(Integer doctorId, String date, String timeSlot) {
+        ensureDutyTable();
+        jdbcTemplate.update(
+            "INSERT IGNORE INTO doctor_duty_schedules (doctor_id, schedule_date, time_slot) VALUES (?,?,?)",
+            doctorId, date, timeSlot);
+    }
+
+    public void removeDutySlot(Integer doctorId, String date, String timeSlot) {
+        jdbcTemplate.update(
+            "DELETE FROM doctor_duty_schedules WHERE doctor_id=? AND schedule_date=? AND time_slot=?",
+            doctorId, date, timeSlot);
+    }
+
+    /**
+     * Get weekly schedule (appointments) for a specific doctor
+     */
+    public List<Map<String, Object>> getDoctorWeeklySchedule(Integer doctorId, String weekStart) {
+        try {
+            String sql = """
+                SELECT a.id,
+                       DATE_FORMAT(a.appointment_date, '%Y-%m-%d') as appointment_date,
+                       a.appointment_time, a.status,
+                       u.full_name as patient_name, u.phone_number as patient_phone
+                FROM appointments a
+                JOIN users u ON a.patient_id = u.id
+                WHERE a.doctor_id = ?
+                  AND a.appointment_date BETWEEN ? AND DATE_ADD(?, INTERVAL 6 DAY)
+                  AND a.status != 'cancelled'
+                ORDER BY a.appointment_date, a.appointment_time
+                """;
+
+            List<Map<String, Object>> appointments = jdbcTemplate.queryForList(sql, doctorId, weekStart, weekStart);
+
+            for (Map<String, Object> appt : appointments) {
+                appt.put("patientName", appt.get("patient_name"));
+                appt.put("patientPhone", appt.get("patient_phone"));
+                appt.put("appointmentDate", appt.get("appointment_date"));
+                appt.put("appointmentTime", appt.get("appointment_time"));
+                appt.remove("patient_name");
+                appt.remove("patient_phone");
+                appt.remove("appointment_date");
+                appt.remove("appointment_time");
+            }
+
+            return appointments;
+
+        } catch (Exception e) {
+            System.err.println("Error getting doctor weekly schedule: " + e.getMessage());
             return List.of();
         }
     }
@@ -398,7 +581,7 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.name as specialty_name
+                       d.full_name as doctor_name, s.specialty_name as specialty_name
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id
@@ -444,7 +627,7 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.name as specialty_name
+                       d.full_name as doctor_name, s.specialty_name as specialty_name
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id

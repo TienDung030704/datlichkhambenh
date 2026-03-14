@@ -15,98 +15,15 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
     />
+    <link rel="stylesheet" href="../../css/booking-common.css" />
 
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      body {
-        font-family: "Noto Sans", sans-serif;
-        background: #f0f4fb;
-        color: #1f2937;
-        min-height: 100vh;
-      }
-
       .page-wrap {
         max-width: 760px;
         margin: 0 auto;
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-      }
-
-      /* ── HEADER ── */
-      .booking-header {
-        height: 64px;
-        background: #fff;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 18px;
-        border-bottom: 1px solid #e7edf8;
-        color: #1d9bf0;
-        font-size: 24px;
-      }
-      .booking-header span {
-        font-size: 22px;
-        font-weight: 700;
-      }
-      .booking-header i {
-        cursor: pointer;
-      }
-
-      /* ── STEPPER ── */
-      .booking-stepper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 16px 0 20px;
-        background: #f0f4fb;
-      }
-      .step {
-        width: 42px;
-        height: 42px;
-        border-radius: 50%;
-        background: #f0f5ff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #9ca3af;
-        font-size: 18px;
-        transition: 0.3s;
-      }
-      .step.done {
-        background: #1da1f2;
-        color: #fff;
-      }
-      .step.current {
-        background: #1e2a5e;
-        color: #fff;
-        clip-path: polygon(
-          50% 0%,
-          93.3% 25%,
-          93.3% 75%,
-          50% 100%,
-          6.7% 75%,
-          6.7% 25%
-        );
-        border-radius: 0;
-        width: 46px;
-        height: 46px;
-        font-size: 17px;
-      }
-      .line {
-        width: 50px;
-        height: 3px;
-        background: #e2e8f2;
-        border-radius: 2px;
-      }
-      .line.active {
-        background: #1da1f2;
       }
 
       /* ── CONTENT ── */
@@ -159,7 +76,7 @@
         font-size: 13px;
         font-weight: 600;
         letter-spacing: 0.06em;
-        color: #1d9bf0;
+        color: #1da1f2;
         text-transform: uppercase;
         margin-bottom: 14px;
       }
@@ -261,13 +178,13 @@
     </style>
   </head>
   <body>
-    <div class="page-wrap">
-      <header class="booking-header">
-        <i class="fas fa-home" id="btnHome"></i>
-        <span>Đặt lịch thành công</span>
-        <span style="width: 24px"></span>
-      </header>
+    <header class="booking-header">
+      <i class="fas fa-home" id="btnHome"></i>
+      <span>Đặt lịch thành công</span>
+      <span style="width: 24px"></span>
+    </header>
 
+    <div class="page-wrap">
       <div class="booking-stepper">
         <div class="step done"><i class="fas fa-user"></i></div>
         <div class="line active"></div>

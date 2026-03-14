@@ -2,13 +2,6 @@
    SPECIALTY SELECTION STYLES
    =========================== */
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Noto Sans", sans-serif;
-}
-
 /* ===== SPECIALTY INFO OVERLAY ===== */
 #specialtyInfoOverlay {
   position: fixed;
@@ -91,7 +84,7 @@
 .info-select-btn {
   width: 100%;
   padding: 16px;
-  background: #1d4ed8;
+  background: #1da1f2;
   color: #fff;
   border: none;
   border-radius: 14px;

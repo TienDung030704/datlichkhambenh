@@ -105,6 +105,7 @@ function updatePageTitle(section) {
     dashboard: "Dashboard",
     appointments: "Quản lý đặt lịch",
     doctors: "Bác sĩ & Chuyên khoa",
+    doctorManagement: "Quản lý bác sĩ",
     patients: "Bệnh nhân",
     settings: "Cài đặt",
   };
@@ -126,6 +127,9 @@ function loadSectionData(section) {
       break;
     case "doctors":
       loadDoctorsData();
+      break;
+    case "doctorManagement":
+      loadDoctorManagementData();
       break;
     case "patients":
       loadPatientsData();
@@ -559,24 +563,575 @@ function saveSpecialtyModal() {
   }
 }
 
-// Load patients data từ database thật
-async function loadPatientsData() {
-  try {
-    showLoading(true);
+/* ===== DOCTOR MANAGEMENT ===== */
+let doctorMgmtCurrentPage = 0;
+const DOCTOR_MGMT_PAGE_SIZE = 10;
+let doctorMgmtTotal = 0;
+let doctorMgmtSearch = "";
+let doctorMgmtSpecialty = "";
+let allSpecialtiesForFilter = [];
 
-    const response = await fetch("/api/admin/patients/list");
-    if (response.ok) {
-      const patientsData = await response.json();
-      console.log("Patients loaded:", patientsData);
-      // TODO: Display patients in UI
-    } else {
-      console.error("Failed to load patients");
+// Current doctor schedule state
+let scheduleCurrentDoctorId = null;
+let scheduleCurrentDoctorName = "";
+let scheduleCurrentWeekStart = null; // Date object (Monday)
+
+async function loadDoctorManagementData() {
+  doctorMgmtCurrentPage = 0;
+  doctorMgmtSearch = "";
+  doctorMgmtSpecialty = "";
+
+  // Load specialties into filter dropdown (once)
+  if (allSpecialtiesForFilter.length === 0) {
+    try {
+      const res = await fetch("/api/specialties");
+      if (res.ok) {
+        const data = await res.json();
+        allSpecialtiesForFilter = data.data || [];
+        const sel = document.getElementById("doctorSpecialtyFilter");
+        if (sel) {
+          sel.innerHTML = '<option value="">Tất cả chuyên khoa</option>';
+          allSpecialtiesForFilter.forEach((s) => {
+            const opt = document.createElement("option");
+            opt.value = s.id;
+            opt.textContent = s.name;
+            sel.appendChild(opt);
+          });
+        }
+      }
+    } catch (e) {
+      /* ignore */
     }
-  } catch (error) {
-    console.error("Error loading patients data:", error);
+  }
+
+  const searchInput = document.getElementById("searchDoctorsMgmt");
+  const specialtySelect = document.getElementById("doctorSpecialtyFilter");
+  if (searchInput) {
+    searchInput.value = "";
+    searchInput.addEventListener(
+      "input",
+      debounce(function () {
+        doctorMgmtSearch = searchInput.value.trim();
+        doctorMgmtCurrentPage = 0;
+        fetchAndRenderDoctorsMgmt();
+      }, 350),
+    );
+  }
+  if (specialtySelect) {
+    specialtySelect.value = "";
+    specialtySelect.addEventListener("change", function () {
+      doctorMgmtSpecialty = specialtySelect.value;
+      doctorMgmtCurrentPage = 0;
+      fetchAndRenderDoctorsMgmt();
+    });
+  }
+
+  await fetchAndRenderDoctorsMgmt();
+}
+
+async function fetchAndRenderDoctorsMgmt() {
+  showLoading(true);
+  try {
+    const offset = doctorMgmtCurrentPage * DOCTOR_MGMT_PAGE_SIZE;
+    const res = await fetch(
+      `/api/admin/doctors/list?offset=${offset}&limit=${DOCTOR_MGMT_PAGE_SIZE}`,
+    );
+    if (!res.ok) throw new Error("Lỗi tải danh sách bác sĩ");
+    const data = await res.json();
+    let doctors = data.doctors || [];
+    doctorMgmtTotal = data.total || doctors.length;
+
+    // Client-side filter by name/email/phone
+    if (doctorMgmtSearch) {
+      const q = doctorMgmtSearch.toLowerCase();
+      doctors = doctors.filter(
+        (d) =>
+          (d.fullName || "").toLowerCase().includes(q) ||
+          (d.email || "").toLowerCase().includes(q) ||
+          (d.phoneNumber || "").toLowerCase().includes(q),
+      );
+    }
+    // Client-side filter by specialty
+    if (doctorMgmtSpecialty) {
+      const sp = allSpecialtiesForFilter.find(
+        (s) => String(s.id) === String(doctorMgmtSpecialty),
+      );
+      if (sp) {
+        doctors = doctors.filter(
+          (d) =>
+            (d.specialtyName || "").toLowerCase() === sp.name.toLowerCase(),
+        );
+      }
+    }
+
+    renderDoctorsMgmtTable(doctors, offset);
+    renderDoctorsMgmtPagination();
+
+    const badge = document.getElementById("doctorsMgmtTotalBadge");
+    if (badge) badge.textContent = doctorMgmtTotal;
+  } catch (err) {
+    console.error("Error loading doctors:", err);
+    const tbody = document.getElementById("doctorsMgmtTableBody");
+    if (tbody)
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:#ef4444">Lỗi tải dữ liệu bác sĩ</td></tr>`;
   } finally {
     showLoading(false);
   }
+}
+
+function renderDoctorsMgmtTable(doctors, offset) {
+  const tbody = document.getElementById("doctorsMgmtTableBody");
+  if (!tbody) return;
+  if (doctors.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:#9ca3af">Không có bác sĩ nào</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = doctors
+    .map((d, i) => {
+      const isActive = d.isActive == 1 || d.isActive === true;
+      const status = isActive
+        ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Hoạt động</span>`
+        : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Không hoạt động</span>`;
+      return `<tr>
+      <td>${offset + i + 1}</td>
+      <td><strong>${d.fullName || "--"}</strong></td>
+      <td><span style="background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:12px;font-size:12px">${d.specialtyName || "--"}</span></td>
+      <td>${d.email || "--"}</td>
+      <td>${d.phoneNumber || "--"}</td>
+      <td style="text-align:center">${d.experience != null ? d.experience + " năm" : "--"}</td>
+      <td>${status}</td>
+      <td>
+        <button onclick="openDoctorScheduleModal(${d.id}, '${(d.fullName || "").replace(/'/g, "\\'")}', '${(d.specialtyName || "").replace(/'/g, "\\'")}')"
+          style="background:#1da1f2;color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:12px;font-weight:600;cursor:pointer">
+          <i class="fas fa-calendar-alt"></i> Xem lịch
+        </button>
+      </td>
+    </tr>`;
+    })
+    .join("");
+}
+
+function renderDoctorsMgmtPagination() {
+  const totalPages = Math.ceil(doctorMgmtTotal / DOCTOR_MGMT_PAGE_SIZE);
+  const pageNumbers = document.getElementById("doctorsMgmtPageNumbers");
+  const prevBtn = document.getElementById("doctorsMgmtPrevBtn");
+  const nextBtn = document.getElementById("doctorsMgmtNextBtn");
+  if (prevBtn) prevBtn.disabled = doctorMgmtCurrentPage === 0;
+  if (nextBtn) nextBtn.disabled = doctorMgmtCurrentPage >= totalPages - 1;
+  if (!pageNumbers) return;
+  pageNumbers.innerHTML = "";
+  for (let i = 0; i < totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.className = "btn-pagination";
+    btn.style.cssText =
+      i === doctorMgmtCurrentPage
+        ? "background:#3b82f6;color:#fff;border-color:#3b82f6"
+        : "";
+    btn.textContent = i + 1;
+    btn.onclick = () => {
+      doctorMgmtCurrentPage = i;
+      fetchAndRenderDoctorsMgmt();
+    };
+    pageNumbers.appendChild(btn);
+  }
+}
+
+function changeDoctorMgmtPage(delta) {
+  const totalPages = Math.ceil(doctorMgmtTotal / DOCTOR_MGMT_PAGE_SIZE);
+  doctorMgmtCurrentPage = Math.max(
+    0,
+    Math.min(totalPages - 1, doctorMgmtCurrentPage + delta),
+  );
+  fetchAndRenderDoctorsMgmt();
+}
+
+/* ===== DOCTOR SCHEDULE / TIMETABLE ===== */
+const TIME_SLOTS = [
+  "06:30 - 07:30",
+  "07:30 - 08:30",
+  "08:30 - 09:30",
+  "09:30 - 10:30",
+  "10:30 - 11:30",
+  "13:00 - 14:00",
+  "14:00 - 15:00",
+  "15:00 - 16:00",
+];
+
+const DAY_LABELS = [
+  "Thứ 2",
+  "Thứ 3",
+  "Thứ 4",
+  "Thứ 5",
+  "Thứ 6",
+  "Thứ 7",
+  "Chủ nhật",
+];
+
+function getMondayOfCurrentWeek() {
+  const today = new Date();
+  const day = today.getDay(); // 0=Sun
+  const diff = day === 0 ? -6 : 1 - day;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff);
+  monday.setHours(0, 0, 0, 0);
+  return monday;
+}
+
+function formatDateVN(date) {
+  return date.toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function toISODateString(date) {
+  // Use local date components to avoid UTC timezone shift (e.g. UTC+7)
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
+}
+
+function openDoctorScheduleModal(doctorId, doctorName, specialtyName) {
+  scheduleCurrentDoctorId = doctorId;
+  scheduleCurrentDoctorName = doctorName;
+  scheduleCurrentWeekStart = getMondayOfCurrentWeek();
+
+  document.getElementById("scheduleModalDoctorName").textContent =
+    "Lịch khám: " + doctorName;
+  document.getElementById("scheduleModalSpecialty").textContent =
+    specialtyName || "";
+  document.getElementById("doctorScheduleModal").style.display = "flex";
+  fetchAndRenderTimetable();
+}
+
+function closeDoctorScheduleModal() {
+  document.getElementById("doctorScheduleModal").style.display = "none";
+  scheduleCurrentDoctorId = null;
+  scheduleCurrentWeekStart = null;
+}
+
+function navigateDoctorWeek(delta) {
+  if (!scheduleCurrentWeekStart) return;
+  scheduleCurrentWeekStart = new Date(scheduleCurrentWeekStart);
+  scheduleCurrentWeekStart.setDate(
+    scheduleCurrentWeekStart.getDate() + delta * 7,
+  );
+  fetchAndRenderTimetable();
+}
+
+async function fetchAndRenderTimetable() {
+  const weekStartStr = toISODateString(scheduleCurrentWeekStart);
+  const weekEnd = new Date(scheduleCurrentWeekStart);
+  weekEnd.setDate(weekEnd.getDate() + 6);
+  document.getElementById("scheduleWeekLabel").textContent =
+    `Từ ${formatDateVN(scheduleCurrentWeekStart)} đến ${formatDateVN(weekEnd)}`;
+
+  const table = document.getElementById("doctorTimetableGrid");
+  if (!table) return;
+  table.innerHTML = `<tbody><tr><td colspan="9" style="text-align:center;padding:40px;color:#6b7280;font-size:13px"><i class="fas fa-spinner fa-spin" style="color:#1e3a8a;font-size:20px;margin-bottom:10px;display:block"></i>Đang tải lịch trực...</td></tr></tbody>`;
+
+  try {
+    const res = await fetch(
+      `/api/admin/doctors/${scheduleCurrentDoctorId}/duty?weekStart=${weekStartStr}`,
+    );
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    if (!data.success && !data.dutySlots)
+      throw new Error(data.message || "Lỗi dữ liệu");
+    renderTimetableGrid(table, data.dutySlots || [], scheduleCurrentWeekStart);
+  } catch (err) {
+    console.error("fetchAndRenderTimetable error:", err);
+    table.innerHTML = `<tbody><tr><td colspan="9" style="text-align:center;padding:32px">
+      <div style="color:#ef4444;font-size:14px;font-weight:600;margin-bottom:12px"><i class="fas fa-exclamation-circle"></i> Không thể tải lịch trực</div>
+      <div style="color:#6b7280;font-size:12px;margin-bottom:16px">${err.message}</div>
+      <button onclick="fetchAndRenderTimetable()" style="background:#1e3a8a;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:13px;cursor:pointer;font-weight:600">
+        <i class="fas fa-redo"></i> Tải lại
+      </button>
+    </td></tr></tbody>`;
+  }
+}
+
+async function toggleDutySlot(doctorId, dateStr, timeSlot, isOnDuty) {
+  try {
+    await fetch(`/api/admin/doctors/${doctorId}/duty`, {
+      method: isOnDuty ? "DELETE" : "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ date: dateStr, timeSlot }),
+    });
+    fetchAndRenderTimetable();
+  } catch (e) {
+    console.error("toggleDutySlot error", e);
+  }
+}
+
+function renderTimetableGrid(table, dutySlots, weekMonday) {
+  // Build duty set: key = "YYYY-MM-DD|HH:MM"
+  const dutySet = new Set();
+  for (const s of dutySlots) {
+    const d = (s.scheduleDate || s.schedule_date || "").split("T")[0];
+    const t = (s.timeSlot || s.time_slot || "").substring(0, 5);
+    if (d && t) dutySet.add(`${d}|${t}`);
+  }
+
+  // Column dates Mon → Sun
+  const colDates = [];
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(weekMonday);
+    d.setDate(weekMonday.getDate() + i);
+    colDates.push(d);
+  }
+
+  // Styles
+  const HDR_S = `background:#1e3a8a;color:#fff;padding:11px 8px;border:1px solid #2d4fa8;font-weight:700;text-align:center;font-size:12px;white-space:nowrap`;
+  const TIME_S = `background:#1e3a8a;color:#fff;padding:0 8px;border:1px solid #2d4fa8;font-weight:600;text-align:center;font-size:11px;white-space:nowrap;min-width:95px;vertical-align:middle`;
+  const EMPTY_S = `background:#fff;border:1px solid #dee2e6;vertical-align:middle;text-align:center;cursor:pointer;transition:background .15s`;
+  const DUTY_S = `background:#f0fdf4;border:1px solid #86efac;vertical-align:middle;text-align:center;cursor:pointer;transition:background .15s`;
+
+  // ── Header ──
+  let html = `<thead><tr>
+    <th style="${HDR_S};min-width:95px">Giờ khám</th>`;
+  for (let i = 0; i < 7; i++) {
+    const d = colDates[i];
+    const isToday = toISODateString(d) === toISODateString(new Date());
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    const todayBorder = isToday ? "border-bottom:3px solid #facc15;" : "";
+    html += `<th style="${HDR_S};min-width:130px;${todayBorder}">${DAY_LABELS[i]}${isToday ? " <span style='font-size:9px;background:#facc15;color:#1e3a8a;padding:1px 4px;border-radius:3px;font-weight:700'>HÔM NAY</span>" : ""}<br><span style="font-size:11px;font-weight:400;opacity:0.85">${dd}/${mm}</span></th>`;
+  }
+  html += `<th style="${HDR_S};min-width:95px">Giờ khám</th>
+  </tr></thead><tbody>`;
+
+  // ── Rows ──
+  TIME_SLOTS.forEach((slot, rowIdx) => {
+    // Section separators
+    if (rowIdx === 0) {
+      html += `<tr><td colspan="9" style="background:#eff6ff;text-align:center;padding:5px 0;color:#1e40af;font-size:11px;font-weight:700;border:1px solid #bfdbfe;letter-spacing:1px">
+        ☀ BUỔI SÁNG
+      </td></tr>`;
+    } else if (rowIdx === 5) {
+      html += `<tr><td colspan="9" style="background:#f0fdf4;text-align:center;padding:5px 0;color:#166534;font-size:11px;font-weight:700;border:1px solid #bbf7d0;letter-spacing:1px">
+        ⛅ BUỔI CHIỀU
+      </td></tr>`;
+    }
+
+    const [startPart, endPart] = slot.split(" - ");
+    const slotStart = startPart.trim();
+    const rowH = "height:62px";
+
+    html += `<tr style="${rowH}">
+      <td style="${TIME_S}">
+        <div style="font-size:12px;font-weight:700">${slotStart}</div>
+        <div style="font-size:10px;opacity:0.75;margin-top:2px">${endPart ? "→ " + endPart.trim() : ""}</div>
+      </td>`;
+
+    for (let i = 0; i < 7; i++) {
+      const dateStr = toISODateString(colDates[i]);
+      const key = `${dateStr}|${slotStart}`;
+      const isOnDuty = dutySet.has(key);
+
+      if (isOnDuty) {
+        html += `<td onclick="toggleDutySlot(${scheduleCurrentDoctorId},'${dateStr}','${slot}',true)"
+             style="${DUTY_S};padding:8px"
+             title="Đang trực – click để bỏ phân công">
+          <div style="display:inline-block;width:8px;height:8px;background:#22c55e;border-radius:50%;margin-bottom:4px"></div>
+          <div style="font-size:11px;color:#16a34a;font-weight:600">Đang trực</div>
+          <div style="font-size:10px;color:#9ca3af;margin-top:2px">Chưa có BN</div>
+        </td>`;
+      } else {
+        html += `<td onclick="toggleDutySlot(${scheduleCurrentDoctorId},'${dateStr}','${slot}',false)"
+             style="${EMPTY_S};padding:8px"
+             title="Click để phân công trực">
+          <span style="color:#d1d5db;font-size:20px;line-height:1">+</span>
+        </td>`;
+      }
+    }
+
+    html += `<td style="${TIME_S}">
+      <div style="font-size:12px;font-weight:700">${slotStart}</div>
+      <div style="font-size:10px;opacity:0.75;margin-top:2px">${endPart ? "→ " + endPart.trim() : ""}</div>
+    </td></tr>`;
+  });
+
+  // ── Footer ──
+  html += `</tbody><tfoot><tr>
+    <th style="${HDR_S}">Giờ khám</th>`;
+  for (let i = 0; i < 7; i++) {
+    const d = colDates[i];
+    const dd = String(d.getDate()).padStart(2, "0");
+    const mm = String(d.getMonth() + 1).padStart(2, "0");
+    html += `<th style="${HDR_S}">${DAY_LABELS[i]}<br><span style="font-size:11px;font-weight:400;opacity:0.85">${dd}/${mm}</span></th>`;
+  }
+  html += `<th style="${HDR_S}">Giờ khám</th>
+  </tr></tfoot>`;
+
+  table.innerHTML = html;
+}
+
+// Load patients data từ database thật
+/* ===== PATIENTS MANAGEMENT ===== */
+let patientCurrentPage = 0;
+const PATIENT_PAGE_SIZE = 10;
+let patientTotalCount = 0;
+let patientSearchQuery = "";
+let patientStatusFilter = "";
+
+async function loadPatientsData() {
+  patientCurrentPage = 0;
+  patientSearchQuery = "";
+  patientStatusFilter = "";
+
+  const searchInput = document.getElementById("searchPatients");
+  const statusSelect = document.getElementById("patientStatusFilter");
+  if (searchInput) {
+    searchInput.value = "";
+    searchInput.addEventListener(
+      "input",
+      debounce(function () {
+        patientSearchQuery = searchInput.value.trim();
+        patientCurrentPage = 0;
+        fetchAndRenderPatients();
+      }, 350),
+    );
+  }
+  if (statusSelect) {
+    statusSelect.value = "";
+    statusSelect.addEventListener("change", function () {
+      patientStatusFilter = statusSelect.value;
+      patientCurrentPage = 0;
+      fetchAndRenderPatients();
+    });
+  }
+
+  await fetchAndRenderPatients();
+}
+
+async function fetchAndRenderPatients() {
+  showLoading(true);
+  try {
+    let url;
+    const offset = patientCurrentPage * PATIENT_PAGE_SIZE;
+
+    if (patientSearchQuery) {
+      url = `/api/admin/patients/search?query=${encodeURIComponent(patientSearchQuery)}&offset=${offset}&limit=${PATIENT_PAGE_SIZE}`;
+    } else {
+      url = `/api/admin/patients/list?offset=${offset}&limit=${PATIENT_PAGE_SIZE}`;
+    }
+
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Không thể tải danh sách bệnh nhân");
+
+    const data = await response.json();
+    let patients = data.patients || [];
+    patientTotalCount = data.total || patients.length;
+
+    // Filter by status on client side (search endpoint doesn't support it)
+    if (patientStatusFilter === "active") {
+      patients = patients.filter((p) => p.isActive == 1 || p.isActive === true);
+    } else if (patientStatusFilter === "inactive") {
+      patients = patients.filter(
+        (p) => p.isActive == 0 || p.isActive === false,
+      );
+    }
+
+    renderPatientsTable(patients);
+    renderPatientsPagination();
+
+    const badge = document.getElementById("patientsTotalBadge");
+    if (badge) badge.textContent = patientTotalCount;
+  } catch (error) {
+    console.error("Error loading patients:", error);
+    const tbody = document.getElementById("patientsTableBody");
+    if (tbody)
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:#ef4444">Lỗi tải dữ liệu bệnh nhân</td></tr>`;
+  } finally {
+    showLoading(false);
+  }
+}
+
+function renderPatientsTable(patients) {
+  const tbody = document.getElementById("patientsTableBody");
+  if (!tbody) return;
+
+  if (patients.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:32px;color:#9ca3af">Không có bệnh nhân nào</td></tr>`;
+    return;
+  }
+
+  const offset = patientCurrentPage * PATIENT_PAGE_SIZE;
+  tbody.innerHTML = patients
+    .map((p, i) => {
+      const isActive = p.isActive == 1 || p.isActive === true;
+      const statusBadge = isActive
+        ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Hoạt động</span>`
+        : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Bị khóa</span>`;
+
+      const dob = p.dateOfBirth
+        ? new Date(p.dateOfBirth).toLocaleDateString("vi-VN")
+        : "--";
+      const createdAt = p.createdAt
+        ? new Date(p.createdAt).toLocaleDateString("vi-VN")
+        : "--";
+      const gender =
+        p.gender === "MALE"
+          ? "Nam"
+          : p.gender === "FEMALE"
+            ? "Nữ"
+            : p.gender || "--";
+      const fullName = p.fullName || p.username || "--";
+      const email = p.email || "--";
+      const phone = p.phoneNumber || "--";
+
+      return `<tr>
+      <td>${offset + i + 1}</td>
+      <td><strong>${fullName}</strong><br><span style="color:#6b7280;font-size:12px">@${p.username || ""}</span></td>
+      <td>${email}</td>
+      <td>${phone}</td>
+      <td>${gender}</td>
+      <td>${dob}</td>
+      <td>${createdAt}</td>
+      <td>${statusBadge}</td>
+    </tr>`;
+    })
+    .join("");
+}
+
+function renderPatientsPagination() {
+  const totalPages = Math.ceil(patientTotalCount / PATIENT_PAGE_SIZE);
+  const pageNumbers = document.getElementById("patientsPageNumbers");
+  const prevBtn = document.getElementById("patientsPrevBtn");
+  const nextBtn = document.getElementById("patientsNextBtn");
+
+  if (prevBtn) prevBtn.disabled = patientCurrentPage === 0;
+  if (nextBtn) nextBtn.disabled = patientCurrentPage >= totalPages - 1;
+
+  if (!pageNumbers) return;
+  pageNumbers.innerHTML = "";
+  for (let i = 0; i < totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.className =
+      "btn-pagination" + (i === patientCurrentPage ? " active" : "");
+    btn.style.cssText =
+      i === patientCurrentPage
+        ? "background:#3b82f6;color:#fff;border-color:#3b82f6"
+        : "";
+    btn.textContent = i + 1;
+    btn.onclick = () => {
+      patientCurrentPage = i;
+      fetchAndRenderPatients();
+    };
+    pageNumbers.appendChild(btn);
+  }
+}
+
+function changePatientPage(delta) {
+  const totalPages = Math.ceil(patientTotalCount / PATIENT_PAGE_SIZE);
+  patientCurrentPage = Math.max(
+    0,
+    Math.min(totalPages - 1, patientCurrentPage + delta),
+  );
+  fetchAndRenderPatients();
 }
 
 // Load settings data
@@ -940,6 +1495,12 @@ function logout() {
   if (confirm("Bạn có chắc chắn muốn đăng xuất?")) {
     localStorage.removeItem("adminUser");
     sessionStorage.removeItem("adminUser");
+    localStorage.removeItem("currentUser");
+    sessionStorage.removeItem("currentUser");
+    localStorage.removeItem("accessToken");
+    sessionStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    sessionStorage.removeItem("refreshToken");
     window.location.href = "../index.html";
   }
 }

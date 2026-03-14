@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
@@ -260,6 +262,87 @@ public class AdminController {
             response.put("message", "Error getting appointments list: " + e.getMessage());
         }
         
+        return ResponseEntity.ok(response);
+    }
+
+    // ===================== DOCTOR DUTY SCHEDULE =====================
+
+    @GetMapping("/doctors/{id}/duty")
+    public ResponseEntity<Map<String, Object>> getDoctorDutySchedule(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "") String weekStart) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            if (weekStart.isEmpty()) {
+                weekStart = LocalDate.now().with(DayOfWeek.MONDAY).toString();
+            }
+            Map<String, Object> data = adminService.getDoctorDutySchedule(id, weekStart);
+            response.put("success", true);
+            response.put("weekStart", weekStart);
+            response.putAll(data);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/doctors/{id}/duty")
+    public ResponseEntity<Map<String, Object>> assignDutySlot(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            adminService.assignDutySlot(id, body.get("date"), body.get("timeSlot"));
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/doctors/{id}/duty")
+    public ResponseEntity<Map<String, Object>> removeDutySlot(
+            @PathVariable Integer id,
+            @RequestBody Map<String, String> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            adminService.removeDutySlot(id, body.get("date"), body.get("timeSlot"));
+            response.put("success", true);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Get weekly schedule for a specific doctor
+     */
+    @GetMapping("/doctors/{id}/schedule")
+    public ResponseEntity<Map<String, Object>> getDoctorWeeklySchedule(
+            @PathVariable Integer id,
+            @RequestParam(defaultValue = "") String weekStart) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            if (weekStart.isEmpty()) {
+                LocalDate monday = LocalDate.now().with(DayOfWeek.MONDAY);
+                weekStart = monday.toString();
+            }
+
+            List<Map<String, Object>> schedule = adminService.getDoctorWeeklySchedule(id, weekStart);
+
+            response.put("success", true);
+            response.put("schedule", schedule);
+            response.put("weekStart", weekStart);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error getting doctor schedule: " + e.getMessage());
+        }
+
         return ResponseEntity.ok(response);
     }
 }

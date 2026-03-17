@@ -237,10 +237,29 @@ public class AdminController {
         
         return ResponseEntity.ok(response);
     }
-    
+
     /**
-     * Get all appointments for management section
+     * Notification polling endpoint — returns recent booked appointments.
+     * sinceId=0  → last N booked appointments (initial load)
+     * sinceId>0  → booked appointments with id > sinceId (new arrivals for polling)
      */
+    @GetMapping("/notifications")
+    public ResponseEntity<Map<String, Object>> getNotifications(
+            @RequestParam(defaultValue = "0") int sinceId,
+            @RequestParam(defaultValue = "10") int limit) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Map<String, Object>> notifications = adminService.getNewBookedAppointments(sinceId, limit);
+            response.put("success", true);
+            response.put("notifications", notifications);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+
+
     @GetMapping("/appointments/list")
     public ResponseEntity<Map<String, Object>> getAppointmentsList(
             @RequestParam(defaultValue = "0") int offset,
@@ -263,6 +282,31 @@ public class AdminController {
         }
         
         return ResponseEntity.ok(response);
+    }
+
+    /**
+     * Update appointment status (admin only)
+     */
+    @PutMapping("/appointments/{id}/status")
+    public ResponseEntity<Map<String, Object>> updateAppointmentStatus(
+            @PathVariable int id,
+            @RequestBody Map<String, String> body) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String newStatus = body.get("status");
+            if (newStatus == null || newStatus.isBlank()) {
+                response.put("success", false);
+                response.put("message", "Thiếu trường 'status'");
+                return ResponseEntity.badRequest().body(response);
+            }
+            Map<String, Object> result = adminService.updateAppointmentStatus(id, newStatus.trim());
+            boolean ok = Boolean.TRUE.equals(result.get("success"));
+            return ResponseEntity.status(ok ? 200 : 400).body(result);
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi server: " + e.getMessage());
+            return ResponseEntity.status(500).body(response);
+        }
     }
 
     // ===================== DOCTOR DUTY SCHEDULE =====================

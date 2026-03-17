@@ -54,6 +54,22 @@ async function checkAuthStatus() {
                 </div>`
             : "";
 
+          const notifBellHTML = isAdmin
+            ? `<div class="notif-bell-wrapper" id="notifBellWrapper">
+                <button class="notif-bell-btn" onclick="toggleNotifDropdown(event)">
+                  <i class="fas fa-bell"></i>
+                  <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+                </button>
+                <div class="notif-dropdown" id="notifDropdown">
+                  <div class="notif-header">
+                    <span>Lịch hẹn mới</span>
+                    <a href="html/admin-panel.html" class="notif-view-all">Xem tất cả</a>
+                  </div>
+                  <div id="notifList"><div class="notif-empty">Đang tải...</div></div>
+                </div>
+              </div>`
+            : "";
+
           authButtons.innerHTML = `
             <div class="user-menu">
               <div class="user-profile" onclick="toggleUserDropdown()">
@@ -65,6 +81,10 @@ async function checkAuthStatus() {
                 <div class="dropdown-item" onclick="showUserInfo()">
                   <i class="fas fa-user"></i>
                   <span>Thông tin cá nhân</span>
+                </div>
+                <div class="dropdown-item" onclick="window.location.href='/html/appointments.html'">
+                  <i class="fas fa-calendar-check"></i>
+                  <span>Lịch hẹn của tôi</span>
                 </div>
                 ${adminMenuItem}
                 <div class="dropdown-item" onclick="showTerms()">
@@ -85,9 +105,9 @@ async function checkAuthStatus() {
                   <span>Đăng xuất</span>
                 </div>
               </div>
-            </div>
-          `;
+            </div>            ${notifBellHTML}          `;
 
+          if (isAdmin) initAdminNotifications();
           return; // Exit early after updating UI
         }
       } catch (error) {
@@ -113,6 +133,22 @@ async function checkAuthStatus() {
           </div>`
       : "";
 
+    const notifBellHTML = isAdmin
+      ? `<div class="notif-bell-wrapper" id="notifBellWrapper">
+          <button class="notif-bell-btn" onclick="toggleNotifDropdown(event)">
+            <i class="fas fa-bell"></i>
+            <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div class="notif-header">
+              <span>Lịch hẹn mới</span>
+              <a href="html/admin-panel.html" class="notif-view-all">Xem tất cả</a>
+            </div>
+            <div id="notifList"><div class="notif-empty">Đang tải...</div></div>
+          </div>
+        </div>`
+      : "";
+
     // Cập nhật UI cho user đã đăng nhập với avatar và tên thật
     authButtons.innerHTML = `
       <div class="user-menu">
@@ -125,6 +161,10 @@ async function checkAuthStatus() {
           <div class="dropdown-item" onclick="showUserInfo()">
             <i class="fas fa-user"></i>
             <span>Thông tin cá nhân</span>
+          </div>
+          <div class="dropdown-item" onclick="window.location.href='/html/appointments.html'">
+            <i class="fas fa-calendar-check"></i>
+            <span>Lịch hẹn của tôi</span>
           </div>
           ${adminMenuItem}
           <div class="dropdown-item" onclick="showTerms()">
@@ -146,7 +186,9 @@ async function checkAuthStatus() {
           </div>
         </div>
       </div>
+      ${notifBellHTML}
     `;
+    if (isAdmin) initAdminNotifications();
   } else {
     // User chưa đăng nhập - hiển thị nút đăng nhập/đăng ký
     authButtons.innerHTML = `
@@ -192,7 +234,7 @@ function showAdminPanel() {
   toggleUserDropdown();
 }
 
-// Close dropdown when clicking outside
+// Close dropdowns when clicking outside
 document.addEventListener("click", function (event) {
   const dropdown = document.getElementById("userDropdown");
   const userProfile = document.querySelector(".user-profile");
@@ -205,6 +247,18 @@ document.addEventListener("click", function (event) {
   ) {
     dropdown.classList.remove("show");
     document.querySelector(".dropdown-arrow")?.classList.remove("rotated");
+  }
+
+  // Close notification dropdown when clicking outside
+  const notifDropdown = document.getElementById("notifDropdown");
+  const notifBtn = document.querySelector(".notif-bell-btn");
+  if (
+    notifDropdown &&
+    notifDropdown.classList.contains("show") &&
+    !notifBtn?.contains(event.target) &&
+    !notifDropdown.contains(event.target)
+  ) {
+    notifDropdown.classList.remove("show");
   }
 });
 
@@ -795,3 +849,130 @@ document.addEventListener("DOMContentLoaded", function () {
     checkAuthStatus();
   }
 });
+
+// ===================== ADMIN NOTIFICATION BELL =====================
+
+let _notifPollInterval = null;
+
+function toggleNotifDropdown(event) {
+  if (event) event.stopPropagation();
+  const dropdown = document.getElementById("notifDropdown");
+  if (!dropdown) return;
+  const isOpen = dropdown.classList.toggle("show");
+  if (isOpen) {
+    // Clear badge when dropdown is opened
+    const badge = document.getElementById("notifBadge");
+    if (badge) {
+      badge.style.display = "none";
+      badge.textContent = "0";
+    }
+    // Mark current items as seen by updating lastNotifId
+    const items = dropdown.querySelectorAll(".notif-item[data-id]");
+    if (items.length > 0) {
+      const maxId = Math.max(
+        ...Array.from(items).map((el) => parseInt(el.dataset.id) || 0),
+      );
+      if (maxId > 0) localStorage.setItem("lastNotifId", String(maxId));
+    }
+  }
+}
+
+async function initAdminNotifications() {
+  if (_notifPollInterval) clearInterval(_notifPollInterval);
+  // Initial load: populate dropdown with latest booked appointments
+  await _fetchNotifications(false);
+  // Poll every 30 seconds for new appointments
+  _notifPollInterval = setInterval(() => _fetchNotifications(true), 30000);
+}
+
+async function _fetchNotifications(pollMode) {
+  try {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+    if (!token) return;
+
+    const sinceId = pollMode
+      ? parseInt(localStorage.getItem("lastNotifId") || "0")
+      : 0;
+    const limit = pollMode ? 5 : 10;
+
+    const resp = await fetch(
+      `/api/admin/notifications?sinceId=${sinceId}&limit=${limit}`,
+      { headers: { Authorization: `Bearer ${token}` } },
+    );
+    if (!resp.ok) return;
+
+    const data = await resp.json();
+    if (!data.success || !Array.isArray(data.notifications)) return;
+
+    const notifications = data.notifications;
+
+    if (pollMode && notifications.length > 0) {
+      // Show toast for each new booking
+      notifications.forEach((n) => _showBookingToast(n));
+
+      // Update badge count (only if dropdown is closed)
+      const badge = document.getElementById("notifBadge");
+      const dropdown = document.getElementById("notifDropdown");
+      if (badge && !(dropdown && dropdown.classList.contains("show"))) {
+        const current = parseInt(badge.textContent) || 0;
+        badge.textContent = String(current + notifications.length);
+        badge.style.display = "flex";
+      }
+
+      // Track the latest id
+      const maxId = Math.max(...notifications.map((n) => n.id || 0));
+      if (maxId > 0) localStorage.setItem("lastNotifId", String(maxId));
+
+      // Prepend new items to the dropdown list
+      const listEl = document.getElementById("notifList");
+      if (listEl) {
+        const hadEmpty = listEl.querySelector(".notif-empty");
+        const existingHTML = hadEmpty ? "" : listEl.innerHTML;
+        listEl.innerHTML =
+          notifications.map(_renderNotifItem).join("") + existingHTML;
+      }
+    } else if (!pollMode) {
+      // Initial load
+      const listEl = document.getElementById("notifList");
+      if (listEl) {
+        listEl.innerHTML =
+          notifications.length > 0
+            ? notifications.map(_renderNotifItem).join("")
+            : '<div class="notif-empty">Chưa có lịch hẹn nào</div>';
+      }
+      if (notifications.length > 0) {
+        const maxId = Math.max(...notifications.map((n) => n.id || 0));
+        const stored = parseInt(localStorage.getItem("lastNotifId") || "0");
+        if (maxId > stored) localStorage.setItem("lastNotifId", String(maxId));
+      }
+    }
+  } catch (e) {
+    console.error("Notification fetch error:", e);
+  }
+}
+
+function _renderNotifItem(n) {
+  const dateStr = n.appointmentDate
+    ? new Date(n.appointmentDate).toLocaleDateString("vi-VN")
+    : "";
+  const timeStr = n.appointmentTime || "";
+  return `<div class="notif-item" data-id="${n.id || 0}">
+    <div class="notif-item-icon"><i class="fas fa-calendar-plus"></i></div>
+    <div class="notif-item-body">
+      <div class="notif-item-title">${n.patientName || "Bệnh nhân"} đặt lịch khám</div>
+      <div class="notif-item-detail">BS. ${n.doctorName || ""} &bull; ${dateStr} ${timeStr}</div>
+    </div>
+  </div>`;
+}
+
+function _showBookingToast(n) {
+  const dateStr = n.appointmentDate
+    ? new Date(n.appointmentDate).toLocaleDateString("vi-VN")
+    : "";
+  showNotification(
+    `📅 Lịch hẹn mới: ${n.patientName || "Bệnh nhân"} — ${dateStr}`,
+    "info",
+  );
+}

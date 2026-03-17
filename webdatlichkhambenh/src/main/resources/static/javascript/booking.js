@@ -178,7 +178,43 @@ async function initializeBookingPage() {
   }
 
   await syncAccountProfile(currentUser);
+  await syncDBProfiles();
   renderProfiles();
+}
+
+// Tải các hồ sơ phụ đã lưu trong DB về localStorage
+async function syncDBProfiles() {
+  try {
+    const authManager = new AuthManager();
+    const response = await authManager.authenticatedFetch("/api/profiles");
+    if (!response.ok) return;
+    const data = await response.json();
+    if (!data.success || !Array.isArray(data.profiles)) return;
+
+    // Chuyển đổi từ DB format sang format của booking.js
+    const dbProfiles = data.profiles.map((p) => ({
+      id: p.id,
+      fullName: p.hoTen,
+      gender: p.gioiTinh || "",
+      email: "",
+      address: p.diaChi || "",
+      phone: p.soDienThoai || "",
+      birthDate: p.ngaySinh ? String(p.ngaySinh).slice(0, 10) : "",
+      cccd: "",
+      isAccountProfile: false,
+      fromDB: true,
+    }));
+
+    // Merge: giữ account profile, thay thế các hồ sơ phụ bằng phiên bản DB
+    const existing = getStoredProfiles();
+    const accountProfile = existing.find((p) => p.isAccountProfile) || null;
+    const merged = accountProfile
+      ? [accountProfile, ...dbProfiles]
+      : dbProfiles;
+    setStoredProfiles(merged);
+  } catch (err) {
+    console.warn("Không thể đồng bộ hồ sơ từ DB:", err);
+  }
 }
 
 async function syncAccountProfile(currentUser) {

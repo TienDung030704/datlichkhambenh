@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lịch Hẹn Của Tôi - Đặt Lịch Khám Bệnh</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../css/appointments.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="appt-header">
+      <button class="btn-back" onclick="window.history.back()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <h1 class="header-title">Lịch Hẹn Của Tôi</h1>
+      <button class="btn-refresh" id="btnLamMoi" title="Làm mới">
+        <i class="fas fa-sync-alt"></i>
+      </button>
+    </header>
+
+    <div class="page-container">
+      <!-- Thẻ thông tin người dùng -->
+      <div class="user-summary-card">
+        <div class="user-avatar-large" id="avatarText">ND</div>
+        <div class="user-info">
+          <div class="user-fullname" id="tenNguoiDung">Người dùng</div>
+          <div class="user-email" id="emailNguoiDung">--</div>
+        </div>
+        <a href="/html/profile.html" class="btn-profile-link">
+          <i class="fas fa-user-cog"></i> Hồ sơ
+        </a>
+      </div>
+
+      <!-- Thống kê tổng quan -->
+      <div class="stats-row" id="statsRow">
+        <div class="stat-card">
+          <div class="stat-number" id="statTongSo">--</div>
+          <div class="stat-label">Tổng lịch hẹn</div>
+        </div>
+        <div class="stat-card stat-pending">
+          <div class="stat-number" id="statChoDuyet">--</div>
+          <div class="stat-label">Chờ khám</div>
+        </div>
+        <div class="stat-card stat-done">
+          <div class="stat-number" id="statHoanThanh">--</div>
+          <div class="stat-label">Hoàn thành</div>
+        </div>
+        <div class="stat-card stat-cancel">
+          <div class="stat-number" id="statDaHuy">--</div>
+          <div class="stat-label">Đã hủy</div>
+        </div>
+      </div>
+
+      <!-- Bộ lọc trạng thái -->
+      <div class="filter-tabs">
+        <button class="filter-btn active" data-filter="all">Tất cả</button>
+        <button class="filter-btn" data-filter="booked">Chờ khám</button>
+        <button class="filter-btn" data-filter="examined">Hoàn thành</button>
+        <button class="filter-btn" data-filter="cancelled">Đã hủy</button>
+      </div>
+
+      <!-- Danh sách lịch hẹn -->
+      <div id="danhSachLichHen" class="appointments-list">
+        <div class="state-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Đang tải lịch hẹn...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal xem chi tiết -->
+    <div class="modal-overlay" id="modalChiTiet" onclick="dongModal(event)">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title">Chi Tiết Lịch Hẹn</h2>
+          <button class="modal-close" onclick="dongModalBtn()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body" id="modalNoidung">
+          <!-- Được điền bằng JS -->
+        </div>
+        <div class="modal-footer" id="modalFooter">
+          <!-- Được điền bằng JS nếu có nút hủy -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast thông báo -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="../javascript/auth-utils.js"></script>
+    <script src="../javascript/appointments.js"></script>
+  </body>
+</html>

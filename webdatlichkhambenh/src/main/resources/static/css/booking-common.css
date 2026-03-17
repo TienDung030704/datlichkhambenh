@@ -34,23 +34,27 @@ body {
   align-items: center;
   justify-content: space-between;
   background: #ffffff;
-  padding: 16px 22px;
+  padding: 14px 18px;
   color: #1da1f2;
-  font-size: 20px;
-  font-weight: 600;
-  border-bottom: 1px solid #e6edf5;
+  font-size: 18px;
+  font-weight: 700;
+  border-bottom: 1px solid #e8f0fa;
+  box-shadow: 0 2px 12px rgba(29, 161, 242, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .booking-header i,
 .booking-header .btn-icon {
-  font-size: 24px;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.2s;
   color: #1da1f2;
   background: none;
   border: none;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -59,7 +63,8 @@ body {
 
 .booking-header i:hover,
 .booking-header .btn-icon:hover {
-  opacity: 0.7;
+  background: #eaf5ff;
+  color: #0d8ae0;
 }
 
 .booking-header span,
@@ -67,8 +72,9 @@ body {
   flex: 1;
   text-align: center;
   color: #1da1f2;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
 }
 
 /* ── STEPPER ── */
@@ -76,33 +82,38 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 20px 0 30px;
+  gap: 8px;
+  padding: 18px 24px 22px;
   background: #ffffff;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   flex-wrap: wrap;
+  border-radius: 0 0 20px 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .step {
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  background: #f0f5ff;
+  background: #edf2f9;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
-  font-size: 18px;
+  color: #b0bec5;
+  font-size: 16px;
   transition: 0.3s;
+  border: 2px solid #dde6f0;
 }
 
 .step.done {
-  background: #1da1f2;
+  background: linear-gradient(135deg, #1da1f2, #0d8ae0);
   color: white;
+  border-color: #1da1f2;
+  box-shadow: 0 3px 10px rgba(29, 161, 242, 0.3);
 }
 
 .step.current {
-  background: #1e2a5e;
+  background: linear-gradient(135deg, #1e2a5e, #2d3e80);
   color: white;
   clip-path: polygon(
     50% 0%,
@@ -113,56 +124,71 @@ body {
     6.7% 25%
   );
   border-radius: 0;
+  border: none;
   width: 46px;
   height: 46px;
   font-size: 17px;
+  box-shadow: 0 4px 14px rgba(30, 42, 94, 0.35);
 }
 
 .line {
-  width: 50px;
+  width: 44px;
   height: 3px;
-  background: #e2e8f2;
+  background: #dde6f0;
   border-radius: 2px;
 }
 
 .line.active {
-  background: #1da1f2;
+  background: linear-gradient(90deg, #1da1f2, #0d8ae0);
 }
 
 /* ── MAIN CARD ── */
 .booking-main-card {
   background: #ffffff;
-  border-radius: 18px;
+  border-radius: 20px;
   padding: 22px;
-  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.06);
-  margin-bottom: 20px;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.07),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  margin-bottom: 16px;
+  border: 1px solid #f0f5ff;
 }
 
 .booking-main-card h2 {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 700;
-  color: #1f2937;
+  color: #1a2540;
 }
 
 /* ── NEXT / PRIMARY BUTTON ── */
 .next-btn {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   width: 100%;
-  padding: 16px;
+  padding: 15px;
   background: linear-gradient(135deg, #1da1f2, #0d8ae0);
   color: white;
   border: none;
   border-radius: 14px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 6px 18px rgba(29, 161, 242, 0.35);
-  transition: 0.2s;
+  letter-spacing: 0.02em;
+  box-shadow: 0 6px 20px rgba(29, 161, 242, 0.38);
+  transition: all 0.2s;
 }
 
 .next-btn:hover {
-  background: linear-gradient(135deg, #0d8ae0, #09aaf5);
-  transform: translateY(-1px);
+  background: linear-gradient(135deg, #0b95e6, #0d8ae0);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(29, 161, 242, 0.48);
+}
+
+.next-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 4px 12px rgba(29, 161, 242, 0.3);
 }
 
 /* ── RESPONSIVE STEPPER ── */

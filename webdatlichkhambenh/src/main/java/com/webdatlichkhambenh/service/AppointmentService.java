@@ -140,6 +140,58 @@ public class AppointmentService {
         }
     }
 
+    public List<Map<String, Object>> getLichHenCuaNguoiDung(String username) {
+        ensureAppointmentsTableExists();
+        String sql = """
+            SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
+                   a.created_at,
+                   s.specialty_name AS ten_chuyen_khoa,
+                   d.full_name AS ten_bac_si
+            FROM appointments a
+            JOIN specialties s ON a.specialty_id = s.id
+            JOIN doctors d ON a.doctor_id = d.id
+            JOIN users u ON a.patient_id = u.id
+            WHERE u.username = ? OR u.email = ?
+            ORDER BY a.appointment_date DESC, a.appointment_time DESC
+            """;
+        return jdbcTemplate.queryForList(sql, username, username);
+    }
+
+    public Map<String, Object> huyLichHen(Integer appointmentId, String username) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            String checkSql = """
+                SELECT a.id, a.status FROM appointments a
+                JOIN users u ON a.patient_id = u.id
+                WHERE a.id = ? AND (u.username = ? OR u.email = ?)
+                """;
+            List<Map<String, Object>> rows = jdbcTemplate.queryForList(checkSql, appointmentId, username, username);
+            if (rows.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy lịch hẹn");
+                return response;
+            }
+            String status = String.valueOf(rows.get(0).get("status"));
+            if ("cancelled".equalsIgnoreCase(status)) {
+                response.put("success", false);
+                response.put("message", "Lịch hẹn này đã bị hủy trước đó");
+                return response;
+            }
+            if ("examined".equalsIgnoreCase(status)) {
+                response.put("success", false);
+                response.put("message", "Không thể hủy lịch hẹn đã hoàn thành");
+                return response;
+            }
+            jdbcTemplate.update("UPDATE appointments SET status = 'cancelled', updated_at = NOW() WHERE id = ?", appointmentId);
+            response.put("success", true);
+            response.put("message", "Hủy lịch hẹn thành công");
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi khi hủy lịch hẹn: " + e.getMessage());
+        }
+        return response;
+    }
+
     private void ensureAppointmentsTableExists() {
         String sql = """
             CREATE TABLE IF NOT EXISTS appointments (

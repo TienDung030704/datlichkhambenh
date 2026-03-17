@@ -390,7 +390,18 @@ function createAppointmentRow(appointment, showCheckbox = false) {
       <td>${appointment.specialtyName || appointment.specialty || "--"}</td>
         <td>${formatDate(appointment.appointmentDate)}</td>
         <td>${appointment.appointmentTime}</td>
-        <td><span class="status-badge status-${appointment.status.toLowerCase()}">${getStatusText(appointment.status)}</span></td>
+        <td>
+            ${
+              showCheckbox
+                ? `<select class="status-select status-${appointment.status.toLowerCase()}"
+                         onchange="capNhatTrangThaiLichHen(${appointment.id}, this)">
+                    <option value="booked"    ${appointment.status === "booked" ? "selected" : ""}>Đã đặt</option>
+                    <option value="examined"  ${appointment.status === "examined" ? "selected" : ""}>Đã khám</option>
+                    <option value="cancelled" ${appointment.status === "cancelled" ? "selected" : ""}>Đã hủy</option>
+                 </select>`
+                : `<span class="status-badge status-${appointment.status.toLowerCase()}">${getStatusText(appointment.status)}</span>`
+            }
+        </td>
         <td>
             <div class="action-buttons">
                 <button class="btn btn-sm btn-edit" onclick="editAppointment(${appointment.id})">
@@ -1380,6 +1391,45 @@ function formatNumber(num) {
 function formatDate(dateStr) {
   const date = new Date(dateStr);
   return date.toLocaleDateString("vi-VN");
+}
+
+async function capNhatTrangThaiLichHen(appointmentId, selectEl) {
+  const newStatus = selectEl.value;
+  const originalStatus = selectEl.dataset.originalStatus || selectEl.value;
+
+  // Lưu trạng thái gốc để rollback nếu lỗi
+  if (!selectEl.dataset.originalStatus) {
+    selectEl.dataset.originalStatus = newStatus;
+  }
+
+  try {
+    selectEl.disabled = true;
+    const response = await fetch(
+      `/api/admin/appointments/${appointmentId}/status`,
+      {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      },
+    );
+    const data = await response.json();
+
+    if (data.success) {
+      // Cập nhật màu sắc dropdown
+      selectEl.className = `status-select status-${newStatus}`;
+      selectEl.dataset.originalStatus = newStatus;
+      showNotification("Cập nhật trạng thái thành công", "success");
+    } else {
+      // Rollback
+      selectEl.value = selectEl.dataset.originalStatus;
+      showNotification(data.message || "Cập nhật thất bại", "error");
+    }
+  } catch (err) {
+    selectEl.value = selectEl.dataset.originalStatus;
+    showNotification("Lỗi kết nối server", "error");
+  } finally {
+    selectEl.disabled = false;
+  }
 }
 
 function getStatusText(status) {

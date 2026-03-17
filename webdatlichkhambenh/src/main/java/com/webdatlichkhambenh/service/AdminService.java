@@ -676,4 +676,86 @@ public class AdminService {
             return 0;
         }
     }
+
+    /**
+     * Get booked appointments for notification polling.
+     * When sinceId == 0, returns the latest 'limit' booked appointments ordered by id DESC.
+     * When sinceId > 0, returns appointments with id > sinceId (new arrivals).
+     */
+    public List<Map<String, Object>> getNewBookedAppointments(int sinceId, int limit) {
+        try {
+            String sql = sinceId > 0
+                ? """
+                    SELECT a.id, a.appointment_date, a.appointment_time, a.status,
+                           u.full_name AS patient_name,
+                           d.full_name AS doctor_name, s.specialty_name AS specialty_name
+                    FROM appointments a
+                    JOIN users u ON a.patient_id = u.id
+                    JOIN doctors d ON a.doctor_id = d.id
+                    JOIN specialties s ON a.specialty_id = s.id
+                    WHERE a.status = 'booked' AND a.id > ?
+                    ORDER BY a.id DESC
+                    LIMIT ?
+                    """
+                : """
+                    SELECT a.id, a.appointment_date, a.appointment_time, a.status,
+                           u.full_name AS patient_name,
+                           d.full_name AS doctor_name, s.specialty_name AS specialty_name
+                    FROM appointments a
+                    JOIN users u ON a.patient_id = u.id
+                    JOIN doctors d ON a.doctor_id = d.id
+                    JOIN specialties s ON a.specialty_id = s.id
+                    WHERE a.status = 'booked'
+                    ORDER BY a.id DESC
+                    LIMIT ?
+                    """;
+
+            List<Map<String, Object>> appointments = sinceId > 0
+                ? jdbcTemplate.queryForList(sql, sinceId, limit)
+                : jdbcTemplate.queryForList(sql, limit);
+
+            for (Map<String, Object> apt : appointments) {
+                apt.put("patientName", apt.get("patient_name"));
+                apt.put("doctorName", apt.get("doctor_name"));
+                apt.put("specialtyName", apt.get("specialty_name"));
+                apt.put("appointmentDate", apt.get("appointment_date"));
+                apt.put("appointmentTime", apt.get("appointment_time"));
+                apt.remove("patient_name");
+                apt.remove("doctor_name");
+                apt.remove("specialty_name");
+                apt.remove("appointment_date");
+                apt.remove("appointment_time");
+            }
+            return appointments;
+        } catch (Exception e) {
+            System.err.println("Error getting new booked appointments: " + e.getMessage());
+            return List.of();
+        }
+    }
+
+    public Map<String, Object> updateAppointmentStatus(int appointmentId, String newStatus) {
+        Map<String, Object> response = new HashMap<>();
+        java.util.Set<String> validStatuses = java.util.Set.of("booked", "examined", "cancelled");
+        if (!validStatuses.contains(newStatus)) {
+            response.put("success", false);
+            response.put("message", "Trạng thái không hợp lệ. Chỉ chấp nhận: booked, examined, cancelled");
+            return response;
+        }
+        try {
+            int rows = jdbcTemplate.update(
+                "UPDATE appointments SET status = ? WHERE id = ?", newStatus, appointmentId);
+            if (rows == 0) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy lịch hẹn");
+            } else {
+                response.put("success", true);
+                response.put("message", "Cập nhật trạng thái thành công");
+                response.put("newStatus", newStatus);
+            }
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Lỗi cập nhật: " + e.getMessage());
+        }
+        return response;
+    }
 }

@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  btnSave.addEventListener("click", function (e) {
+  btnSave.addEventListener("click", async function (e) {
     e.preventDefault();
 
     // === Lấy input ===
@@ -47,23 +47,70 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // === Tạo hồ sơ mới ===
-    const newProfile = {
-      id: Date.now(),
-      fullName: `${lastname} ${firstname}`,
-      gender,
-      email,
-      address,
-      phone,
-      birthDate: birthday,
-      cccd,
-      isAccountProfile: false,
-    };
+    const hoTen = `${lastname} ${firstname}`;
 
-    saveProfile(newProfile);
+    // === Lưu vào DB qua API ===
+    const authManager = new AuthManager();
+    try {
+      btnSave.disabled = true;
+      btnSave.textContent = "Đang lưu...";
 
-    localStorage.setItem("selectedProfile", JSON.stringify(newProfile));
-    window.location.href = "book-appointment.html";
+      const response = await authManager.authenticatedFetch("/api/profiles", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          hoTen,
+          ngaySinh: birthday || null,
+          gioiTinh: gender,
+          soDienThoai: phone || null,
+          diaChi: address || null,
+          baoHiem: null,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Lưu vào localStorage để booking.js dùng được ngay
+        const newProfile = {
+          id: result.id,
+          fullName: hoTen,
+          gender,
+          email,
+          address,
+          phone,
+          birthDate: birthday,
+          cccd,
+          isAccountProfile: false,
+          fromDB: true,
+        };
+        saveProfile(newProfile);
+        localStorage.setItem("selectedProfile", JSON.stringify(newProfile));
+        window.location.href = "book-appointment.html";
+      } else {
+        alert(result.message || "Không thể lưu hồ sơ. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      console.error("Lỗi lưu hồ sơ:", error);
+      // Fallback: lưu localStorage nếu API lỗi
+      const newProfile = {
+        id: Date.now(),
+        fullName: hoTen,
+        gender,
+        email,
+        address,
+        phone,
+        birthDate: birthday,
+        cccd,
+        isAccountProfile: false,
+      };
+      saveProfile(newProfile);
+      localStorage.setItem("selectedProfile", JSON.stringify(newProfile));
+      window.location.href = "book-appointment.html";
+    } finally {
+      btnSave.disabled = false;
+      btnSave.textContent = "Lưu hồ sơ";
+    }
   });
 });
 

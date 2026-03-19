@@ -594,6 +594,21 @@ body {
   font-weight: 500;
 }
 
+.status-select {
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  outline: none;
+}
+
+.status-select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .status-booked {
   background: #fef3c7;
   color: #d97706;

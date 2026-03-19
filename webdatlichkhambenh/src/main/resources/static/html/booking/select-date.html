@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn ngày khám</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../css/booking-common.css" />
+    <link rel="stylesheet" href="../../css/select-date.css" />
+  </head>
+
+  <body>
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" id="btnBack"></i>
+      <span>Chọn ngày khám</span>
+      <i class="fas fa-home" id="btnHome"></i>
+    </header>
+
+    <div class="container">
+      <!-- stepper -->
+      <div class="booking-stepper">
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step done"><i class="fas fa-stethoscope"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-file-alt"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
+      </div>
+
+      <div class="booking-main-card">
+        <div class="calendar-header">
+          <button class="nav-btn" id="prevMonth" type="button">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <h2 id="monthTitle">Tháng -- - ----</h2>
+          <button class="nav-btn" id="nextMonth" type="button">
+            <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="weekday-row">
+          <span>CN</span>
+          <span>T2</span>
+          <span>T3</span>
+          <span>T4</span>
+          <span>T5</span>
+          <span>T6</span>
+          <span>T7</span>
+        </div>
+
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </div>
+
+      <div class="notice-box">
+        <p>
+          Vui lòng bấm chọn ngày có <strong>màu xanh dương</strong> để đặt khám.
+        </p>
+      </div>
+
+      <div class="legend-box">
+        <div class="legend-item">
+          <span class="dot dot-available"></span>
+          <span>Ngày có thể chọn</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot dot-disabled"></span>
+          <span>Ngày ngoài vùng đăng ký khám</span>
+        </div>
+        <div class="legend-item">
+          <span class="dot dot-holiday"></span>
+          <span>Ngày nghỉ, lễ, tết</span>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../javascript/select-date.js"></script>
+  </body>
+</html>

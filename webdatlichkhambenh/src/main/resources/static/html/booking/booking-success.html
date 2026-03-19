@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đặt lịch thành công</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../../css/booking-common.css" />
+
+    <style>
+      .page-wrap {
+        max-width: 760px;
+        margin: 0 auto;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── CONTENT ── */
+      .content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 32px 20px 40px;
+        gap: 24px;
+      }
+
+      /* success icon */
+      .success-icon {
+        width: 90px;
+        height: 90px;
+        border-radius: 50%;
+        background: #e8f8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+        color: #16a34a;
+        box-shadow: 0 0 0 12px #d1fae540;
+      }
+
+      .success-title {
+        font-size: 26px;
+        font-weight: 700;
+        color: #111827;
+        text-align: center;
+      }
+      .success-sub {
+        font-size: 15px;
+        color: #6b7280;
+        text-align: center;
+        max-width: 340px;
+      }
+
+      /* detail card */
+      .detail-card {
+        width: 100%;
+        background: #fff;
+        border-radius: 18px;
+        padding: 20px 22px;
+        border: 1px solid #e5edf7;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      }
+      .detail-card-title {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: #1da1f2;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+      }
+      .detail-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 9px 0;
+        border-bottom: 1px solid #f1f5fb;
+        font-size: 15px;
+      }
+      .detail-row:last-child {
+        border-bottom: none;
+      }
+      .detail-row .lbl {
+        color: #6b7280;
+        white-space: nowrap;
+      }
+      .detail-row .val {
+        font-weight: 600;
+        color: #111827;
+        text-align: right;
+      }
+      .detail-row .val.blue {
+        color: #145bcc;
+        text-transform: uppercase;
+      }
+
+      /* booking code badge */
+      .code-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #eff6ff;
+        border: 1px dashed #93c5fd;
+        border-radius: 10px;
+        padding: 8px 18px;
+        font-size: 20px;
+        font-weight: 700;
+        color: #1d4ed8;
+        letter-spacing: 0.08em;
+      }
+      .code-badge i {
+        font-size: 16px;
+      }
+
+      /* action buttons */
+      .actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .btn-home {
+        width: 100%;
+        padding: 15px;
+        border-radius: 14px;
+        background: #145bcc;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+      .btn-appointments {
+        width: 100%;
+        padding: 15px;
+        border-radius: 14px;
+        background: #fff;
+        color: #145bcc;
+        font-size: 17px;
+        font-weight: 700;
+        border: 2px solid #145bcc;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+      }
+
+      @media (max-width: 480px) {
+        .success-icon {
+          width: 72px;
+          height: 72px;
+          font-size: 34px;
+        }
+        .success-title {
+          font-size: 20px;
+        }
+        .detail-row {
+          font-size: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="booking-header">
+      <i class="fas fa-home" id="btnHome"></i>
+      <span>Đặt lịch thành công</span>
+      <span style="width: 24px"></span>
+    </header>
+
+    <div class="page-wrap">
+      <div class="booking-stepper">
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step done"><i class="fas fa-stethoscope"></i></div>
+        <div class="line active"></div>
+        <div class="step done"><i class="fas fa-file-alt"></i></div>
+        <div class="line active"></div>
+        <div class="step done"><i class="fas fa-wallet"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-clipboard-list"></i></div>
+      </div>
+
+      <div class="content">
+        <div class="success-icon">
+          <i class="fas fa-check"></i>
+        </div>
+
+        <div class="success-title">Đặt lịch thành công!</div>
+        <div class="success-sub">
+          Lịch hẹn của bạn đã được xác nhận. Vui lòng đến đúng giờ và mang theo
+          giấy tờ tùy thân.
+        </div>
+
+        <div class="code-badge">
+          <i class="fas fa-ticket-alt"></i>
+          Mã lịch hẹn: <span id="appointmentCode">--</span>
+        </div>
+
+        <div class="detail-card">
+          <div class="detail-card-title">Thông tin đặt khám</div>
+          <div class="detail-row">
+            <span class="lbl">Chuyên khoa</span>
+            <span class="val blue" id="detailSpecialty">--</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Bác sĩ</span>
+            <span class="val" id="detailDoctor">--</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Ngày khám</span>
+            <span class="val" id="detailDate">--</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Phòng - Giờ khám</span>
+            <span class="val" id="detailRoomTime">--</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Phương thức thanh toán</span>
+            <span class="val" id="detailPayment">--</span>
+          </div>
+          <div class="detail-row">
+            <span class="lbl">Tổng tiền</span>
+            <span class="val blue" id="detailTotal">--</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-home" id="btnGoHome">
+            <i class="fas fa-home"></i> Về trang chủ
+          </button>
+          <button class="btn-appointments" id="btnViewAppointments">
+            <i class="fas fa-calendar-check"></i> Xem lịch hẹn của tôi
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Read saved booking result
+        let info = {};
+        try {
+          info = JSON.parse(localStorage.getItem("lastBookingResult") || "{}");
+        } catch (_) {}
+
+        const fmt = (n) => `${Number(n || 0).toLocaleString("vi-VN")}đ`;
+
+        const paymentLabel = {
+          cash: "Tiền mặt",
+          momo: "Ví điện tử MoMo",
+        };
+
+        document.getElementById("appointmentCode").textContent =
+          info.appointmentId ? `#${info.appointmentId}` : "--";
+        document.getElementById("detailSpecialty").textContent =
+          info.specialty || "--";
+        document.getElementById("detailDoctor").textContent =
+          info.doctor || "--";
+        document.getElementById("detailDate").textContent = info.date || "--";
+        document.getElementById("detailRoomTime").textContent =
+          info.roomTime || "--";
+        document.getElementById("detailPayment").textContent =
+          paymentLabel[info.paymentMethod] || info.paymentMethod || "--";
+        document.getElementById("detailTotal").textContent = info.fee
+          ? fmt(info.fee)
+          : "--";
+
+        document.getElementById("btnHome")?.addEventListener("click", () => {
+          window.location.href = "/";
+        });
+        document.getElementById("btnGoHome")?.addEventListener("click", () => {
+          window.location.href = "/";
+        });
+        document
+          .getElementById("btnViewAppointments")
+          ?.addEventListener("click", () => {
+            window.location.href = "/html/appointments.html";
+          });
+      });
+    </script>
+  </body>
+</html>

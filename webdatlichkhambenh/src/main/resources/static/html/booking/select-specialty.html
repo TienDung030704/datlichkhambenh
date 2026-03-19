@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn chuyên khoa - Đặt Lịch Khám Bệnh</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/booking-common.css" />
+    <link rel="stylesheet" href="../../css/specialty-selection.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" id="btnBack"></i>
+      <span>Chọn chuyên khoa</span>
+      <i class="fas fa-home" id="btnHome"></i>
+    </header>
+
+    <div class="container">
+      <!-- ===== STEPPER ===== -->
+      <div class="booking-stepper">
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-stethoscope"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-file-alt"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
+      </div>
+
+      <!-- ===== MAIN CARD ===== -->
+      <div class="booking-main-card">
+        <h2>Chọn chuyên khoa</h2>
+        <p>Vui lòng chọn chuyên khoa mà bạn muốn khám</p>
+
+        <!-- ===== SELECTED PROFILE ===== -->
+        <!-- ===== SPECIALTY LIST ===== -->
+        <div class="specialty-list" id="specialtyList">
+          <div class="loading">Đang tải danh sách chuyên khoa...</div>
+        </div>
+      </div>
+
+      <!-- ===== SELECTED INFO ===== -->
+      <div class="selected-info" id="selectedInfo" style="display: none">
+        <h3>Thông tin đã chọn</h3>
+        <p>Chuyên khoa: <strong id="selectedSpecialtyName"></strong></p>
+        <p>Số bác sĩ: <strong id="selectedDoctorCount"></strong></p>
+        <button class="next-btn" onclick="proceedToNextStep()">
+          Tiếp tục <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- JS -->
+    <script src="../../javascript/specialty-selection.js"></script>
+
+    <!-- ===== SPECIALTY INFO OVERLAY ===== -->
+    <div
+      id="specialtyInfoOverlay"
+      style="display: none"
+      onclick="if (event.target === this) closeSpecialtyInfo();"
+    >
+      <div class="specialty-info-panel">
+        <header class="info-panel-header">
+          <i class="fas fa-arrow-left" onclick="closeSpecialtyInfo()"></i>
+          <span>Chức năng chuyên khoa</span>
+          <i class="fas fa-home" onclick="goHome()"></i>
+        </header>
+        <div class="info-panel-body">
+          <h2 id="infoSpecialtyName"></h2>
+          <p id="infoSpecialtyDesc"></p>
+        </div>
+        <div class="info-panel-footer">
+          <button id="infoSelectBtn" class="info-select-btn">
+            Chọn chuyên khoa
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

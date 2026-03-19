@@ -1,4 +1,4 @@
-// Profile Page JavaScript
+// Khởi tạo trang profile
 document.addEventListener("DOMContentLoaded", function () {
   initProfile();
   initForms();
@@ -159,7 +159,7 @@ function initForms() {
   }
 }
 
-// Initialize tab functionality
+// Khởi tạo chức năng tab
 function initTabs() {
   const tabButtons = document.querySelectorAll(".tab-btn");
   const tabContents = document.querySelectorAll(".tab-content");
@@ -168,38 +168,16 @@ function initTabs() {
     button.addEventListener("click", function () {
       const targetTab = this.getAttribute("data-tab");
 
-      // Remove active class from all buttons and contents
       tabButtons.forEach((btn) => btn.classList.remove("active"));
       tabContents.forEach((content) => content.classList.remove("active"));
 
-      // Add active class to clicked button and corresponding content
       this.classList.add("active");
       document.getElementById(targetTab).classList.add("active");
     });
   });
 }
 
-// Initialize tab functionality
-function initTabs() {
-  const tabButtons = document.querySelectorAll(".tab-btn");
-  const tabContents = document.querySelectorAll(".tab-content");
-
-  tabButtons.forEach((button) => {
-    button.addEventListener("click", function () {
-      const targetTab = this.getAttribute("data-tab");
-
-      // Remove active class from all buttons and contents
-      tabButtons.forEach((btn) => btn.classList.remove("active"));
-      tabContents.forEach((content) => content.classList.remove("active"));
-
-      // Add active class to clicked button and corresponding content
-      this.classList.add("active");
-      document.getElementById(targetTab).classList.add("active");
-    });
-  });
-}
-
-// Handle profile form submission
+// Xử lý form cập nhật hồ sơ
 async function handleProfileSubmit(e) {
   e.preventDefault();
 

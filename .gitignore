@@ -48,3 +48,10 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+# Project docs
+docs/
+CLAUDE.md
+claude.md
+**/CLAUDE.md
+**/claude.md

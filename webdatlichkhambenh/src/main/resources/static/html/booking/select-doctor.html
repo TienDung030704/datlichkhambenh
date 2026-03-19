@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chọn bác sĩ - Đặt Lịch Khám Bệnh</title>
+
+    <!-- Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../../css/booking-common.css" />
+    <link rel="stylesheet" href="../../css/select-doctor.css" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header class="booking-header">
+      <i class="fas fa-arrow-left" id="btnBack"></i>
+      <span>Chọn bác sĩ</span>
+      <i class="fas fa-home" id="btnHome"></i>
+    </header>
+
+    <div class="container">
+      <!-- ===== STEPPER ===== -->
+      <div class="booking-stepper">
+        <div class="step done"><i class="fas fa-user"></i></div>
+        <div class="line active"></div>
+        <div class="step current"><i class="fas fa-stethoscope"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-file-alt"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-wallet"></i></div>
+        <div class="line"></div>
+        <div class="step"><i class="fas fa-clipboard-list"></i></div>
+      </div>
+
+      <!-- ===== MAIN CARD ===== -->
+      <div class="booking-main-card">
+        <h2>Chọn bác sĩ</h2>
+        <p class="info-text">Vui lòng chọn giờ mà bạn muốn khám</p>
+
+        <!-- ===== DAYS TABS ===== -->
+        <div class="days-tabs" id="daysTabs">
+          <!-- Dynamically populated -->
+        </div>
+
+        <!-- ===== DOCTORS LIST ===== -->
+        <div class="doctors-list" id="doctorsList">
+          <div class="loading">Đang tải danh sách bác sĩ...</div>
+        </div>
+
+        <div
+          class="time-slot-section inline-time-slot"
+          id="inlineTimeSlotSection"
+          style="display: none"
+        >
+          <div class="time-slot-title">Chọn khung giờ khám</div>
+          <div class="session-switch" id="sessionSwitch">
+            <button type="button" class="session-btn" data-session="morning">
+              Buổi sáng
+            </button>
+            <button type="button" class="session-btn" data-session="afternoon">
+              Buổi chiều
+            </button>
+          </div>
+          <div class="time-range-grid" id="timeSlotGrid"></div>
+
+          <button
+            class="next-btn"
+            id="inlineNextBtn"
+            style="display: none"
+            onclick="proceedToNextStep()"
+          >
+            Tiếp tục <i class="fas fa-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../javascript/select-doctor.js"></script>
+  </body>
+</html>

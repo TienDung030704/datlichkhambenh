@@ -62,6 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Đăng nhập thành công
         showSuccess(result.message || "Đăng nhập thành công!");
 
+        // Xóa dữ liệu auth cũ khỏi localStorage để tránh xung đột tài khoản
+        localStorage.removeItem("currentUser");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
         // Lưu tokens và user info
         const userData = {
           username: result.username,
@@ -104,12 +109,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let isValid = true;
 
-    // Validate email
+    // Validate username/email
     if (!email) {
-      showFieldError(emailInput, "Vui lòng nhập email");
-      isValid = false;
-    } else if (!isValidEmail(email)) {
-      showFieldError(emailInput, "Email không hợp lệ");
+      showFieldError(emailInput, "Vui lòng nhập email hoặc tên đăng nhập");
       isValid = false;
     }
 
@@ -123,12 +125,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     return isValid;
-  }
-
-  // Kiểm tra email hợp lệ
-  function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
   }
 
   // Hiển thị lỗi cho field

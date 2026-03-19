@@ -104,30 +104,49 @@ async function performClearChat() {
 async function checkChatStatusAndInit() {
     try {
         const response = await fetch('/api/chat/status');
-        const {isOnline, message} = await response.json();
+        const { schedule, operatingHoursMessage } = await response.json();
         
-        if (!isOnline) {
-            showOfflineNotice(message);
+        if (!isWithinOperatingHours(schedule)) {
+            showOfflineNotice(operatingHoursMessage);
             return;
         }
         
-        // Chat đang online, khởi tạo bình thường
         checkUserAndInit();
     } catch (e) {
         console.error("Lỗi kiểm tra trạng thái chat:", e);
-        // Nếu lỗi API, giả định là online
         checkUserAndInit();
     }
+}
+
+function isWithinOperatingHours(schedule) {
+    if (!schedule) return true;
+
+    const now = new Date();
+    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+    const todayKey = dayNames[now.getDay()];
+    const todayRange = schedule[todayKey];
+
+    if (!todayRange) return false;
+
+    const [startH, startM] = todayRange.start.split(':').map(Number);
+    const [endH, endM] = todayRange.end.split(':').map(Number);
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+    return currentMinutes >= (startH * 60 + startM) && currentMinutes <= (endH * 60 + endM);
 }
 
 function showOfflineNotice(message) {
     const chatMessages = document.getElementById('chatMessages');
     if (!chatMessages) return;
+
+    const now = new Date();
+    const localTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
     
     chatMessages.innerHTML = `
         <div style="padding: 20px; text-align: center;">
             <div style="font-size: 32px; margin-bottom: 10px;">🔴</div>
             <div style="font-weight: bold; margin-bottom: 10px;">Hết giờ làm việc</div>
+            <div style="color: #999; font-size: 12px; margin-bottom: 8px;">Giờ hiện tại: ${localTimeStr}</div>
             <div style="color: #666; font-size: 13px; white-space: pre-line; margin-bottom: 15px;">${message}</div>
             <button onclick="goToContact()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
                 Gửi Liên Hệ
@@ -135,7 +154,6 @@ function showOfflineNotice(message) {
         </div>
     `;
     
-    // Vô hiệu hóa input
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendChatBtn');
     if (chatInput) chatInput.disabled = true;
@@ -393,8 +411,6 @@ function renderMessageElement(message, api) {
         return;
     }
     
-    // Xác định tin nhắn của "Tôi"
-    // Bot và Admin KHÔNG bao giờ là "Tôi"
     const isBot = message.sender === 'Medical Bot';
     const isAdmin = message.sender === 'Admin' || message.sender === 'Administrator' || message.sender === 'Tiếp tân';
     
@@ -404,16 +420,17 @@ function renderMessageElement(message, api) {
                 (savedGuestName && message.sender === savedGuestName) || 
                 (message.sessionId && message.sessionId === mySessionId);
     }
+
+    const timeStr = formatTimestamp(message.timestamp);
         
     if (isMe) {
         messageElement.classList.add('sent');
-        messageElement.textContent = message.content;
+        messageElement.innerHTML = `<span>${message.content}</span><div class="msg-time sent-time">${timeStr}</div>`;
     } else {
         messageElement.classList.add('received');
         
         const senderName = isAdmin ? 'Tiếp tân' : message.sender;
         
-        // Render HTML cho Bot/Admin (cần unescape nếu bị escape)
         let contentHtml = message.content;
         
         if (contentHtml.includes("&lt;") && contentHtml.includes("&gt;")) {
@@ -422,13 +439,18 @@ function renderMessageElement(message, api) {
             contentHtml = txt.value;
         }
 
-        messageElement.innerHTML = `<strong>${senderName}</strong><br><span>${contentHtml}</span>`;
+        messageElement.innerHTML = `<strong>${senderName}</strong><br><span>${contentHtml}</span><div class="msg-time">${timeStr}</div>`;
     }
     api.appendChild(messageElement);
+}
+
+function formatTimestamp(ts) {
+    if (!ts) return '';
+    const date = new Date(ts);
+    return date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
 }
 
 function toggleChat() {
     const chatBox = document.getElementById('chatBox');
     chatBox.classList.toggle('active');
 }
-

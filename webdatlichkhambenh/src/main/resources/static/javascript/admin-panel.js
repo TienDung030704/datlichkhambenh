@@ -111,6 +111,7 @@ function updatePageTitle(section) {
     patients: "Bệnh nhân",
     settings: "Cài đặt",
     livechat: "Live Chat Support",
+    faqManagement: "Quản lý FAQ",
   };
 
   const pageTitle = document.querySelector(".page-title");
@@ -142,6 +143,9 @@ function loadSectionData(section) {
       break;
     case "settings":
       loadSettingsData();
+      break;
+    case "faqManagement":
+      loadFaqData();
       break;
   }
 }
@@ -1868,7 +1872,7 @@ function filterContacts() {
         'READ': 'Đã xem',
         'REPLIED': 'Đã phản hồi'
     };
-    
+
     const badgeText = row.querySelector(".status-badge").textContent;
     if (badgeText === statusBadges[statusFilter]) {
         row.style.display = "";
@@ -1876,4 +1880,205 @@ function filterContacts() {
         row.style.display = "none";
     }
   });
+}
+
+// ==================== FAQ MANAGEMENT ====================
+
+let allFaqs = [];
+
+async function loadFaqData() {
+  showLoading(true);
+  try {
+    const response = await fetch("/api/faq/all");
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.faqs) {
+        allFaqs = data.faqs;
+        displayFaqs(allFaqs);
+      } else {
+        displayEmptyFaqs();
+      }
+    } else {
+      displayEmptyFaqs();
+    }
+  } catch (error) {
+    console.error("Error loading FAQs:", error);
+    displayEmptyFaqs();
+  } finally {
+    showLoading(false);
+  }
+}
+
+function displayFaqs(faqs) {
+  const tbody = document.getElementById("faqTableBody");
+  if (!tbody) return;
+
+  if (!faqs || faqs.length === 0) {
+    displayEmptyFaqs();
+    return;
+  }
+
+  tbody.innerHTML = faqs.map((faq) => {
+    const isActive = faq.isActive === true || faq.isActive === 1;
+    const statusBadge = isActive
+      ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Hoạt động</span>`
+      : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Tắt</span>`;
+    const toggleIcon = isActive ? "fa-toggle-on" : "fa-toggle-off";
+    const toggleTitle = isActive ? "Tắt FAQ" : "Bật FAQ";
+
+    return `<tr>
+      <td>${faq.id}</td>
+      <td style="max-width: 300px;">
+        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(faq.question)}">
+          ${escapeHtml(faq.question)}
+        </div>
+      </td>
+      <td><span style="background:#eff6ff;color:#1d4ed8;padding:2px 10px;border-radius:12px;font-size:12px">${faq.category || "--"}</span></td>
+      <td style="text-align:center">${faq.displayOrder || 0}</td>
+      <td>${statusBadge}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn btn-sm btn-edit" onclick="editFaq(${faq.id})" title="Sửa FAQ">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm" onclick="toggleFaqActive(${faq.id})" title="${toggleTitle}" style="color:#f59e0b;background:#fef3c7;border:none;">
+            <i class="fas ${toggleIcon}"></i>
+          </button>
+          <button class="btn btn-sm btn-delete" onclick="deleteFaq(${faq.id})" title="Xóa FAQ">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function displayEmptyFaqs() {
+  const tbody = document.getElementById("faqTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = `<tr>
+    <td colspan="6" style="text-align: center; padding: 40px; color: #9ca3af;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+        <i class="fas fa-question-circle" style="font-size: 48px; color: #cbd5e1;"></i>
+        <h3 style="margin: 0; font-size: 18px; color: #475569;">Chưa có FAQ nào</h3>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">Nhấn "Thêm FAQ mới" để tạo câu hỏi thường gặp</p>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function openAddFaqModal() {
+  document.getElementById("faqId").value = "";
+  document.getElementById("faqModalTitle").textContent = "Thêm FAQ mới";
+  document.getElementById("faqQuestion").value = "";
+  document.getElementById("faqAnswer").value = "";
+  document.getElementById("faqCategory").value = "";
+  document.getElementById("faqDisplayOrder").value = "0";
+  document.getElementById("faqModal").style.display = "flex";
+}
+
+function editFaq(id) {
+  const faq = allFaqs.find(f => f.id === id);
+  if (!faq) return;
+
+  document.getElementById("faqId").value = faq.id;
+  document.getElementById("faqModalTitle").textContent = "Sửa FAQ";
+  document.getElementById("faqQuestion").value = faq.question || "";
+  document.getElementById("faqAnswer").value = faq.answer || "";
+  document.getElementById("faqCategory").value = faq.category || "";
+  document.getElementById("faqDisplayOrder").value = faq.displayOrder || 0;
+  document.getElementById("faqModal").style.display = "flex";
+}
+
+function closeFaqModal() {
+  document.getElementById("faqModal").style.display = "none";
+}
+
+async function saveFaq() {
+  const id = document.getElementById("faqId").value;
+  const question = document.getElementById("faqQuestion").value.trim();
+  const answer = document.getElementById("faqAnswer").value.trim();
+  const category = document.getElementById("faqCategory").value;
+  const displayOrder = parseInt(document.getElementById("faqDisplayOrder").value) || 0;
+
+  if (!question) {
+    alert("Vui lòng nhập câu hỏi");
+    return;
+  }
+  if (!answer) {
+    alert("Vui lòng nhập câu trả lời");
+    return;
+  }
+
+  const payload = { question, answer, category, displayOrder };
+
+  try {
+    let response;
+    if (id) {
+      response = await fetch(`/api/faq/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    } else {
+      response = await fetch("/api/faq", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+    }
+
+    const data = await response.json();
+    if (data.success) {
+      closeFaqModal();
+      loadFaqData();
+      showSuccess(id ? "FAQ đã được cập nhật" : "FAQ đã được tạo");
+    } else {
+      alert("Lỗi: " + (data.message || "Không thể lưu FAQ"));
+    }
+  } catch (error) {
+    console.error("Error saving FAQ:", error);
+    alert("Lỗi kết nối server");
+  }
+}
+
+async function toggleFaqActive(id) {
+  try {
+    const response = await fetch(`/api/faq/${id}/toggle`, { method: "PATCH" });
+    const data = await response.json();
+    if (data.success) {
+      loadFaqData();
+      showSuccess("Trạng thái FAQ đã được thay đổi");
+    } else {
+      showError(data.message || "Không thể thay đổi trạng thái");
+    }
+  } catch (error) {
+    console.error("Error toggling FAQ:", error);
+    showError("Lỗi kết nối server");
+  }
+}
+
+async function deleteFaq(id) {
+  if (!confirm("Bạn có chắc chắn muốn xóa FAQ này?")) return;
+
+  try {
+    const response = await fetch(`/api/faq/${id}`, { method: "DELETE" });
+    const data = await response.json();
+    if (data.success) {
+      loadFaqData();
+      showSuccess("FAQ đã được xóa");
+    } else {
+      showError(data.message || "Không thể xóa FAQ");
+    }
+  } catch (error) {
+    console.error("Error deleting FAQ:", error);
+    showError("Lỗi kết nối server");
+  }
+}
+
+function escapeHtml(text) {
+  if (!text) return "";
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
 }

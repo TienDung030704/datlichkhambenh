@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Liên Hệ - HealthCare</title>
-    <link rel="stylesheet" href="../css/contact.css" />
+    <title>Câu hỏi thường gặp - HealthCare</title>
+    <link rel="stylesheet" href="../css/faq.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -17,109 +17,121 @@
     />
   </head>
   <body>
-    <div class="contact-container">
-      <a href="../index.html" class="back-link"
-        ><i class="fas fa-arrow-left"></i> Quay lại trang chủ</a
-      >
+    <!-- Header -->
+    <header class="header">
+      <div class="nav-container">
+        <div class="logo">
+          <span>HealthCare</span>
+        </div>
+        <nav class="nav-menu">
+          <li><a href="../index.html">Trang Chủ</a></li>
+          <li><a href="#faq">Câu hỏi thường gặp</a></li>
+          <li><a href="#guide">Hướng dẫn</a></li>
+          <li><a href="contact.html">Liên Hệ</a></li>
+        </nav>
+        <div class="nav-auth">
+          <a href="login.html" class="btn-outline">Đăng Nhập</a>
+          <a href="register.html" class="btn-primary">Đăng Ký</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="faq-container">
+      <a href="../index.html" class="back-link">
+        <i class="fas fa-arrow-left"></i> Quay lại trang chủ
+      </a>
 
       <div class="section-header">
-        <h1>Liên Hệ Với Chúng Tôi</h1>
-        <p>Chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn</p>
+        <h1>Câu hỏi thường gặp</h1>
+        <p>Tìm câu trả lời nhanh chóng cho các thắc mắc của bạn</p>
       </div>
 
-      <div class="contact-content">
-        <!-- Contact Info -->
-        <div class="contact-info-section">
-          <h2>Thông Tin Liên Hệ</h2>
+      <!-- Tabs -->
+      <div class="faq-tabs">
+        <button class="tab-btn active" data-tab="faq">
+          <i class="fas fa-question-circle"></i> Câu hỏi thường gặp
+        </button>
+        <button class="tab-btn" data-tab="guide">
+          <i class="fas fa-book"></i> Hướng dẫn sử dụng
+        </button>
+      </div>
 
-          <div class="info-item">
-            <i class="fas fa-map-marker-alt"></i>
-            <p>215 Hồng Bàng, Phường 11, Quận 5, TP.HCM</p>
-          </div>
-
-          <div class="info-item">
-            <i class="fas fa-phone-alt"></i>
-            <p>1900 2115</p>
-          </div>
-
-          <div class="info-item">
-            <i class="fas fa-envelope"></i>
-            <p>support@healthcare.vn</p>
-          </div>
-
-          <div class="social-media">
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-          </div>
+      <!-- FAQ Section -->
+      <div class="faq-content" id="faqSection">
+        <!-- Category Filter -->
+        <div class="category-filter" id="categoryFilter">
+          <button class="filter-btn active" data-category="all">Tất cả</button>
         </div>
 
-        <!-- Contact Form -->
-        <div class="contact-form-section">
-          <h2>Gửi Tin Nhắn Cho Chúng Tôi</h2>
-          <form id="contactForm">
-            <div class="form-group">
-              <label for="fullName">Họ và Tên *</label>
-              <input
-                type="text"
-                id="fullName"
-                placeholder="Nhập họ và tên của bạn"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="email">Email *</label>
-              <input
-                type="email"
-                id="email"
-                placeholder="Nhập địa chỉ email"
-                required
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="phoneNumber">Số Điện Thoại</label>
-              <input
-                type="tel"
-                id="phoneNumber"
-                placeholder="Nhập số điện thoại"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="subject">Chủ Đề</label>
-              <input
-                type="text"
-                id="subject"
-                placeholder="Bạn cần hỗ trợ về vấn đề gì?"
-              />
-            </div>
-
-            <div class="form-group">
-              <label for="image">Đính kèm ảnh (Tùy chọn)</label>
-              <input type="file" id="image" accept="image/*" />
-            </div>
-
-            <div class="form-group">
-              <label for="message">Nội Dung *</label>
-              <textarea
-                id="message"
-                rows="5"
-                placeholder="Nhập nội dung tin nhắn..."
-                required
-              ></textarea>
-            </div>
-
-            <button type="submit" class="btn-submit">Gửi Tin Nhắn</button>
-
-            <div id="notification" class="notification"></div>
-          </form>
+        <!-- FAQ Accordion -->
+        <div class="faq-list" id="faqList">
+          <div class="loading-state">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Đang tải câu hỏi thường gặp...</p>
+          </div>
         </div>
       </div>
 
-      <!-- Hospital Branches Section -->
+      <!-- Guide Section -->
+      <div class="guide-content" id="guideSection" style="display: none;">
+        <h2>Hướng dẫn sử dụng dịch vụ đặt lịch khám</h2>
+        <p class="guide-intro">Làm theo 5 bước đơn giản để đặt lịch khám bệnh online</p>
+
+        <div class="steps-container">
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-user-plus"></i>
+            </div>
+            <div class="step-number">Bước 1</div>
+            <div class="step-title">Đăng ký tài khoản</div>
+            <div class="step-desc">Nhấn "Đăng Ký" và điền thông tin cá nhân như họ tên, số điện thoại, email và mật khẩu để tạo tài khoản.</div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-stethoscope"></i>
+            </div>
+            <div class="step-number">Bước 2</div>
+            <div class="step-title">Chọn chuyên khoa</div>
+            <div class="step-desc">Truy cập trang đặt lịch, chọn chuyên khoa phù hợp với nhu cầu khám bệnh của bạn.</div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-user-md"></i>
+            </div>
+            <div class="step-number">Bước 3</div>
+            <div class="step-title">Chọn bác sĩ</div>
+            <div class="step-desc">Xem danh sách bác sĩ theo chuyên khoa, bao gồm thông tin về kinh nghiệm, chuyên môn và lịch làm việc.</div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="step-number">Bước 4</div>
+            <div class="step-title">Chọn ngày và giờ khám</div>
+            <div class="step-desc">Chọn ngày khám phù hợp và khung giờ trống của bác sĩ. Xác nhận thông tin lịch hẹn.</div>
+          </div>
+
+          <div class="step-item">
+            <div class="step-icon">
+              <i class="fas fa-credit-card"></i>
+            </div>
+            <div class="step-number">Bước 5</div>
+            <div class="step-title">Thanh toán và xác nhận</div>
+            <div class="step-desc">Chọn phương thức thanh toán (tiền mặt, chuyển khoản, ví điện tử) và nhận xác nhận đặt lịch qua email/SMS.</div>
+          </div>
+        </div>
+
+        <div class="guide-note">
+          <i class="fas fa-info-circle"></i>
+          <p>Sau khi đặt lịch thành công, bạn sẽ nhận được mã xác nhận qua email. Vui lòng mang theo mã này và CMND/CCCD khi đến khám.</p>
+        </div>
+      </div>
+
+      <!-- Hospital Branches -->
       <div class="branches-section">
         <h2>Các cơ sở bệnh viện</h2>
         <div class="branches-grid">
@@ -184,13 +196,13 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
     <!-- Chat Widget Integration -->
     <div id="chatWidgetBtn" class="chat-widget-btn" title="Chat với chúng tôi">
         <i class="fas fa-comments" style="font-size: 28px;"></i>
     </div>
-    
+
     <div id="chatBox" class="chat-box">
         <div class="chat-header">
             <div class="chat-header-info">
@@ -202,8 +214,7 @@
                 <span id="closeChatBtn" style="cursor: pointer;" title="Đóng"><i class="fas fa-times"></i></span>
             </div>
         </div>
-        
-        <!-- Login Overlay -->
+
         <div id="chatLoginOverlay" class="chat-login-overlay">
             <div class="chat-login-title">Thông tin của bạn</div>
             <div class="chat-login-desc">Vui lòng nhập tên để bắt đầu chat</div>
@@ -211,7 +222,6 @@
             <button id="chatLoginBtn" class="chat-login-btn">Bắt đầu chat</button>
         </div>
 
-        <!-- Delete Confirmation Modal -->
         <div id="deleteConfirmModal" class="chat-modal">
             <div class="chat-modal-content">
                 <div class="chat-modal-text">Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện?</div>
@@ -229,27 +239,24 @@
                 <span class="message-time">Vừa xong</span>
             </div>
         </div>
-        
+
         <div class="quick-actions">
             <button class="quick-btn">🕒 Giờ làm việc</button>
             <button class="quick-btn">💰 Bảng giá</button>
             <button class="quick-btn">📍 Địa chỉ</button>
             <button class="quick-btn">📞 Tư vấn dặt lịch</button>
         </div>
-        
+
         <div class="chat-input-area">
             <input type="text" id="chatInput" placeholder="Nhập tin nhắn..." disabled>
             <button class="send-btn" id="sendChatBtn"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
 
-    <!-- Chat Dependencies -->
-    <link rel="stylesheet" href="../css/chat-widget.css?v=1.1">
+    <link rel="stylesheet" href="../css/chat-widget.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-    <script src="../javascript/chat-widget.js?v=1.9"></script>
-    <script src="../javascript/auth-utils.js?v=1.1"></script> <!-- Verify auth for name -->
-
-    <script src="../javascript/contact.js"></script>
+    <script src="../javascript/chat-widget.js"></script>
+    <script src="../javascript/faq.js"></script>
   </body>
 </html>

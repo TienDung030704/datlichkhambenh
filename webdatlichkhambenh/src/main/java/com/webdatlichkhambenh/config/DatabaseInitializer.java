@@ -21,6 +21,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         createDoctorsTable();
         createAppointmentsTable();
         createContactTable();
+        createFaqsTable();
 
         // Seed initial data if needed
         seedInitialData();
@@ -161,6 +162,25 @@ public class DatabaseInitializer implements CommandLineRunner {
         }
     }
 
+    private void createFaqsTable() {
+        try {
+            String sql = "CREATE TABLE IF NOT EXISTS faqs (" +
+                    "id INT AUTO_INCREMENT PRIMARY KEY," +
+                    "question VARCHAR(500) NOT NULL," +
+                    "answer TEXT NOT NULL," +
+                    "category VARCHAR(100)," +
+                    "display_order INT DEFAULT 0," +
+                    "is_active TINYINT(1) DEFAULT 1," +
+                    "created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP," +
+                    "updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP" +
+                    ")";
+            jdbcTemplate.execute(sql);
+            System.out.println("Table 'faqs' checked/created successfully.");
+        } catch (Exception e) {
+            System.err.println("Error creating 'faqs' table: " + e.getMessage());
+        }
+    }
+
     private void seedInitialData() {
         try {
             // Check if users table is empty
@@ -210,6 +230,36 @@ public class DatabaseInitializer implements CommandLineRunner {
                 } catch (Exception e) {
                     System.out.println("Skipping doctor seeding: " + e.getMessage());
                 }
+            }
+
+            // Check if FAQs table is empty
+            Integer faqCount = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM faqs", Integer.class);
+            if (faqCount != null && faqCount == 0) {
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Làm thế nào để đặt lịch khám bệnh?",
+                        "Bạn có thể đặt lịch khám bệnh qua website bằng cách: 1) Chọn chuyên khoa phù hợp, 2) Chọn bác sĩ, 3) Chọn ngày và giờ khám, 4) Điền thông tin bệnh nhân, 5) Xác nhận đặt lịch.",
+                        "Đặt lịch", 1);
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Tôi có thể hủy lịch khám không?",
+                        "Có, bạn có thể hủy lịch khám trước ít nhất 24 giờ so với giờ hẹn. Vui lòng đăng nhập vào tài khoản và vào mục 'Lịch hẹn của tôi' để hủy hoặc đổi lịch.",
+                        "Đặt lịch", 2);
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Phương thức thanh toán nào được chấp nhận?",
+                        "Chúng tôi chấp nhận thanh toán tiền mặt tại quầy, chuyển khoản ngân hàng, và thanh toán qua ví điện tử (VNPay, MoMo, ZaloPay).",
+                        "Thanh toán", 3);
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Giờ làm việc của bệnh viện là khi nào?",
+                        "Bệnh viện làm việc từ thứ 2 đến thứ 6: 7:30 - 16:30, thứ 7: 7:30 - 11:30. Trung tâm cấp cứu hoạt động 24/7.",
+                        "Dịch vụ", 4);
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Tôi cần mang theo giấy tờ gì khi đến khám?",
+                        "Vui lòng mang theo: CMND/CCCD, thẻ BHYT (nếu có), kết quả xét nghiệm hoặc đơn thuốc cũ (nếu có), và giấy xác nhận đặt lịch khám.",
+                        "Dịch vụ", 5);
+                jdbcTemplate.update("INSERT INTO faqs (question, answer, category, display_order, is_active) VALUES (?, ?, ?, ?, 1)",
+                        "Làm sao để liên hệ với bệnh viện?",
+                        "Bạn có thể liên hệ qua: Hotline 1900 1607, email support@healthcare.vn, hoặc chat trực tiếp trên website. Đội ngũ hỗ trợ sẵn sàng giải đáp 24/7.",
+                        "Liên hệ", 6);
+                System.out.println("Seeded default FAQs.");
             }
 
         } catch (Exception e) {

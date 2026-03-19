@@ -84,17 +84,25 @@ public class ChatController {
         return chatMessage;
     }
 
-    // API kiểm tra trạng thái hoạt động
+    // API trả về lịch hoạt động (client tự kiểm tra bằng local time)
     @GetMapping("/api/chat/status")
     @ResponseBody
     public java.util.Map<String, Object> getChatStatus() {
-        java.util.Map<String, Object> status = new java.util.HashMap<>();
-        boolean isOnline = chatOperatingHours.isOperating();
+        java.util.Map<String, Object> result = new java.util.HashMap<>();
 
-        status.put("isOnline", isOnline);
-        status.put("message", isOnline ? "Chat đang hoạt động" : chatOperatingHours.getOperatingHoursMessage());
+        // Trả schedule để client tự check bằng local time
+        java.util.Map<String, java.util.Map<String, String>> scheduleMap = new java.util.HashMap<>();
+        chatOperatingHours.getSchedule().forEach((day, range) -> {
+            java.util.Map<String, String> timeRange = new java.util.HashMap<>();
+            timeRange.put("start", range.getStart().toString());
+            timeRange.put("end", range.getEnd().toString());
+            scheduleMap.put(day, timeRange);
+        });
 
-        return status;
+        result.put("schedule", scheduleMap);
+        result.put("operatingHoursMessage", chatOperatingHours.getOperatingHoursMessage());
+
+        return result;
     }
 
     // API lấy lịch sử chat

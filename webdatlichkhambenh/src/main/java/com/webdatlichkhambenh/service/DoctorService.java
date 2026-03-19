@@ -123,4 +123,19 @@ public class DoctorService {
             return "";
         }
     }
+
+    // Find doctors by specialty name keyword (for chatbot)
+    public List<Map<String, Object>> findDoctorsBySpecialtyKeyword(String specialtyKeyword) {
+        try {
+            String sql = "SELECT d.id, d.full_name, d.specialization, d.price, s.specialty_name " +
+                    "FROM doctors d " +
+                    "LEFT JOIN specialties s ON d.specialty_id = s.id " +
+                    "WHERE s.specialty_name LIKE ? AND d.is_active = 1 " +
+                    "LIMIT 5";
+            return jdbcTemplate.queryForList(sql, "%" + specialtyKeyword + "%");
+        } catch (Exception e) {
+            System.out.println("Error finding doctors by specialty keyword: " + e.getMessage());
+            return List.of();
+        }
+    }
 }

@@ -549,5 +549,23 @@
 
     <script src="javascript/auth-utils.js"></script>
     <script src="javascript/index.js"></script>
+
+    <!-- Chatbox AI -->
+    <div id="chatbox" class="chatbox">
+      <div class="chatbox-header">
+        <span>Chat AI</span>
+        <button id="close-chatbox">&times;</button>
+      </div>
+      <div class="chatbox-body" id="chatbox-body">
+        <div class="message bot">Xin chào! Tôi là trợ lý AI y tế. Tôi có thể giúp bạn với các câu hỏi về sức khỏe, bệnh tật và dinh dưỡng.</div>
+      </div>
+      <div class="chatbox-footer">
+        <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
+        <button id="send-button">Gửi</button>
+      </div>
+    </div>
+    <button id="open-chatbox" class="open-chatbox-btn">💬</button>
+
+    <script src="javascript/chatbox.js"></script>
   </body>
 </html>

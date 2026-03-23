@@ -20,6 +20,7 @@ public class ChatMessage {
     private Long timestamp;
     private String recipient;
     private String sessionId;
+    private String senderType; // USER, AI, STAFF
 
     public enum MessageType {
         CHAT,
@@ -81,5 +82,13 @@ public class ChatMessage {
 
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
+    }
+
+    public String getSenderType() {
+        return senderType;
+    }
+
+    public void setSenderType(String senderType) {
+        this.senderType = senderType;
     }
 }

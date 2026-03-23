@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="../css/admin-panel.css" />
-    <link rel="stylesheet" href="../css/admin-chat.css" />
+    <link rel="stylesheet" href="../css/admin-chat.css?v=2.0" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
   <body>
@@ -348,24 +348,16 @@
 
       <!-- Live Chat Section (NEW) -->
       <div class="chat-content section-content" id="livechatSection" style="display: none">
-          <div class="section-header">
-              <h2>Trung tâm Live Chat</h2>
-              <div class="reply-target-indicator" id="replyTarget" style="display: none; align-items: center; gap: 5px;">
-                  <span id="replyTargetLabel">Đang trả lời: ...</span>
-                  <i class="fas fa-times-circle" id="clearRecipient" style="cursor: pointer;" title="Hủy"></i>
-              </div>
-          </div>
-          
           <div class="chat-console-container">
               <!-- Left Panel: Active Users -->
               <div class="chat-users-panel">
                   <div class="chat-users-header">
-                      Khách hàng đang Chat
+                      Chats
                   </div>
                   <div class="user-list" id="chatUserList">
                       <!-- Users will be added here dynamically -->
                       <div class="user-item" style="justify-content: center; color: #94a3b8; font-style: italic; font-size: 13px;" id="noUsersLabel">
-                          Chưa có ai nhắn tin
+                          Chưa có tin nhắn mới
                       </div>
                   </div>
               </div>
@@ -373,19 +365,19 @@
               <!-- Right Panel: Chat Area -->
               <div class="chat-main-panel">
                   <div class="chat-main-header">
-                      <div id="chatHeaderTitle" style="font-weight: 600;">Chọn một khách hàng để chat</div>
+                      <h3 id="chatHeaderTitle">Chọn một hội thoại</h3>
                       <div class="chat-controls">
-                          <button class="btn btn-sm btn-danger" id="endChatBtn" style="display: none;">kết thúc</button>
+                          <button class="btn btn-sm btn-outline-danger" id="endChatBtn" style="display: none;">Kết thúc</button>
                       </div>
                   </div>
                   <div class="chat-console-messages" id="consoleMessages">
-                      <div class="console-message bot">Hệ thống sẵn sàng. Bấm vào tin nhắn của khách để trả lời riêng.</div>
+                      <div class="console-message ai">Hệ thống sẵn sàng. Vui lòng chọn khách hàng để bắt đầu hỗ trợ.</div>
                   </div>
                   
                   <div class="chat-input-toolbar">
-                      <input type="text" id="consoleInput" class="console-input" placeholder="Nhập tin nhắn..." autocomplete="off">
-                      <button id="sendConsoleBtn" class="console-btn-send">
-                          <i class="fas fa-paper-plane"></i> Gửi
+                      <input type="text" id="consoleInput" class="console-input" placeholder="Aa..." autocomplete="off">
+                      <button id="sendConsoleBtn" class="console-btn-send" title="Gửi">
+                          <i class="fas fa-paper-plane"></i>
                       </button>
                   </div>
               </div>

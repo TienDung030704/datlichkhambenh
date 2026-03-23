@@ -71,7 +71,7 @@ public class SpecialtyService {
                 WHERE s.id = ? AND s.is_active = 1
                 GROUP BY s.id, s.specialty_name, s.description, s.price, s.is_active
                 """;
-            List<Specialty> specialties = jdbcTemplate.query(sql, new Object[] { id }, specialtyRowMapper);
+            List<Specialty> specialties = jdbcTemplate.query(sql, specialtyRowMapper, id);
             return specialties.isEmpty() ? null : specialties.get(0);
         } catch (Exception e) {
             System.out.println("Error getting specialty by id: " + e.getMessage());

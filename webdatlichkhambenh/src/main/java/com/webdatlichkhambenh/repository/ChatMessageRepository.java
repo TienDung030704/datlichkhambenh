@@ -12,6 +12,9 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessage, Long> 
     // Find messages by Session ID
     List<ChatMessage> findBySessionIdOrderByTimestampAsc(String sessionId);
 
+    // Get last 10 messages for AI context
+    List<ChatMessage> findTop10BySessionIdOrderByTimestampAsc(String sessionId);
+
     // Find messages for a specific user (Sender OR Recipient)
     List<ChatMessage> findBySenderOrRecipientOrderByTimestampAsc(String sender, String recipient);
 

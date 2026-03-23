@@ -55,3 +55,6 @@ CLAUDE.md
 claude.md
 **/CLAUDE.md
 **/claude.md
+
+# Environment variables
+.env

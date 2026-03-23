@@ -42,7 +42,7 @@ public class DoctorService {
     public List<Doctor> getDoctorsBySpecialtyId(Integer specialtyId) {
         try {
             String sql = "SELECT id, specialty_id, full_name, email, phone_number, address, license_number, experience, is_active FROM doctors WHERE specialty_id = ? AND is_active = 1";
-            return jdbcTemplate.query(sql, new Object[] { specialtyId }, doctorRowMapper);
+            return jdbcTemplate.query(sql, doctorRowMapper, specialtyId);
         } catch (Exception e) {
             System.out.println("Error getting doctors by specialty: " + e.getMessage());
             return List.of();
@@ -53,7 +53,7 @@ public class DoctorService {
     public List<Doctor> getDoctorsBySpecialtyIdWithLimit(Integer specialtyId, Integer limit) {
         try {
             String sql = "SELECT id, specialty_id, full_name, email, phone_number, address, license_number, experience, is_active FROM doctors WHERE specialty_id = ? AND is_active = 1 LIMIT ?";
-            return jdbcTemplate.query(sql, new Object[] { specialtyId, limit }, doctorRowMapper);
+            return jdbcTemplate.query(sql, doctorRowMapper, specialtyId, limit);
         } catch (Exception e) {
             System.out.println("Error getting doctors by specialty with limit: " + e.getMessage());
             return List.of();
@@ -64,7 +64,7 @@ public class DoctorService {
     public Doctor getDoctorById(Integer id) {
         try {
             String sql = "SELECT id, specialty_id, full_name, email, phone_number, address, license_number, experience, is_active FROM doctors WHERE id = ? AND is_active = 1";
-            List<Doctor> doctors = jdbcTemplate.query(sql, new Object[] { id }, doctorRowMapper);
+            List<Doctor> doctors = jdbcTemplate.query(sql, doctorRowMapper, id);
             return doctors.isEmpty() ? null : doctors.get(0);
         } catch (Exception e) {
             System.out.println("Error getting doctor by id: " + e.getMessage());
@@ -81,8 +81,7 @@ public class DoctorService {
 
             // Get the created doctor id
             String getIdSql = "SELECT id FROM doctors WHERE license_number = ? ORDER BY created_at DESC LIMIT 1";
-            List<Integer> ids = jdbcTemplate.query(getIdSql, new Object[] { licenseNumber },
-                    (rs, rowNum) -> rs.getInt("id"));
+            List<Integer> ids = jdbcTemplate.query(getIdSql, (rs, rowNum) -> rs.getInt("id"), licenseNumber);
             return ids.isEmpty() ? 0 : ids.get(0);
         } catch (Exception e) {
             System.out.println("Error creating doctor: " + e.getMessage());
@@ -115,8 +114,7 @@ public class DoctorService {
     private String getSpecialtyName(Integer specialtyId) {
         try {
             String sql = "SELECT name FROM specialties WHERE id = ?";
-            List<String> names = jdbcTemplate.query(sql, new Object[] { specialtyId },
-                    (rs, rowNum) -> rs.getString("name"));
+            List<String> names = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getString("name"), specialtyId);
             return names.isEmpty() ? "" : names.get(0);
         } catch (Exception e) {
             System.out.println("Error getting specialty name: " + e.getMessage());

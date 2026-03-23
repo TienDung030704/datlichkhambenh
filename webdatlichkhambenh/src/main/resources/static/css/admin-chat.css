@@ -1,61 +1,102 @@
-/* Admin Chat Console Styles */
-.chat-console-container {
-    display: flex;
-    height: 70vh; /* Occupy good amount of screen */
-    gap: 20px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    border: 1px solid #e2e8f0;
+/* Admin Chat Console Styles - Messenger/Zalo Style */
+:root {
+    --messenger-blue: #0084ff;
+    --messenger-grey: #e4e6eb;
+    --messenger-hover: #f5f5f5;
+    --text-primary: #050505;
+    --text-secondary: #65676b;
+    --ai-teal: #e7f3ff;
 }
 
-/* User List (Left Panel) - Optional for MVP but good structure */
+.chat-console-container {
+    display: flex;
+    height: calc(100vh - 180px);
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin: 20px;
+}
+
+/* User List (Left Panel) */
 .chat-users-panel {
-    width: 280px;
-    border-right: 1px solid #e2e8f0;
+    width: 320px;
+    border-right: 1px solid #dddfe2;
     display: flex;
     flex-direction: column;
-    background: #f8fafc;
+    background: #fff;
 }
 
 .chat-users-header {
-    padding: 15px;
-    border-bottom: 1px solid #e2e8f0;
-    font-weight: 600;
-    color: #475569;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    border-bottom: 1px solid transparent;
 }
 
 .user-list {
     flex: 1;
     overflow-y: auto;
+    padding: 8px;
 }
 
 .user-item {
-    padding: 12px 15px;
+    padding: 12px;
     cursor: pointer;
-    border-bottom: 1px solid #f1f5f9;
-    transition: background 0.2s;
+    border-radius: 10px;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
 }
 
-.user-item:hover, .user-item.active {
-    background: #e0f2fe;
-    color: #0284c7;
+.user-item:hover {
+    background: var(--messenger-hover);
+}
+
+.user-item.active {
+    background: #ebf5ff;
+}
+
+.user-item.active .user-name {
+    color: var(--messenger-blue);
 }
 
 .user-avatar-small {
-    width: 32px;
-    height: 32px;
-    background: #cbd5e1;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #0084ff, #00c6ff);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    font-size: 18px;
+    font-weight: bold;
     color: white;
+    flex-shrink: 0;
+}
+
+.user-info-brief {
+    flex: 1;
+    min-width: 0;
+}
+
+.user-name {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-last-msg {
+    font-size: 13px;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Chat Area (Right Panel) */
@@ -63,135 +104,129 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    background: #fff;
 }
 
 .chat-main-header {
-    padding: 15px;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dddfe2;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
 }
 
-.chat-controls {
-    display: flex;
-    gap: 10px;
+.chat-main-header h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0;
 }
 
 .chat-console-messages {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background: #f8fafc;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 4px;
+    background: #fff;
 }
 
 .console-message {
-    max-width: 70%;
-    padding: 10px 14px;
-    border-radius: 8px;
-    font-size: 14px;
-    line-height: 1.5;
-    position: relative;
+    max-width: 65%;
+    padding: 10px 16px;
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    word-wrap: break-word;
 }
 
-.console-message.received {
-    background: white;
-    align-self: flex-start; /* From Users */
-    border: 1px solid #e2e8f0;
-    cursor: pointer; /* Click to reply */
+/* Tin nhắn từ Người dùng / AI (Bên trái) */
+.console-message.user, .console-message.ai {
+    align-self: flex-start;
+    background: var(--messenger-grey);
+    color: var(--text-primary);
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
 }
 
-.console-message.received:hover {
-    border-color: #007bff;
+.console-message.ai {
+    background: #f0f2f5;
+    border: 1px solid #e4e6eb;
+    color: #4b4b4b;
+    font-style: italic;
 }
 
-.console-message.sent {
-    background: #eff6ff;
-    align-self: flex-end; /* From Admin */
-    border: 1px solid #bfdbfe;
-    color: #1e40af;
-}
-
-.console-message.bot {
-    background: #f0fdf4;
-    align-self: center;
-    border: 1px dashed #86efac;
-    color: #166534;
-    font-size: 13px;
-    max-width: 90%;
+/* Tin nhắn từ Admin (Bên phải) */
+.console-message.staff {
+    align-self: flex-end;
+    background: var(--messenger-blue);
+    color: #fff;
+    border-radius: 18px;
+    border-bottom-right-radius: 4px;
 }
 
 .message-meta {
     font-size: 11px;
-    color: #94a3b8;
-    margin-bottom: 4px;
-    display: flex;
-    justify-content: space-between;
+    color: var(--text-secondary);
+    margin: 2px 0 10px 0;
+    display: block;
 }
 
-.reply-badge {
-    position: absolute;
-    top: -10px;
-    right: -10px;
-    background: #3b82f6;
-    color: white;
-    font-size: 10px;
-    padding: 2px 6px;
-    border-radius: 10px;
-    display: none;
+.console-message.user + .message-meta,
+.console-message.ai + .message-meta {
+    align-self: flex-start;
+    padding-left: 8px;
 }
 
-.console-message.received.selected {
-    border: 2px solid #007bff;
-    background: #f0f9ff;
+.console-message.staff + .message-meta {
+    align-self: flex-end;
+    padding-right: 8px;
 }
 
+/* Input Area */
 .chat-input-toolbar {
-    padding: 15px;
-    background: white;
-    border-top: 1px solid #e2e8f0;
+    padding: 15px 20px;
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: center;
-}
-
-.reply-target-indicator {
-    font-size: 12px;
-    color: #64748b;
-    background: #f1f5f9;
-    padding: 4px 8px;
-    border-radius: 4px;
-    display: none;
-}
-
-.reply-target-indicator.visible {
-    display: inline-block;
+    border-top: 1px solid #dddfe2;
 }
 
 .console-input {
     flex: 1;
-    padding: 10px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
+    padding: 12px 16px;
+    background: #f0f2f5;
+    border: none;
+    border-radius: 20px;
     outline: none;
-}
-
-.console-input:focus {
-    border-color: #007bff;
+    font-size: 15px;
 }
 
 .console-btn-send {
-    padding: 10px 20px;
-    background: #007bff;
-    color: white;
+    background: none;
     border: none;
-    border-radius: 6px;
+    color: var(--messenger-blue);
+    font-weight: bold;
     cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
 }
 
 .console-btn-send:hover {
-    background: #0069d9;
+    transform: scale(1.1);
+}
+
+/* Scrollbar */
+.chat-console-messages::-webkit-scrollbar,
+.user-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.chat-console-messages::-webkit-scrollbar-thumb,
+.user-list::-webkit-scrollbar-thumb {
+    background: #bcc0c4;
+    border-radius: 10px;
 }

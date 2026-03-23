@@ -72,7 +72,7 @@ async function performClearChat() {
             usernameParam = userObj.username;
         } catch (e) {}
     } else {
-        usernameParam = localStorage.getItem('chat_guest_name') || '';
+        usernameParam = sessionStorage.getItem('chat_guest_name') || '';
     }
     
     try {
@@ -102,62 +102,8 @@ async function performClearChat() {
 }
 
 async function checkChatStatusAndInit() {
-    try {
-        const response = await fetch('/api/chat/status');
-        const { schedule, operatingHoursMessage } = await response.json();
-        
-        if (!isWithinOperatingHours(schedule)) {
-            showOfflineNotice(operatingHoursMessage);
-            return;
-        }
-        
-        checkUserAndInit();
-    } catch (e) {
-        console.error("Lỗi kiểm tra trạng thái chat:", e);
-        checkUserAndInit();
-    }
-}
-
-function isWithinOperatingHours(schedule) {
-    if (!schedule) return true;
-
-    const now = new Date();
-    const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
-    const todayKey = dayNames[now.getDay()];
-    const todayRange = schedule[todayKey];
-
-    if (!todayRange) return false;
-
-    const [startH, startM] = todayRange.start.split(':').map(Number);
-    const [endH, endM] = todayRange.end.split(':').map(Number);
-    const currentMinutes = now.getHours() * 60 + now.getMinutes();
-
-    return currentMinutes >= (startH * 60 + startM) && currentMinutes <= (endH * 60 + endM);
-}
-
-function showOfflineNotice(message) {
-    const chatMessages = document.getElementById('chatMessages');
-    if (!chatMessages) return;
-
-    const now = new Date();
-    const localTimeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
-    
-    chatMessages.innerHTML = `
-        <div style="padding: 20px; text-align: center;">
-            <div style="font-size: 32px; margin-bottom: 10px;">🔴</div>
-            <div style="font-weight: bold; margin-bottom: 10px;">Hết giờ làm việc</div>
-            <div style="color: #999; font-size: 12px; margin-bottom: 8px;">Giờ hiện tại: ${localTimeStr}</div>
-            <div style="color: #666; font-size: 13px; white-space: pre-line; margin-bottom: 15px;">${message}</div>
-            <button onclick="goToContact()" style="background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                Gửi Liên Hệ
-            </button>
-        </div>
-    `;
-    
-    const chatInput = document.getElementById('chatInput');
-    const sendBtn = document.getElementById('sendChatBtn');
-    if (chatInput) chatInput.disabled = true;
-    if (sendBtn) sendBtn.disabled = true;
+    // AI Chat 24/7 - Bỏ qua kiểm tra giờ làm việc
+    checkUserAndInit();
 }
 
 function goToContact() {
@@ -165,10 +111,10 @@ function goToContact() {
 }
 
 const getSessionId = () => {
-    let sid = localStorage.getItem('chat_session_id');
+    let sid = sessionStorage.getItem('chat_session_id');
     if (!sid) {
         sid = 'sess-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
-        localStorage.setItem('chat_session_id', sid);
+        sessionStorage.setItem('chat_session_id', sid);
     }
     return sid;
 };
@@ -198,7 +144,7 @@ function checkUserAndInit() {
     }
 
     // 2. Kiểm tra nếu là Khách cũ
-    const savedGuest = localStorage.getItem('chat_guest_name');
+    const savedGuest = sessionStorage.getItem('chat_guest_name');
     if (savedGuest) {
         username = savedGuest;
         
@@ -236,7 +182,7 @@ function handleChatLogin() {
     
     if (name) {
         username = name;
-        localStorage.setItem('chat_guest_name', username); // Lưu cho lần sau
+        sessionStorage.setItem('chat_guest_name', username); // Lưu cho phiên này
         
         // Ẩn overlay, hiện chat
         const loginOverlay = document.getElementById('chatLoginOverlay');
@@ -273,7 +219,7 @@ function connect() {
 }
 
 function onConnected() {
-    stompClient.subscribe('/topic/public', onMessageReceived);
+    stompClient.subscribe('/topic/chat/' + getSessionId(), onMessageReceived);
     
     stompClient.send("/app/chat.addUser",
         {},
@@ -315,17 +261,8 @@ function onMessageReceived(payload) {
     const message = JSON.parse(payload.body);
     const api = document.getElementById('chatMessages');
     
-    // Lọc quyền riêng tư: Chỉ hiện tin nhắn liên quan đến mình
-    const mySessionId = getSessionId();
-    const isRelated = (message.recipient === username) || 
-                      (message.sender === username) || 
-                      (message.recipient === 'ALL') ||
-                      (message.recipient === localStorage.getItem('chat_guest_name')) ||
-                      (message.sessionId === mySessionId);
-
-    if (!isRelated) {
-        return; 
-    }
+    // Lọc quyền riêng tư: Đã được xử lý ở cấp độ Topic (Network level)
+    // Chỉ cần render các tin nhắn nhận được từ topic riêng của mình
     
     // Render tin nhắn
     renderMessageElement(message, api);
@@ -358,7 +295,7 @@ async function loadHistory() {
                 url += `&username=${encodeURIComponent(regUsername)}`;
             }
         } catch(e) {}
-    } else if (username && username !== localStorage.getItem('chat_guest_name')) {
+    } else if (username && username !== sessionStorage.getItem('chat_guest_name')) {
          url += `&username=${encodeURIComponent(username)}`;
     }
     
@@ -371,7 +308,6 @@ async function loadHistory() {
         const api = document.getElementById('chatMessages');
         if (!api) return;
         
-        // Giữ lại tin nhắn chào mừng mặc định nếu có, sau đó append history
         history.forEach(msg => {
              renderMessageElement(msg, api);
         });
@@ -379,28 +315,14 @@ async function loadHistory() {
         
     } catch (e) {
         console.error("Lỗi tải lịch sử", e);
-        // Fallback: Sử dụng LocalStorage nếu API lỗi
-        const rawHistory = localStorage.getItem('chat_history');
-        if (rawHistory) {
-            let history = JSON.parse(rawHistory);
-            const api = document.getElementById('chatMessages');
-            history.forEach(msg => renderMessageElement(msg, api));
-        }
     }
 }
 
 function renderMessageElement(message, api) {
     const mySessionId = getSessionId();
-    const savedGuestName = localStorage.getItem('chat_guest_name');
      
-    const isRelated = (message.recipient === username) || 
-                      (message.sender === username) || 
-                      (message.recipient === 'ALL') ||
-                      (message.recipient === savedGuestName) ||
-                      (message.sender === savedGuestName) || 
-                      (message.sessionId === mySessionId);
-     
-    if (!isRelated) {
+    // Chỉ hiển thị tin nhắn thuộc session này
+    if (message.sessionId !== mySessionId) {
         return;
     }
      
@@ -411,15 +333,10 @@ function renderMessageElement(message, api) {
         return;
     }
     
-    const isBot = message.sender === 'Medical Bot';
-    const isAdmin = message.sender === 'Admin' || message.sender === 'Administrator' || message.sender === 'Tiếp tân';
-    
-    let isMe = false;
-    if (!isBot && !isAdmin) {
-         isMe = (message.sender === username) || 
-                (savedGuestName && message.sender === savedGuestName) || 
-                (message.sessionId && message.sessionId === mySessionId);
-    }
+    const senderType = message.senderType || 'USER'; 
+    const isMe = (senderType === 'USER');
+    const isAi = (senderType === 'AI');
+    const isStaff = (senderType === 'STAFF');
 
     const timeStr = formatTimestamp(message.timestamp);
         
@@ -429,15 +346,21 @@ function renderMessageElement(message, api) {
     } else {
         messageElement.classList.add('received');
         
-        const senderName = isAdmin ? 'Tiếp tân' : message.sender;
-        
-        let contentHtml = message.content;
-        
-        if (contentHtml.includes("&lt;") && contentHtml.includes("&gt;")) {
-            const txt = document.createElement("textarea");
-            txt.innerHTML = contentHtml;
-            contentHtml = txt.value;
+        let senderName = message.sender;
+        if (isAi) {
+            senderName = "Medical Bot (AI) ✨";
+            messageElement.classList.add('ai-message');
+        } else if (isStaff) {
+            senderName = "Tiếp tân (Bệnh viện) 🏥";
+            messageElement.classList.add('staff-message');
         }
+        
+        let contentHtml = message.content || '';
+        
+        // Unescape HTML and prevent script injection (basic)
+        const div = document.createElement('div');
+        div.textContent = contentHtml;
+        contentHtml = div.innerHTML.replace(/\n/g, '<br>');
 
         messageElement.innerHTML = `<strong>${senderName}</strong><br><span>${contentHtml}</span><div class="msg-time">${timeStr}</div>`;
     }
@@ -452,5 +375,5 @@ function formatTimestamp(ts) {
 
 function toggleChat() {
     const chatBox = document.getElementById('chatBox');
-    chatBox.classList.toggle('active');
+    if (chatBox) chatBox.classList.toggle('active');
 }

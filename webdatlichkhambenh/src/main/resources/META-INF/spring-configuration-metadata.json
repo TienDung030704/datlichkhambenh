@@ -1,0 +1,74 @@
+{
+  "properties": [
+    {
+      "name": "chat.hours.monday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Monday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.monday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Monday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.tuesday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Tuesday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.tuesday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Tuesday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.wednesday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Wednesday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.wednesday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Wednesday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.thursday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Thursday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.thursday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Thursday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.friday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Friday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.friday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Friday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.saturday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Saturday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.saturday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Saturday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.sunday.start",
+      "type": "java.lang.String",
+      "description": "Chat start time for Sunday (HH:mm format)"
+    },
+    {
+      "name": "chat.hours.sunday.end",
+      "type": "java.lang.String",
+      "description": "Chat end time for Sunday (HH:mm format)"
+    }
+  ]
+}

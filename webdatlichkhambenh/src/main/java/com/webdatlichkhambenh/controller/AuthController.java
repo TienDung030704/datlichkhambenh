@@ -17,40 +17,42 @@ public class AuthController {
 
     @Autowired
     private UserService userService;
-    
+
     @Autowired
     private JwtService jwtService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody LoginRequest request) {
         Map<String, Object> response = new HashMap<>();
-        
+
         if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Username không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Password không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         boolean success = userService.login(request.getUsername(), request.getPassword());
-        
+
         if (success) {
             String accessToken = jwtService.generateAccessToken(request.getUsername());
             String refreshToken = jwtService.generateRefreshToken(request.getUsername());
-            
+            String fullName = userService.getFullName(request.getUsername());
+
             // Save refresh token to database
             jwtService.saveRefreshTokenToDatabase(request.getUsername(), refreshToken);
-            
+
             response.put("success", true);
             response.put("message", "Đăng nhập thành công");
             response.put("accessToken", accessToken);
             response.put("refreshToken", refreshToken);
             response.put("username", request.getUsername());
+            response.put("fullName", fullName);
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
@@ -62,67 +64,68 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterRequest request) {
         Map<String, Object> response = new HashMap<>();
-        
+
         // Validate input
         if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Username không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Password không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Email không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (request.getFullName() == null || request.getFullName().trim().isEmpty()) {
             response.put("success", false);
             response.put("message", "Họ tên không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (request.getPassword().length() < 6) {
             response.put("success", false);
             response.put("message", "Password phải có ít nhất 6 ký tự");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         // Kiểm tra email đã tồn tại
         if (userService.emailExists(request.getEmail())) {
             response.put("success", false);
             response.put("message", "Email này đã được sử dụng");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         // Kiểm tra username đã tồn tại
         if (userService.userExists(request.getUsername())) {
             response.put("success", false);
             response.put("message", "Tên đăng nhập đã tồn tại");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         boolean success = userService.register(request);
-        
+
         if (success) {
             // Tự động tạo token sau khi đăng ký thành công
             String accessToken = jwtService.generateAccessToken(request.getUsername());
             String refreshToken = jwtService.generateRefreshToken(request.getUsername());
-            
+
             // Save refresh token to database
             jwtService.saveRefreshTokenToDatabase(request.getUsername(), refreshToken);
-            
+
             response.put("success", true);
             response.put("message", "Đăng ký thành công");
             response.put("accessToken", accessToken);
             response.put("refreshToken", refreshToken);
             response.put("username", request.getUsername());
+            response.put("fullName", request.getFullName());
             return ResponseEntity.ok(response);
         } else {
             response.put("success", false);
@@ -130,27 +133,27 @@ public class AuthController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-    
+
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, Object>> refreshToken(@RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
-        
+
         String refreshToken = request.get("refreshToken");
         String username = request.get("username");
-        
+
         if (refreshToken == null || username == null) {
             response.put("success", false);
             response.put("message", "Refresh token và username không được để trống");
             return ResponseEntity.badRequest().body(response);
         }
-        
+
         if (jwtService.validateRefreshToken(refreshToken, username)) {
             String newAccessToken = jwtService.generateAccessToken(username);
             String newRefreshToken = jwtService.generateRefreshToken(username);
-            
+
             // Save new tokens to database
             jwtService.saveRefreshTokenToDatabase(username, newRefreshToken);
-            
+
             response.put("success", true);
             response.put("message", "Token đã được làm mới");
             response.put("accessToken", newAccessToken);
@@ -163,33 +166,33 @@ public class AuthController {
             return ResponseEntity.badRequest().body(response);
         }
     }
-    
+
     @PostMapping("/logout")
     public ResponseEntity<Map<String, Object>> logout(@RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
-        
+
         String username = request.get("username");
         if (username != null) {
             jwtService.revokeRefreshToken(username);
         }
-        
+
         response.put("success", true);
         response.put("message", "Đăng xuất thành công");
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/test")
     public ResponseEntity<String> test() {
         return ResponseEntity.ok("API đang hoạt động!");
     }
-    
+
     @GetMapping("/user-info")
     public ResponseEntity<Map<String, Object>> getUserInfo(@RequestParam String username) {
         Map<String, Object> response = new HashMap<>();
-        
+
         try {
             String fullName = userService.getFullName(username);
-            
+
             if (fullName != null) {
                 response.put("success", true);
                 response.put("fullName", fullName);
@@ -198,24 +201,24 @@ public class AuthController {
                 response.put("success", false);
                 response.put("message", "User not found");
             }
-            
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
         }
-        
+
         return ResponseEntity.ok(response);
     }
-    
+
     // Get user profile
     @GetMapping("/profile")
     public ResponseEntity<Map<String, Object>> getUserProfile(@RequestParam String username) {
         Map<String, Object> response = new HashMap<>();
-        
+
         try {
             // Get user profile from database
             Map<String, Object> profile = userService.getUserProfile(username);
-            
+
             if (profile != null) {
                 response.put("success", true);
                 response.put("profile", profile);
@@ -223,47 +226,47 @@ public class AuthController {
                 response.put("success", false);
                 response.put("message", "User profile not found");
             }
-            
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
         }
-        
+
         return ResponseEntity.ok(response);
     }
-    
+
     // Update user profile
     @PostMapping("/profile")
     public ResponseEntity<Map<String, Object>> updateUserProfile(@RequestBody Map<String, Object> profileData) {
         Map<String, Object> response = new HashMap<>();
-        
+
         try {
             // Validate required fields first
             String fullName = (String) profileData.get("fullName");
             String email = (String) profileData.get("email");
-            
+
             if (fullName == null || fullName.trim().isEmpty()) {
                 response.put("success", false);
                 response.put("message", "Họ tên không được để trống");
                 return ResponseEntity.badRequest().body(response);
             }
-            
+
             if (email == null || email.trim().isEmpty()) {
                 response.put("success", false);
                 response.put("message", "Email không được để trống");
                 return ResponseEntity.badRequest().body(response);
             }
-            
+
             // Basic email validation
             if (!email.contains("@") || !email.contains(".")) {
                 response.put("success", false);
                 response.put("message", "Email không hợp lệ");
                 return ResponseEntity.badRequest().body(response);
             }
-            
+
             // Use email as identifier since it's unique and present in profileData
             boolean updated = userService.updateUserProfile(email, profileData);
-            
+
             if (updated) {
                 response.put("success", true);
                 response.put("message", "Cập nhật thông tin thành công");
@@ -271,33 +274,33 @@ public class AuthController {
                 response.put("success", false);
                 response.put("message", "Không thể cập nhật thông tin. Vui lòng kiểm tra lại.");
             }
-            
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Lỗi hệ thống: " + e.getMessage());
         }
-        
+
         return ResponseEntity.ok(response);
     }
-    
+
     // Change password
     @PostMapping("/change-password")
     public ResponseEntity<Map<String, Object>> changePassword(@RequestBody Map<String, Object> passwordData) {
         Map<String, Object> response = new HashMap<>();
-        
+
         try {
             String username = (String) passwordData.get("username");
             String currentPassword = (String) passwordData.get("currentPassword");
             String newPassword = (String) passwordData.get("newPassword");
-            
+
             if (username == null || currentPassword == null || newPassword == null) {
                 response.put("success", false);
                 response.put("message", "All fields are required");
                 return ResponseEntity.badRequest().body(response);
             }
-            
+
             boolean changed = userService.changePassword(username, currentPassword, newPassword);
-            
+
             if (changed) {
                 response.put("success", true);
                 response.put("message", "Password changed successfully");
@@ -305,12 +308,12 @@ public class AuthController {
                 response.put("success", false);
                 response.put("message", "Current password is incorrect");
             }
-            
+
         } catch (Exception e) {
             response.put("success", false);
             response.put("message", "Error: " + e.getMessage());
         }
-        
+
         return ResponseEntity.ok(response);
     }
 }

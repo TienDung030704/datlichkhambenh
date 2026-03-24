@@ -1,17 +1,21 @@
 package com.webdatlichkhambenh.service;
 
 import com.webdatlichkhambenh.model.ChatMessage;
+import io.github.cdimascio.dotenv.Dotenv;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
 public class AiService {
 
-    @Value("${groq.api.key}")
+    @Value("${groq.api.key:}")
     private String groqApiKey;
 
     @Value("${groq.api.url}")
@@ -20,7 +24,7 @@ public class AiService {
     @Value("${groq.model}")
     private String groqModel;
 
-    @Value("${gemini.api.key}")
+    @Value("${gemini.api.key:}")
     private String geminiApiKey;
 
     @Value("${gemini.chat.url}")
@@ -30,6 +34,20 @@ public class AiService {
     private String geminiEmbedUrl;
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+    @PostConstruct
+    public void initializeApiKeys() {
+        groqApiKey = resolveApiKey(groqApiKey, "GROQ_API_KEY");
+        geminiApiKey = resolveApiKey(geminiApiKey, "GEMINI_API_KEY");
+
+        if (groqApiKey == null || groqApiKey.isBlank()) {
+            System.err.println("AI Warning: GROQ_API_KEY not found. Groq chat will be disabled.");
+        }
+
+        if (geminiApiKey == null || geminiApiKey.isBlank()) {
+            System.err.println("AI Warning: GEMINI_API_KEY not found. Gemini chat/embedding will be disabled.");
+        }
+    }
 
     private static final String SYSTEM_INSTRUCTION = "Bạn là 'Medical Bot' - một trợ lý AI thân thiện, chuyên nghiệp của hệ thống Đặt Lịch Khám Bệnh. "
             +
@@ -55,12 +73,16 @@ public class AiService {
             return response;
 
         // Fallback to Gemini if Groq fails
-        System.out.println("Groq failed, falling back to Gemini...");
+        System.out.println("Groq unavailable or failed, falling back to Gemini...");
         return callGemini(userMessage, history, context);
     }
 
     @SuppressWarnings("unchecked")
     private String callGroq(String userMessage, List<ChatMessage> history, String context) {
+        if (groqApiKey == null || groqApiKey.isBlank()) {
+            return null;
+        }
+
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(groqApiKey);
@@ -107,6 +129,10 @@ public class AiService {
 
     @SuppressWarnings("unchecked")
     private String callGemini(String userMessage, List<ChatMessage> history, String context) {
+        if (geminiApiKey == null || geminiApiKey.isBlank()) {
+            return "Dạ tính năng AI hiện chưa được cấu hình API key. Anh/Chị vui lòng gọi hotline 1900.1607 để được hỗ trợ nha ạ!";
+        }
+
         String url = geminiChatUrl + "?key=" + geminiApiKey;
 
         Map<String, Object> payload = new HashMap<>();
@@ -158,6 +184,10 @@ public class AiService {
      * Embedding using Gemini (Free & Stable)
      */
     public float[] getEmbedding(String text) {
+        if (geminiApiKey == null || geminiApiKey.isBlank()) {
+            return null;
+        }
+
         // Fix: Always use the correct path for embeddings
         String url = geminiEmbedUrl + "?key=" + geminiApiKey;
 
@@ -196,5 +226,44 @@ public class AiService {
 
     public String getAiResponse(String userMessage, List<ChatMessage> history) {
         return getAiResponse(userMessage, history, null);
+    }
+
+    private String resolveApiKey(String currentValue, String envKey) {
+        if (currentValue != null && !currentValue.isBlank()) {
+            return currentValue;
+        }
+
+        String systemValue = System.getenv(envKey);
+        if (systemValue != null && !systemValue.isBlank()) {
+            return systemValue;
+        }
+
+        for (String directory : List.of(".", "webdatlichkhambenh")) {
+            String dotenvValue = readFromDotenv(directory, envKey);
+            if (dotenvValue != null && !dotenvValue.isBlank()) {
+                return dotenvValue;
+            }
+        }
+
+        return "";
+    }
+
+    private String readFromDotenv(String directory, String envKey) {
+        try {
+            Path dotenvPath = Path.of(directory, ".env").toAbsolutePath().normalize();
+            if (!Files.exists(dotenvPath)) {
+                return null;
+            }
+
+            Dotenv dotenv = Dotenv.configure()
+                    .directory(dotenvPath.getParent().toString())
+                    .filename(dotenvPath.getFileName().toString())
+                    .ignoreIfMalformed()
+                    .ignoreIfMissing()
+                    .load();
+            return dotenv.get(envKey);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

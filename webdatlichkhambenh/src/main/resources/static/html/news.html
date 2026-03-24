@@ -1,126 +1,136 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tin Tức - HealthCare</title>
-    <link rel="stylesheet" href="../css/news.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/chat-widget.css?v=1.1">
-</head>
-<body>
+    <link rel="stylesheet" href="../css/news.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/chat-widget.css?v=1.1" />
+  </head>
+  <body>
     <!-- Header -->
     <header class="header">
-        <div class="nav-container">
-            <div class="logo">
-                <a href="../index.html"><span>HealthCare</span></a>
-            </div>
-            <nav class="nav-menu">
-                <li><a href="../index.html">Trang Chủ</a></li>
-                <li><a href="../index.html#specialties">Chức năng</a></li>
-                <li><a href="news.html" class="active">Tin Tức</a></li>
-                <li><a href="faq.html">Hướng dẫn</a></li>
-                <li><a href="contact.html">Liên Hệ</a></li>
-            </nav>
-            <div class="nav-auth">
-                <a href="login.html" class="btn-outline">Đăng Nhập</a>
-                <a href="register.html" class="btn-primary">Đăng Ký</a>
-            </div>
+      <div class="nav-container">
+        <div class="logo">
+          <a href="../index.html"><span>HealthCare</span></a>
         </div>
+        <nav class="nav-menu">
+          <li><a href="../index.html">Trang Chủ</a></li>
+          <li><a href="/html/booking/book-appointment.html">Chức năng</a></li>
+          <li><a href="news.html" class="active">Tin Tức</a></li>
+          <li><a href="faq.html">Hướng dẫn</a></li>
+          <li><a href="contact.html">Liên Hệ</a></li>
+        </nav>
+        <div class="nav-auth">
+          <a href="login.html" class="btn-outline">Đăng Nhập</a>
+          <a href="register.html" class="btn-primary">Đăng Ký</a>
+        </div>
+      </div>
     </header>
 
     <!-- Main Content -->
     <main class="news-page">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="container">
-                <h1>Tin Tức - Sự Kiện</h1>
-                <p>Thông tin mới nhất về sức khỏe và y tế</p>
-            </div>
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="container">
+          <h1>Tin Tức - Sự Kiện</h1>
+          <p>Thông tin mới nhất về sức khỏe và y tế</p>
         </div>
+      </div>
 
-        <!-- News Content -->
-        <section class="news-content">
-            <div class="container">
-                <!-- Search and Filter -->
-                <div class="news-controls">
-                    <div class="search-box">
-                        <input type="text" id="searchInput" placeholder="Tìm kiếm tin tức...">
-                        <button id="searchBtn"><i class="fas fa-search"></i></button>
-                    </div>
-                    <div class="filter-category">
-                        <select id="categoryFilter">
-                            <option value="">Tất cả danh mục</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Featured News Section -->
-                <div class="featured-news-section" id="featuredNews">
-                    <h2>Tin Nổi Bật</h2>
-                    <div class="featured-news-grid" id="featuredNewsList">
-                        <!-- Featured news items will be loaded here -->
-                    </div>
-                </div>
-
-                <!-- All News Section -->
-                <div class="all-news-section">
-                    <h2>Tin Tức Mới Nhất</h2>
-                    <div class="news-grid" id="newsList">
-                        <!-- News items will be loaded here -->
-                    </div>
-                    
-                    <!-- Pagination -->
-                    <div class="pagination" id="pagination">
-                        <!-- Pagination controls will be loaded here -->
-                    </div>
-                </div>
+      <!-- News Content -->
+      <section class="news-content">
+        <div class="container">
+          <!-- Search and Filter -->
+          <div class="news-controls">
+            <div class="search-box">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="Tìm kiếm tin tức..."
+              />
+              <button id="searchBtn"><i class="fas fa-search"></i></button>
             </div>
-        </section>
+            <div class="filter-category">
+              <select id="categoryFilter">
+                <option value="">Tất cả danh mục</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Featured News Section -->
+          <div class="featured-news-section" id="featuredNews">
+            <h2>Tin Nổi Bật</h2>
+            <div class="featured-news-grid" id="featuredNewsList">
+              <!-- Featured news items will be loaded here -->
+            </div>
+          </div>
+
+          <!-- All News Section -->
+          <div class="all-news-section">
+            <h2>Tin Tức Mới Nhất</h2>
+            <div class="news-grid" id="newsList">
+              <!-- News items will be loaded here -->
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="pagination">
+              <!-- Pagination controls will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
     <!-- News Detail Modal -->
     <div id="newsModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <div id="newsDetail">
-                <!-- News detail will be loaded here -->
-            </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="newsDetail">
+          <!-- News detail will be loaded here -->
         </div>
+      </div>
     </div>
 
     <!-- Loading Spinner -->
     <div id="loadingSpinner" class="loading-spinner">
-        <i class="fas fa-spinner fa-spin"></i>
+      <i class="fas fa-spinner fa-spin"></i>
     </div>
 
     <!-- Chat Widget -->
     <div id="chat-widget" class="chat-widget">
-        <div class="chat-header" onclick="toggleChat()">
-            <i class="fas fa-comments"></i>
-            <span>Trò chuyện</span>
-            <div class="chat-close" onclick="closeChat()">×</div>
+      <div class="chat-header" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+        <span>Trò chuyện</span>
+        <div class="chat-close" onclick="closeChat()">×</div>
+      </div>
+      <div class="chat-body" style="display: none">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot-message">
+            Xin chào! Tôi có thể hỗ trợ gì cho bạn?
+          </div>
         </div>
-        <div class="chat-body" style="display: none;">
-            <div class="chat-messages" id="chat-messages">
-                <div class="message bot-message">
-                    Xin chào! Tôi có thể hỗ trợ gì cho bạn?
-                </div>
-            </div>
-            <div class="chat-input">
-                <input type="text" id="user-input" placeholder="Nhập tin nhắn...">
-                <button onclick="sendMessage()">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
+        <div class="chat-input">
+          <input type="text" id="user-input" placeholder="Nhập tin nhắn..." />
+          <button onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
+          </button>
         </div>
+      </div>
     </div>
 
     <script src="../javascript/news.js"></script>
     <script src="../javascript/chat-widget.js"></script>
     <script src="../javascript/auth-utils.js"></script>
-</body>
+  </body>
 </html>

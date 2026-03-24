@@ -48,13 +48,16 @@ public class ChatController {
             String sender = chatMessage.getSender();
             if ("Admin".equals(sender) || "Tiếp tân".equals(sender)) {
                 chatMessage.setSenderType("STAFF");
-                // Khi Staff nhắn tin, tự động MUTE AI cho session này
-                aiMutedSessions.put(chatMessage.getSessionId(), true);
             } else if ("Medical Bot".equals(sender)) {
                 chatMessage.setSenderType("AI");
             } else {
                 chatMessage.setSenderType("USER");
             }
+        }
+
+        // Khi Staff nhắn tin, tự động MUTE AI cho session này
+        if ("STAFF".equals(chatMessage.getSenderType())) {
+            aiMutedSessions.put(chatMessage.getSessionId(), true);
         }
 
         // Lưu và gửi cho chính user + admin

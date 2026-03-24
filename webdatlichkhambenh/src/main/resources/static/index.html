@@ -551,56 +551,77 @@
 
     <!-- Chat Widget -->
     <div id="chatWidgetBtn" class="chat-widget-btn" title="Chat với chúng tôi">
-        <i class="fas fa-comments" style="font-size: 28px;"></i>
+      <i class="fas fa-comments" style="font-size: 28px"></i>
     </div>
-    
+
     <div id="chatBox" class="chat-box">
-        <div class="chat-header">
-            <div class="chat-header-info">
-                <div class="online-dot" title="Đang hoạt động"></div>
-                <span>Trợ lý Y tế Online</span>
-            </div>
-            <div class="chat-header-actions" style="display: flex; gap: 10px;">
-                <span id="clearChatBtn" style="cursor: pointer;" title="Xóa lịch sử chat"><i class="fas fa-trash"></i></span>
-                <span id="closeChatBtn" style="cursor: pointer;" title="Đóng"><i class="fas fa-times"></i></span>
-            </div>
+      <div class="chat-header">
+        <div class="chat-header-info">
+          <div class="online-dot" title="Đang hoạt động"></div>
+          <span>Trợ lý Y tế Online</span>
         </div>
-        
-        <!-- Login Overlay -->
-        <div id="chatLoginOverlay" class="chat-login-overlay">
-            <div class="chat-login-title">Thông tin của bạn</div>
-            <div class="chat-login-desc">Vui lòng nhập tên để bắt đầu chat</div>
-            <input type="text" id="chatGuestName" class="chat-login-input" placeholder="Tên của bạn...">
-            <button id="chatLoginBtn" class="chat-login-btn">Bắt đầu chat</button>
+        <div class="chat-header-actions" style="display: flex; gap: 10px">
+          <span
+            id="clearChatBtn"
+            style="cursor: pointer"
+            title="Xóa lịch sử chat"
+            ><i class="fas fa-trash"></i
+          ></span>
+          <span id="closeChatBtn" style="cursor: pointer" title="Đóng"
+            ><i class="fas fa-times"></i
+          ></span>
         </div>
+      </div>
 
-        <!-- Delete Confirmation Modal -->
-        <div id="deleteConfirmModal" class="chat-modal">
-            <div class="chat-modal-content">
-                <div class="chat-modal-text">Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện?</div>
-                <div class="chat-modal-actions">
-                    <button id="cancelDeleteBtn" class="modal-btn cancel">Hủy</button>
-                    <button id="confirmDeleteBtn" class="modal-btn confirm">Xóa</button>
-                </div>
-            </div>
-        </div>
+      <!-- Login Overlay -->
+      <div id="chatLoginOverlay" class="chat-login-overlay">
+        <div class="chat-login-title">Thông tin của bạn</div>
+        <div class="chat-login-desc">Vui lòng nhập tên để bắt đầu chat</div>
+        <input
+          type="text"
+          id="chatGuestName"
+          class="chat-login-input"
+          placeholder="Tên của bạn..."
+        />
+        <button id="chatLoginBtn" class="chat-login-btn">Bắt đầu chat</button>
+      </div>
 
-        <div id="chatMessages" class="chat-messages">
-            <div class="message received">
-                <strong>Medical Bot</strong><br>
-                Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?
-            </div>
+      <!-- Delete Confirmation Modal -->
+      <div id="deleteConfirmModal" class="chat-modal">
+        <div class="chat-modal-content">
+          <div class="chat-modal-text">
+            Bạn có chắc chắn muốn xóa toàn bộ lịch sử trò chuyện?
+          </div>
+          <div class="chat-modal-actions">
+            <button id="cancelDeleteBtn" class="modal-btn cancel">Hủy</button>
+            <button id="confirmDeleteBtn" class="modal-btn confirm">Xóa</button>
+          </div>
         </div>
-        <div class="quick-actions">
-            <button class="quick-btn">💰 Giá khám</button>
-            <button class="quick-btn">⏰ Giờ làm việc</button>
-            <button class="quick-btn">📞 Hotline</button>
-            <button class="quick-btn">📅 Đặt lịch</button>
+      </div>
+
+      <div id="chatMessages" class="chat-messages">
+        <div class="message received">
+          <strong>Medical Bot</strong><br />
+          Chào bạn! Tôi có thể giúp gì cho bạn hôm nay?
         </div>
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" class="chat-input" placeholder="Nhập tin nhắn...">
-            <button id="sendChatBtn" class="send-btn"><i class="fas fa-paper-plane"></i></button>
-        </div>
+      </div>
+      <div class="quick-actions">
+        <button class="quick-btn">💰 Giá khám</button>
+        <button class="quick-btn">⏰ Giờ làm việc</button>
+        <button class="quick-btn">📞 Hotline</button>
+        <button class="quick-btn">📅 Đặt lịch</button>
+      </div>
+      <div class="chat-input-area">
+        <input
+          type="text"
+          id="chatInput"
+          class="chat-input"
+          placeholder="Nhập tin nhắn..."
+        />
+        <button id="sendChatBtn" class="send-btn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
     </div>
 
     <!-- WebSocket Libs -->

@@ -1,7 +1,6 @@
 package com.webdatlichkhambenh.service;
 
 import com.webdatlichkhambenh.model.ChatMessage;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -255,13 +254,21 @@ public class AiService {
                 return null;
             }
 
-            Dotenv dotenv = Dotenv.configure()
-                    .directory(dotenvPath.getParent().toString())
-                    .filename(dotenvPath.getFileName().toString())
-                    .ignoreIfMalformed()
-                    .ignoreIfMissing()
-                    .load();
-            return dotenv.get(envKey);
+            for (String line : Files.readAllLines(dotenvPath)) {
+                String trimmedLine = line.trim();
+                if (trimmedLine.isEmpty() || trimmedLine.startsWith("#") || !trimmedLine.contains("=")) {
+                    continue;
+                }
+
+                int separatorIndex = trimmedLine.indexOf('=');
+                String key = trimmedLine.substring(0, separatorIndex).trim();
+                String value = trimmedLine.substring(separatorIndex + 1).trim();
+                if (envKey.equals(key)) {
+                    return value;
+                }
+            }
+
+            return null;
         } catch (Exception e) {
             return null;
         }

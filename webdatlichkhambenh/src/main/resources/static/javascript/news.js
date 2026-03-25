@@ -368,26 +368,9 @@ function handleSearch() {
   loadNews();
 }
 
-// Open news detail modal
-async function openNewsDetail(newsId) {
-  try {
-    showLoading();
-    const response = await fetch(`/api/news/public/${newsId}`);
-    const result = await response.json();
-
-    if (result.success) {
-      renderNewsDetail(result.data);
-      newsModal.style.display = "block";
-      document.body.style.overflow = "hidden";
-    } else {
-      alert("Không thể tải chi tiết tin tức");
-    }
-  } catch (error) {
-    console.error("Error loading news detail:", error);
-    alert("Đã xảy ra lỗi khi tải tin tức");
-  } finally {
-    hideLoading();
-  }
+// Open news detail page
+function openNewsDetail(newsId) {
+  window.location.href = `news-detail.html?id=${newsId}`;
 }
 
 // Render news detail

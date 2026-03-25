@@ -56,15 +56,27 @@ class AuthManager {
       const exp = payload.exp * 1000;
       const now = Date.now();
 
-      // Return true if token expires in next 2 minutes
-      return exp - now < 2 * 60 * 1000;
+      // Return true if token expires in next 5 minutes
+      return exp - now < 5 * 60 * 1000;
+    } catch (error) {
+      return true;
+    }
+  }
+
+  // Check if token is already expired
+  isTokenExpired(token) {
+    if (!token) return true;
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      return payload.exp * 1000 < Date.now();
     } catch (error) {
       return true;
     }
   }
 
   // Refresh access token
-  async refreshAccessToken() {
+  // silent=true: don't clear auth / redirect on failure (used by periodic timer)
+  async refreshAccessToken(silent = false) {
     if (this.isRefreshing) {
       // If already refreshing, wait for it to complete
       return new Promise((resolve) => {
@@ -117,9 +129,11 @@ class AuthManager {
     } catch (error) {
       console.error("❌ Token refresh failed:", error);
 
-      // Clear auth and redirect to login
-      this.clearAuth();
-      this.redirectToLogin();
+      if (!silent) {
+        // Only clear auth and redirect when explicitly required (e.g. authenticated API call)
+        this.clearAuth();
+        this.redirectToLogin();
+      }
 
       throw error;
     } finally {
@@ -278,19 +292,26 @@ class AuthManager {
 
   // Initialize auth manager
   init() {
-    // DON'T auto-redirect to login on page load
-    // Let users see the homepage first
-    // Only redirect when they actually need authentication
-
     // Set up periodic token refresh check for authenticated users
-    setInterval(() => {
-      const { accessToken } = this.getTokens();
-      if (accessToken && this.isTokenExpiringSoon(accessToken)) {
-        this.refreshAccessToken().catch(() => {
-          // Handle refresh failure silently
-        });
-      }
-    }, 60000); // Check every minute
+    // Runs every 2 minutes; refreshes when token expires in < 5 minutes
+    setInterval(
+      () => {
+        const { accessToken, refreshToken } = this.getTokens();
+        if (!accessToken || !refreshToken) return;
+
+        if (this.isTokenExpiringSoon(accessToken)) {
+          // silent=true: do NOT kick user out if refresh fails (network hiccup etc.)
+          // User will only be redirected when they actually make an API call that fails
+          this.refreshAccessToken(true).catch((err) => {
+            console.warn(
+              "⚠️ Periodic refresh failed (will retry):",
+              err.message,
+            );
+          });
+        }
+      },
+      2 * 60 * 1000,
+    ); // Check every 2 minutes
   }
 
   // Check if user is authenticated (without redirecting)

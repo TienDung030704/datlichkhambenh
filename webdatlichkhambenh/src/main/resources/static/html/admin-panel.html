@@ -19,6 +19,9 @@
         <div class="logo">
           <i class="fas fa-plus-circle"></i>
           <span>HealthCare</span>
+          <a href="../index.html" class="home-btn" title="Về trang chủ">
+            <i class="fas fa-home"></i>
+          </a>
         </div>
       </div>
 
@@ -70,6 +73,12 @@
             <a href="#" class="nav-link" data-section="faqManagement">
               <i class="fas fa-question-circle"></i>
               <span>Quản lý FAQ</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link" data-section="newsManagement">
+              <i class="fas fa-newspaper"></i>
+              <span>Quản lý tin tức</span>
             </a>
           </li>
           <li class="nav-item">
@@ -298,8 +307,6 @@
         </div>
       </div>
 
-
-
       <!-- Contacts Management Section -->
       <div
         class="contacts-content section-content"
@@ -347,41 +354,66 @@
       </div>
 
       <!-- Live Chat Section (NEW) -->
-      <div class="chat-content section-content" id="livechatSection" style="display: none">
-          <div class="chat-console-container">
-              <!-- Left Panel: Active Users -->
-              <div class="chat-users-panel">
-                  <div class="chat-users-header">
-                      Chats
-                  </div>
-                  <div class="user-list" id="chatUserList">
-                      <!-- Users will be added here dynamically -->
-                      <div class="user-item" style="justify-content: center; color: #94a3b8; font-style: italic; font-size: 13px;" id="noUsersLabel">
-                          Chưa có tin nhắn mới
-                      </div>
-                  </div>
+      <div
+        class="chat-content section-content"
+        id="livechatSection"
+        style="display: none"
+      >
+        <div class="chat-console-container">
+          <!-- Left Panel: Active Users -->
+          <div class="chat-users-panel">
+            <div class="chat-users-header">Chats</div>
+            <div class="user-list" id="chatUserList">
+              <!-- Users will be added here dynamically -->
+              <div
+                class="user-item"
+                style="
+                  justify-content: center;
+                  color: #94a3b8;
+                  font-style: italic;
+                  font-size: 13px;
+                "
+                id="noUsersLabel"
+              >
+                Chưa có tin nhắn mới
               </div>
-              
-              <!-- Right Panel: Chat Area -->
-              <div class="chat-main-panel">
-                  <div class="chat-main-header">
-                      <h3 id="chatHeaderTitle">Chọn một hội thoại</h3>
-                      <div class="chat-controls">
-                          <button class="btn btn-sm btn-outline-danger" id="endChatBtn" style="display: none;">Kết thúc</button>
-                      </div>
-                  </div>
-                  <div class="chat-console-messages" id="consoleMessages">
-                      <div class="console-message ai">Hệ thống sẵn sàng. Vui lòng chọn khách hàng để bắt đầu hỗ trợ.</div>
-                  </div>
-                  
-                  <div class="chat-input-toolbar">
-                      <input type="text" id="consoleInput" class="console-input" placeholder="Aa..." autocomplete="off">
-                      <button id="sendConsoleBtn" class="console-btn-send" title="Gửi">
-                          <i class="fas fa-paper-plane"></i>
-                      </button>
-                  </div>
-              </div>
+            </div>
           </div>
+
+          <!-- Right Panel: Chat Area -->
+          <div class="chat-main-panel">
+            <div class="chat-main-header">
+              <h3 id="chatHeaderTitle">Chọn một hội thoại</h3>
+              <div class="chat-controls">
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  id="endChatBtn"
+                  style="display: none"
+                >
+                  Kết thúc
+                </button>
+              </div>
+            </div>
+            <div class="chat-console-messages" id="consoleMessages">
+              <div class="console-message ai">
+                Hệ thống sẵn sàng. Vui lòng chọn khách hàng để bắt đầu hỗ trợ.
+              </div>
+            </div>
+
+            <div class="chat-input-toolbar">
+              <input
+                type="text"
+                id="consoleInput"
+                class="console-input"
+                placeholder="Aa..."
+                autocomplete="off"
+              />
+              <button id="sendConsoleBtn" class="console-btn-send" title="Gửi">
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Other sections (Doctors, Patients, Settings) -->
@@ -1035,7 +1067,11 @@
       </div>
 
       <!-- FAQ Management Section -->
-      <div class="section-content" id="faqManagementSection" style="display: none">
+      <div
+        class="section-content"
+        id="faqManagementSection"
+        style="display: none"
+      >
         <div class="section-header">
           <h2>Quản lý Câu hỏi thường gặp (FAQ)</h2>
           <button class="btn btn-primary" onclick="openAddFaqModal()">
@@ -1057,7 +1093,10 @@
             </thead>
             <tbody id="faqTableBody">
               <tr>
-                <td colspan="6" style="text-align: center; padding: 32px; color: #9ca3af">
+                <td
+                  colspan="6"
+                  style="text-align: center; padding: 32px; color: #9ca3af"
+                >
                   Đang tải dữ liệu...
                 </td>
               </tr>
@@ -1067,41 +1106,240 @@
       </div>
 
       <!-- FAQ Add/Edit Modal -->
-      <div id="faqModal" class="modal" style="display: none;">
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 id="faqModalTitle">Thêm FAQ mới</h2>
-                <span class="close-modal" onclick="closeFaqModal()">&times;</span>
+      <div id="faqModal" class="modal" style="display: none">
+        <div class="modal-content" style="max-width: 600px">
+          <div class="modal-header">
+            <h2 id="faqModalTitle">Thêm FAQ mới</h2>
+            <span class="close-modal" onclick="closeFaqModal()">&times;</span>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="faqId" />
+            <div class="form-group">
+              <label for="faqQuestion">Câu hỏi *</label>
+              <input
+                type="text"
+                id="faqQuestion"
+                class="form-control"
+                placeholder="Nhập câu hỏi..."
+              />
             </div>
-            <div class="modal-body">
-                <input type="hidden" id="faqId" />
-                <div class="form-group">
-                    <label for="faqQuestion">Câu hỏi *</label>
-                    <input type="text" id="faqQuestion" class="form-control" placeholder="Nhập câu hỏi..." />
-                </div>
-                <div class="form-group">
-                    <label for="faqAnswer">Câu trả lời *</label>
-                    <textarea id="faqAnswer" class="form-control" rows="4" placeholder="Nhập câu trả lời..."></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="faqCategory">Danh mục</label>
-                    <select id="faqCategory" class="form-control">
-                        <option value="">-- Chọn danh mục --</option>
-                        <option value="Đặt lịch">Đặt lịch</option>
-                        <option value="Thanh toán">Thanh toán</option>
-                        <option value="Dịch vụ">Dịch vụ</option>
-                        <option value="Liên hệ">Liên hệ</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="faqDisplayOrder">Thứ tự hiển thị</label>
-                    <input type="number" id="faqDisplayOrder" class="form-control" placeholder="0" min="0" />
-                </div>
+            <div class="form-group">
+              <label for="faqAnswer">Câu trả lời *</label>
+              <textarea
+                id="faqAnswer"
+                class="form-control"
+                rows="4"
+                placeholder="Nhập câu trả lời..."
+              ></textarea>
             </div>
-            <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeFaqModal()">Hủy</button>
-                <button class="btn btn-primary" onclick="saveFaq()">Lưu</button>
+            <div class="form-group">
+              <label for="faqCategory">Danh mục</label>
+              <select id="faqCategory" class="form-control">
+                <option value="">-- Chọn danh mục --</option>
+                <option value="Đặt lịch">Đặt lịch</option>
+                <option value="Thanh toán">Thanh toán</option>
+                <option value="Dịch vụ">Dịch vụ</option>
+                <option value="Liên hệ">Liên hệ</option>
+              </select>
             </div>
+            <div class="form-group">
+              <label for="faqDisplayOrder">Thứ tự hiển thị</label>
+              <input
+                type="number"
+                id="faqDisplayOrder"
+                class="form-control"
+                placeholder="0"
+                min="0"
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeFaqModal()">
+              Hủy
+            </button>
+            <button class="btn btn-primary" onclick="saveFaq()">Lưu</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Management Section -->
+      <div
+        class="section-content"
+        id="newsManagementSection"
+        style="display: none"
+      >
+        <div class="section-header">
+          <h2>Quản lý tin tức</h2>
+          <button class="btn btn-primary" onclick="openAddNewsModal()">
+            <i class="fas fa-plus"></i> Thêm tin tức mới
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="appointments-table" style="width: 100%">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tiêu đề</th>
+                <th>Danh mục</th>
+                <th>Tác giả</th>
+                <th>Nổi bật</th>
+                <th>Trạng thái</th>
+                <th>Ngày đăng</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="newsTableBody">
+              <tr>
+                <td
+                  colspan="8"
+                  style="text-align: center; padding: 32px; color: #9ca3af"
+                >
+                  Đang tải dữ liệu...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- News Add/Edit Modal -->
+      <!-- News Add/Edit Modal -->
+      <div id="newsModal" class="modal" style="display: none">
+        <div class="modal-content news-modal-content">
+          <!-- Header -->
+          <div class="news-modal-header">
+            <div class="news-modal-header-left">
+              <div class="news-modal-icon">
+                <i class="fas fa-newspaper"></i>
+              </div>
+              <div>
+                <h2 id="newsModalTitle">Thêm tin tức mới</h2>
+                <p>Điền đầy đủ thông tin bài viết bên dưới</p>
+              </div>
+            </div>
+            <button class="news-modal-close" onclick="closeNewsModal()">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+
+          <div class="news-modal-body">
+            <input type="hidden" id="newsId" />
+
+            <!-- Tiêu đề -->
+            <div class="nf-group">
+              <label class="nf-label" for="newsTitle">
+                <i class="fas fa-heading"></i> Tiêu đề
+                <span class="nf-required">*</span>
+              </label>
+              <input
+                type="text"
+                id="newsTitle"
+                class="nf-input"
+                placeholder="Nhập tiêu đề bài viết..."
+              />
+            </div>
+
+            <!-- Tóm tắt -->
+            <div class="nf-group">
+              <label class="nf-label" for="newsSummary">
+                <i class="fas fa-align-left"></i> Tóm tắt
+              </label>
+              <textarea
+                id="newsSummary"
+                class="nf-input nf-textarea"
+                rows="2"
+                placeholder="Mô tả ngắn về bài viết (hiển thị ở trang danh sách)..."
+              ></textarea>
+            </div>
+
+            <!-- Nội dung -->
+            <div class="nf-group">
+              <label class="nf-label" for="newsContent">
+                <i class="fas fa-file-alt"></i> Nội dung
+                <span class="nf-required">*</span>
+              </label>
+              <textarea
+                id="newsContent"
+                class="nf-input nf-textarea"
+                rows="7"
+                placeholder="Nhập nội dung chi tiết bài viết..."
+              ></textarea>
+            </div>
+
+            <!-- Tác giả + Danh mục -->
+            <div class="nf-row">
+              <div class="nf-group">
+                <label class="nf-label" for="newsAuthor">
+                  <i class="fas fa-user-edit"></i> Tác giả
+                </label>
+                <input
+                  type="text"
+                  id="newsAuthor"
+                  class="nf-input"
+                  placeholder="Tên tác giả..."
+                />
+              </div>
+              <div class="nf-group">
+                <label class="nf-label" for="newsCategory">
+                  <i class="fas fa-tag"></i> Danh mục
+                </label>
+                <select id="newsCategory" class="nf-input nf-select">
+                  <option value="">-- Chọn danh mục --</option>
+                  <option value="Sức khỏe">Sức khỏe</option>
+                  <option value="Dinh dưỡng">Dinh dưỡng</option>
+                  <option value="Bệnh viện">Bệnh viện</option>
+                  <option value="Tư vấn">Tư vấn</option>
+                  <option value="Tin tức">Tin tức</option>
+                  <option value="Khác">Khác</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- URL ảnh -->
+            <div class="nf-group">
+              <label class="nf-label" for="newsImageUrl">
+                <i class="fas fa-image"></i> URL ảnh đại diện
+              </label>
+              <div class="nf-input-icon-wrap">
+                <i class="fas fa-link nf-input-icon"></i>
+                <input
+                  type="text"
+                  id="newsImageUrl"
+                  class="nf-input nf-input-with-icon"
+                  placeholder="https://... hoặc /uploads/ten-anh.jpg"
+                />
+              </div>
+            </div>
+
+            <!-- Checkboxes -->
+            <div class="nf-checkbox-row">
+              <label class="nf-checkbox-card" for="newsIsFeatured">
+                <input type="checkbox" id="newsIsFeatured" />
+                <div class="nf-checkbox-card-inner">
+                  <i class="fas fa-star"></i>
+                  <span>Tin nổi bật</span>
+                </div>
+              </label>
+              <label class="nf-checkbox-card" for="newsIsPublished">
+                <input type="checkbox" id="newsIsPublished" checked />
+                <div class="nf-checkbox-card-inner">
+                  <i class="fas fa-globe"></i>
+                  <span>Xuất bản ngay</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div class="news-modal-footer">
+            <button class="nf-btn-cancel" onclick="closeNewsModal()">
+              <i class="fas fa-times"></i> Hủy
+            </button>
+            <button class="nf-btn-save" onclick="saveNews()">
+              <i class="fas fa-save"></i> Lưu bài viết
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1121,75 +1359,104 @@
 
     <!-- Contact Details Modal -->
     <div id="contactModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Chi tiết tin nhắn (Latest)</h2>
-                <span class="close-modal">&times;</span>
-            </div>
-            <div class="modal-body">
-                <div class="detail-group">
-                    <label>Người gửi:</label>
-                    <p id="modalSenderInfo"></p>
-                </div>
-                <div class="detail-group">
-                    <label>Email:</label>
-                    <p id="modalEmail"></p>
-                </div>
-                <div class="detail-group">
-                    <label>Ngày gửi:</label>
-                    <p id="modalDate"></p>
-                </div>
-                 <div class="detail-group">
-                    <label>Chủ đề:</label>
-                    <p id="modalSubject" style="font-weight: 600;"></p>
-                </div>
-                <div class="detail-group">
-                    <label>Nội dung:</label>
-                    <div id="modalMessage" class="message-box"></div>
-                </div>
-                 <div class="detail-group" id="modalImageGroup" style="display: none;">
-                    <label>Hình ảnh đính kèm:</label>
-                    <div class="image-box">
-                        <img id="modalImage" src="" alt="Attachment" style="max-width: 100%; max-height: 300px; border-radius: 4px; cursor: pointer;" onclick="window.open(this.src, '_blank')">
-                    </div>
-                </div>
-                <div class="detail-group">
-                    <label>Trạng thái:</label>
-                    <span id="modalStatus"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <!-- Email Reply removed as requested -->
-                <button id="btnResetStatus" class="btn btn-warning" title="Dùng để test lại"><i class="fas fa-undo"></i> Reset</button>
-                <button id="btnReplyChat" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Gửi xác nhận & Chat</button>
-                <button id="btnClose" class="btn btn-secondary">Đóng</button>
-            </div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Chi tiết tin nhắn (Latest)</h2>
+          <span class="close-modal">&times;</span>
         </div>
+        <div class="modal-body">
+          <div class="detail-group">
+            <label>Người gửi:</label>
+            <p id="modalSenderInfo"></p>
+          </div>
+          <div class="detail-group">
+            <label>Email:</label>
+            <p id="modalEmail"></p>
+          </div>
+          <div class="detail-group">
+            <label>Ngày gửi:</label>
+            <p id="modalDate"></p>
+          </div>
+          <div class="detail-group">
+            <label>Chủ đề:</label>
+            <p id="modalSubject" style="font-weight: 600"></p>
+          </div>
+          <div class="detail-group">
+            <label>Nội dung:</label>
+            <div id="modalMessage" class="message-box"></div>
+          </div>
+          <div class="detail-group" id="modalImageGroup" style="display: none">
+            <label>Hình ảnh đính kèm:</label>
+            <div class="image-box">
+              <img
+                id="modalImage"
+                src=""
+                alt="Attachment"
+                style="
+                  max-width: 100%;
+                  max-height: 300px;
+                  border-radius: 4px;
+                  cursor: pointer;
+                "
+                onclick="window.open(this.src, '_blank')"
+              />
+            </div>
+          </div>
+          <div class="detail-group">
+            <label>Trạng thái:</label>
+            <span id="modalStatus"></span>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <!-- Email Reply removed as requested -->
+          <button
+            id="btnResetStatus"
+            class="btn btn-warning"
+            title="Dùng để test lại"
+          >
+            <i class="fas fa-undo"></i> Reset
+          </button>
+          <button id="btnReplyChat" class="btn btn-primary">
+            <i class="fas fa-paper-plane"></i> Gửi xác nhận & Chat
+          </button>
+          <button id="btnClose" class="btn btn-secondary">Đóng</button>
+        </div>
+      </div>
     </div>
 
     <!-- Reply Modal -->
     <div id="replyModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" id="closeReplyModal">&times;</span>
-            <h2>Phản hồi Liên hệ</h2>
-            <div class="form-group">
-                <label>Người nhận:</label>
-                <div id="replyToName" style="font-weight: bold; margin-bottom: 10px;"></div>
-            </div>
-            <div class="form-group">
-                <label>Nội dung phản hồi:</label>
-                <textarea id="replyContent" rows="5" class="form-control" placeholder="Nhập nội dung phản hồi..."></textarea>
-            </div>
-            <div style="text-align: right; margin-top: 15px;">
-                <button class="btn btn-secondary" id="cancelReplyBtn">Hủy</button>
-                <button class="btn btn-primary" id="sendReplyBtn">Gửi Phản Hồi</button>
-            </div>
+      <div class="modal-content">
+        <span class="close-modal" id="closeReplyModal">&times;</span>
+        <h2>Phản hồi Liên hệ</h2>
+        <div class="form-group">
+          <label>Người nhận:</label>
+          <div
+            id="replyToName"
+            style="font-weight: bold; margin-bottom: 10px"
+          ></div>
         </div>
+        <div class="form-group">
+          <label>Nội dung phản hồi:</label>
+          <textarea
+            id="replyContent"
+            rows="5"
+            class="form-control"
+            placeholder="Nhập nội dung phản hồi..."
+          ></textarea>
+        </div>
+        <div style="text-align: right; margin-top: 15px">
+          <button class="btn btn-secondary" id="cancelReplyBtn">Hủy</button>
+          <button class="btn btn-primary" id="sendReplyBtn">
+            Gửi Phản Hồi
+          </button>
+        </div>
+      </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script src="../javascript/admin-panel.js"></script>
     <script src="../javascript/admin-chat.js"></script>
-</body>
+  </body>
 </html>

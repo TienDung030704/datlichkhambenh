@@ -18,7 +18,7 @@ function initializeAdminPanel() {
 // Load admin information
 function loadAdminInfo() {
   // Giả sử admin đã đăng nhập, lấy thông tin từ localStorage
-let allContacts = [];
+  let allContacts = [];
   const adminData =
     localStorage.getItem("adminUser") || sessionStorage.getItem("adminUser");
   if (adminData) {
@@ -112,6 +112,7 @@ function updatePageTitle(section) {
     settings: "Cài đặt",
     livechat: "Live Chat Support",
     faqManagement: "Quản lý FAQ",
+    newsManagement: "Quản lý tin tức",
   };
 
   const pageTitle = document.querySelector(".page-title");
@@ -146,6 +147,9 @@ function loadSectionData(section) {
       break;
     case "faqManagement":
       loadFaqData();
+      break;
+    case "newsManagement":
+      loadNewsManagementData();
       break;
   }
 }
@@ -1580,7 +1584,6 @@ document.addEventListener("click", function (e) {
   }
 });
 
-
 // --- CONTACTS MANAGEMENT FUNCTIONS ---
 
 // Load contacts data
@@ -1642,10 +1645,10 @@ function displayContacts(contacts) {
                 <button class="btn btn-sm btn-edit" onclick="viewContactDetails(${contact.id})" title="Xem chi tiết">
                     <i class="fas fa-eye"></i>
                 </button>
-                <button class="btn btn-sm btn-success" onclick="updateContactStatus(${contact.id}, 'READ')" title="Đánh dấu đã xem" ${contact.status !== 'NEW' ? 'disabled' : ''}>
+                <button class="btn btn-sm btn-success" onclick="updateContactStatus(${contact.id}, 'READ')" title="Đánh dấu đã xem" ${contact.status !== "NEW" ? "disabled" : ""}>
                     <i class="fas fa-check"></i>
                 </button>
-                 <button class="btn btn-sm btn-primary" onclick="updateContactStatus(${contact.id}, 'REPLIED')" title="Đánh dấu đã phản hồi" ${contact.status === 'REPLIED' ? 'disabled' : ''}>
+                 <button class="btn btn-sm btn-primary" onclick="updateContactStatus(${contact.id}, 'REPLIED')" title="Đánh dấu đã phản hồi" ${contact.status === "REPLIED" ? "disabled" : ""}>
                     <i class="fas fa-reply"></i>
                 </button>
             </div>
@@ -1656,27 +1659,27 @@ function displayContacts(contacts) {
 }
 
 function getContactStatusBadge(status) {
-    let className = "status-pending"; // Default gray
-    let text = status;
-    
-    if (status === 'NEW') {
-        className = "status-booked"; // Blue/Green
-        text = "Mới";
-    } else if (status === 'READ') {
-        className = "status-examined"; // Green/Blue
-        text = "Đã xem";
-    } else if (status === 'REPLIED') {
-        className = "status-completed"; // Gray/Dark
-        text = "Đã phản hồi";
-    }
+  let className = "status-pending"; // Default gray
+  let text = status;
 
-    return `<span class="status-badge ${className}">${text}</span>`;
+  if (status === "NEW") {
+    className = "status-booked"; // Blue/Green
+    text = "Mới";
+  } else if (status === "READ") {
+    className = "status-examined"; // Green/Blue
+    text = "Đã xem";
+  } else if (status === "REPLIED") {
+    className = "status-completed"; // Gray/Dark
+    text = "Đã phản hồi";
+  }
+
+  return `<span class="status-badge ${className}">${text}</span>`;
 }
 
 function displayEmptyContacts() {
-    const tbody = document.getElementById("contactsTableBody");
-    if (!tbody) return;
-    tbody.innerHTML = `
+  const tbody = document.getElementById("contactsTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = `
         <tr>
             <td colspan="7" style="text-align: center; padding: 40px 20px; color: #64748b;">
                 <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
@@ -1693,163 +1696,165 @@ function displayEmptyContacts() {
 
 // View contact details (Modal)
 function viewContactDetails(id) {
-    const contact = allContacts.find(c => c.id === id);
-    if (!contact) return;
+  const contact = allContacts.find((c) => c.id === id);
+  if (!contact) return;
 
-    // Helper: Escape HTML to detect malicious input?
-    // For now assume trusted or simple text. 
-    // textContent is safe against XSS.
-    
-    const senderElem = document.getElementById('modalSenderInfo');
-    if (senderElem) senderElem.textContent = contact.fullName + (contact.phoneNumber ? ` - ${contact.phoneNumber}` : '');
-    
-    const emailElem = document.getElementById('modalEmail');
-    if (emailElem) emailElem.textContent = contact.email;
-    
-    const dateElem = document.getElementById('modalDate');
-    if (dateElem) dateElem.textContent = formatDate(contact.createdAt);
-    
-    const subjectElem = document.getElementById('modalSubject');
-    if (subjectElem) subjectElem.textContent = contact.subject || 'Không có chủ đề';
-    
-    const msgElem = document.getElementById('modalMessage');
-    if (msgElem) msgElem.textContent = contact.message;
-    
-    // Image attachment
-    const imgGroup = document.getElementById('modalImageGroup');
-    const imgElem = document.getElementById('modalImage');
-    
-    if (contact.imageUrl) {
-        if (imgGroup) imgGroup.style.display = 'block';
-        if (imgElem) imgElem.src = contact.imageUrl;
+  // Helper: Escape HTML to detect malicious input?
+  // For now assume trusted or simple text.
+  // textContent is safe against XSS.
+
+  const senderElem = document.getElementById("modalSenderInfo");
+  if (senderElem)
+    senderElem.textContent =
+      contact.fullName +
+      (contact.phoneNumber ? ` - ${contact.phoneNumber}` : "");
+
+  const emailElem = document.getElementById("modalEmail");
+  if (emailElem) emailElem.textContent = contact.email;
+
+  const dateElem = document.getElementById("modalDate");
+  if (dateElem) dateElem.textContent = formatDate(contact.createdAt);
+
+  const subjectElem = document.getElementById("modalSubject");
+  if (subjectElem)
+    subjectElem.textContent = contact.subject || "Không có chủ đề";
+
+  const msgElem = document.getElementById("modalMessage");
+  if (msgElem) msgElem.textContent = contact.message;
+
+  // Image attachment
+  const imgGroup = document.getElementById("modalImageGroup");
+  const imgElem = document.getElementById("modalImage");
+
+  if (contact.imageUrl) {
+    if (imgGroup) imgGroup.style.display = "block";
+    if (imgElem) imgElem.src = contact.imageUrl;
+  } else {
+    if (imgGroup) imgGroup.style.display = "none";
+    if (imgElem) imgElem.src = "";
+  }
+
+  const statusElem = document.getElementById("modalStatus");
+  if (statusElem) statusElem.innerHTML = getContactStatusBadge(contact.status);
+
+  // Update buttons
+  // const btnReplyEmail = document.getElementById('btnReplyEmail'); // Removed
+  const btnReplyChat = document.getElementById("btnReplyChat");
+  const btnMarkRead = document.getElementById("btnMarkRead");
+
+  if (btnReplyChat) {
+    const newBtn = btnReplyChat.cloneNode(true);
+    btnReplyChat.parentNode.replaceChild(newBtn, btnReplyChat);
+
+    if (contact.status === "REPLIED") {
+      newBtn.disabled = true;
+      newBtn.innerHTML = '<i class="fas fa-check-double"></i> Đã gửi xác nhận';
+      newBtn.className = "btn btn-secondary";
     } else {
-        if (imgGroup) imgGroup.style.display = 'none';
-        if (imgElem) imgElem.src = '';
-    }
-    
-    const statusElem = document.getElementById('modalStatus');
-    if (statusElem) statusElem.innerHTML = getContactStatusBadge(contact.status);
+      newBtn.disabled = false;
+      newBtn.innerHTML =
+        '<i class="fas fa-paper-plane"></i> Gửi xác nhận & Chat';
+      newBtn.className = "btn btn-primary";
+      newBtn.onclick = async () => {
+        // 1. Send Canned Message via Chat
+        const topic = contact.subject || "Liên hệ";
+        const message = `Chúng tôi nhận được tin nhắn của bạn về "${topic}". Chúng tôi đã ghi nhận trường hợp của bạn và sẽ liên hệ bạn sớm nhất.`;
 
-    // Update buttons
-    // const btnReplyEmail = document.getElementById('btnReplyEmail'); // Removed
-    const btnReplyChat = document.getElementById('btnReplyChat');
-    const btnMarkRead = document.getElementById('btnMarkRead');
-    
-    if (btnReplyChat) {
-        const newBtn = btnReplyChat.cloneNode(true);
-        btnReplyChat.parentNode.replaceChild(newBtn, btnReplyChat);
-        
-        if (contact.status === 'REPLIED') {
-             newBtn.disabled = true;
-             newBtn.innerHTML = '<i class="fas fa-check-double"></i> Đã gửi xác nhận';
-             newBtn.className = 'btn btn-secondary';
+        if (typeof window.sendDirectMessage === "function") {
+          window.sendDirectMessage(contact.fullName, message);
+          alert(`Đã gửi tin nhắn đến ${contact.fullName}`);
         } else {
-             newBtn.disabled = false;
-             newBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Gửi xác nhận & Chat';
-             newBtn.className = 'btn btn-primary';
-             newBtn.onclick = async () => {
-                // 1. Send Canned Message via Chat
-                const topic = contact.subject || 'Liên hệ';
-                const message = `Chúng tôi nhận được tin nhắn của bạn về "${topic}". Chúng tôi đã ghi nhận trường hợp của bạn và sẽ liên hệ bạn sớm nhất.`;
-                
-                if (typeof window.sendDirectMessage === 'function') {
-                    window.sendDirectMessage(contact.fullName, message);
-                    alert(`Đã gửi tin nhắn đến ${contact.fullName}`);
-                } else {
-                    console.error("Chat function not avail");
-                }
-
-                // 2. Update Status to REPLIED
-                await updateContactStatus(id, 'REPLIED');
-
-                // 3. Switch to Chat (optional, maybe user wants to stay?)
-                // User asked "send message", but sticking to modal might be better flow?
-                // But let's follow previous pattern: Close modal, open chat to verify
-                closeContactModal();
-                showSection('livechat');
-                if (typeof selectUser === 'function') {
-                    selectUser(contact.fullName);
-                }
-             };
+          console.error("Chat function not avail");
         }
-    }
-    
 
-    
-    // Reset Button for Testing
-    const btnResetStatus = document.getElementById('btnResetStatus');
-    if (btnResetStatus) {
-        const newBtn = btnResetStatus.cloneNode(true);
-        btnResetStatus.parentNode.replaceChild(newBtn, btnResetStatus);
-        newBtn.onclick = async () => {
-             if(confirm('Bạn có chắc muốn Reset về trạng thái MỚI để test lại?')) {
-                 await updateContactStatus(id, 'NEW');
-                 // Refresh modal logic by re-opening or manual update? 
-                 // Simple approach: Close and let them reopen, or manually update UI state.
-                 // Let's close for simplicity as it refreshes the table row too.
-                 closeContactModal();
-                 // Optionally re-open: viewContactDetails(id); -- but need to wait for table reload?
-                 // Just close is fine for testing.
-             }
-        };
+        // 2. Update Status to REPLIED
+        await updateContactStatus(id, "REPLIED");
+
+        // 3. Switch to Chat (optional, maybe user wants to stay?)
+        // User asked "send message", but sticking to modal might be better flow?
+        // But let's follow previous pattern: Close modal, open chat to verify
+        closeContactModal();
+        showSection("livechat");
+        if (typeof selectUser === "function") {
+          selectUser(contact.fullName);
+        }
+      };
     }
-    
-    // Note: btnMarkRead is removed from HTML in previous step logic, but let's keep logic if it exists hidden or restore it?
-    // User didn't explicitly say remove "Mark as Read", but "Mark as Read" is kind of redundant if we have "Reply Chat" and "Reset".
-    // I removed it in HTML for space.
-    
-    const modal = document.getElementById('contactModal');
-    if (modal) modal.classList.add('show');
+  }
+
+  // Reset Button for Testing
+  const btnResetStatus = document.getElementById("btnResetStatus");
+  if (btnResetStatus) {
+    const newBtn = btnResetStatus.cloneNode(true);
+    btnResetStatus.parentNode.replaceChild(newBtn, btnResetStatus);
+    newBtn.onclick = async () => {
+      if (confirm("Bạn có chắc muốn Reset về trạng thái MỚI để test lại?")) {
+        await updateContactStatus(id, "NEW");
+        // Refresh modal logic by re-opening or manual update?
+        // Simple approach: Close and let them reopen, or manually update UI state.
+        // Let's close for simplicity as it refreshes the table row too.
+        closeContactModal();
+        // Optionally re-open: viewContactDetails(id); -- but need to wait for table reload?
+        // Just close is fine for testing.
+      }
+    };
+  }
+
+  // Note: btnMarkRead is removed from HTML in previous step logic, but let's keep logic if it exists hidden or restore it?
+  // User didn't explicitly say remove "Mark as Read", but "Mark as Read" is kind of redundant if we have "Reply Chat" and "Reset".
+  // I removed it in HTML for space.
+
+  const modal = document.getElementById("contactModal");
+  if (modal) modal.classList.add("show");
 }
 
 function closeContactModal() {
-    const modal = document.getElementById('contactModal');
-    if (modal) modal.classList.remove('show');
+  const modal = document.getElementById("contactModal");
+  if (modal) modal.classList.remove("show");
 }
 
 // Modal Event Listeners
-document.addEventListener('DOMContentLoaded', () => {
-    const closeBtn = document.querySelector('.close-modal');
-    if (closeBtn) closeBtn.addEventListener('click', closeContactModal);
-    
-    const btnClose = document.getElementById('btnClose');
-    if (btnClose) btnClose.addEventListener('click', closeContactModal);
-    
-    window.addEventListener('click', (e) => {
-        const modal = document.getElementById('contactModal');
-        if (e.target == modal) {
-            closeContactModal();
-        }
-    });
+document.addEventListener("DOMContentLoaded", () => {
+  const closeBtn = document.querySelector(".close-modal");
+  if (closeBtn) closeBtn.addEventListener("click", closeContactModal);
+
+  const btnClose = document.getElementById("btnClose");
+  if (btnClose) btnClose.addEventListener("click", closeContactModal);
+
+  window.addEventListener("click", (e) => {
+    const modal = document.getElementById("contactModal");
+    if (e.target == modal) {
+      closeContactModal();
+    }
+  });
 });
 
 // Update contact status
 async function updateContactStatus(id, newStatus) {
+  try {
+    const response = await fetch(`/api/contact/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    });
 
-    try {
-        const response = await fetch(`/api/contact/${id}/status`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ status: newStatus })
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            if (data.success) {
-                showSuccess(data.message);
-                loadContactsData(); // Reload table
-            } else {
-                showError(data.message);
-            }
-        } else {
-            showError("Lỗi kết nối server");
-        }
-    } catch (error) {
-        console.error("Error updating status:", error);
-        showError("Có lỗi xảy ra");
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
+        showSuccess(data.message);
+        loadContactsData(); // Reload table
+      } else {
+        showError(data.message);
+      }
+    } else {
+      showError("Lỗi kết nối server");
     }
+  } catch (error) {
+    console.error("Error updating status:", error);
+    showError("Có lỗi xảy ra");
+  }
 }
 
 // Filter contacts
@@ -1868,16 +1873,16 @@ function filterContacts() {
     // But DOM filtering is consistent with existing code.
     // Let's check the text content of the status badge.
     const statusBadges = {
-        'NEW': 'Mới',
-        'READ': 'Đã xem',
-        'REPLIED': 'Đã phản hồi'
+      NEW: "Mới",
+      READ: "Đã xem",
+      REPLIED: "Đã phản hồi",
     };
 
     const badgeText = row.querySelector(".status-badge").textContent;
     if (badgeText === statusBadges[statusFilter]) {
-        row.style.display = "";
+      row.style.display = "";
     } else {
-        row.style.display = "none";
+      row.style.display = "none";
     }
   });
 }
@@ -1918,15 +1923,16 @@ function displayFaqs(faqs) {
     return;
   }
 
-  tbody.innerHTML = faqs.map((faq) => {
-    const isActive = faq.isActive === true || faq.isActive === 1;
-    const statusBadge = isActive
-      ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Hoạt động</span>`
-      : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Tắt</span>`;
-    const toggleIcon = isActive ? "fa-toggle-on" : "fa-toggle-off";
-    const toggleTitle = isActive ? "Tắt FAQ" : "Bật FAQ";
+  tbody.innerHTML = faqs
+    .map((faq) => {
+      const isActive = faq.isActive === true || faq.isActive === 1;
+      const statusBadge = isActive
+        ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Hoạt động</span>`
+        : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Tắt</span>`;
+      const toggleIcon = isActive ? "fa-toggle-on" : "fa-toggle-off";
+      const toggleTitle = isActive ? "Tắt FAQ" : "Bật FAQ";
 
-    return `<tr>
+      return `<tr>
       <td>${faq.id}</td>
       <td style="max-width: 300px;">
         <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(faq.question)}">
@@ -1950,7 +1956,8 @@ function displayFaqs(faqs) {
         </div>
       </td>
     </tr>`;
-  }).join("");
+    })
+    .join("");
 }
 
 function displayEmptyFaqs() {
@@ -1978,7 +1985,7 @@ function openAddFaqModal() {
 }
 
 function editFaq(id) {
-  const faq = allFaqs.find(f => f.id === id);
+  const faq = allFaqs.find((f) => f.id === id);
   if (!faq) return;
 
   document.getElementById("faqId").value = faq.id;
@@ -1999,7 +2006,8 @@ async function saveFaq() {
   const question = document.getElementById("faqQuestion").value.trim();
   const answer = document.getElementById("faqAnswer").value.trim();
   const category = document.getElementById("faqCategory").value;
-  const displayOrder = parseInt(document.getElementById("faqDisplayOrder").value) || 0;
+  const displayOrder =
+    parseInt(document.getElementById("faqDisplayOrder").value) || 0;
 
   if (!question) {
     alert("Vui lòng nhập câu hỏi");
@@ -2081,4 +2089,256 @@ function escapeHtml(text) {
   const div = document.createElement("div");
   div.textContent = text;
   return div.innerHTML;
+}
+
+// ==================== NEWS MANAGEMENT ====================
+
+let allNews = [];
+
+async function loadNewsManagementData() {
+  showLoading(true);
+  try {
+    const token =
+      localStorage.getItem("accessToken") ||
+      sessionStorage.getItem("accessToken");
+    const response = await fetch("/api/news/admin?page=0&size=100", {
+      headers: { Authorization: "Bearer " + token },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      if (data.success && data.data) {
+        allNews = data.data.content || data.data || [];
+        displayNewsManagement(allNews);
+      } else {
+        displayEmptyNews();
+      }
+    } else {
+      displayEmptyNews();
+    }
+  } catch (error) {
+    console.error("Error loading news:", error);
+    displayEmptyNews();
+  } finally {
+    showLoading(false);
+  }
+}
+
+function displayNewsManagement(newsList) {
+  const tbody = document.getElementById("newsTableBody");
+  if (!tbody) return;
+
+  if (!newsList || newsList.length === 0) {
+    displayEmptyNews();
+    return;
+  }
+
+  tbody.innerHTML = newsList
+    .map((item) => {
+      const isPublished = item.isPublished === true || item.published === true;
+      const isFeatured = item.isFeatured === true || item.featured === true;
+      const statusBadge = isPublished
+        ? `<span class="status-badge" style="background:#dcfce7;color:#16a34a">Đã xuất bản</span>`
+        : `<span class="status-badge" style="background:#fee2e2;color:#dc2626">Bản nháp</span>`;
+      const featuredBadge = isFeatured
+        ? `<span class="status-badge" style="background:#fef9c3;color:#854d0e">Nổi bật</span>`
+        : `<span style="color:#9ca3af">-</span>`;
+      const publishedAt = item.publishedAt
+        ? new Date(item.publishedAt).toLocaleDateString("vi-VN")
+        : "-";
+
+      return `<tr>
+      <td>${item.id}</td>
+      <td style="max-width: 260px;">
+        <div style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${escapeHtml(item.title)}">
+          ${escapeHtml(item.title)}
+        </div>
+      </td>
+      <td><span style="background:#eff6ff;color:#1d4ed8;padding:2px 10px;border-radius:12px;font-size:12px">${item.category || "--"}</span></td>
+      <td>${escapeHtml(item.author) || "--"}</td>
+      <td>${featuredBadge}</td>
+      <td>${statusBadge}</td>
+      <td>${publishedAt}</td>
+      <td>
+        <div class="action-buttons">
+          <button class="btn btn-sm btn-edit" onclick="editNews(${item.id})" title="Sửa tin tức">
+            <i class="fas fa-edit"></i>
+          </button>
+          <button class="btn btn-sm" onclick="toggleNewsPublish(${item.id})" title="${isPublished ? "Ẩn" : "Xuất bản"}" style="color:#f59e0b;background:#fef3c7;border:none;">
+            <i class="fas ${isPublished ? "fa-eye-slash" : "fa-eye"}"></i>
+          </button>
+          <button class="btn btn-sm btn-delete" onclick="deleteNews(${item.id})" title="Xóa tin tức">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+    })
+    .join("");
+}
+
+function displayEmptyNews() {
+  const tbody = document.getElementById("newsTableBody");
+  if (!tbody) return;
+  tbody.innerHTML = `<tr>
+    <td colspan="8" style="text-align: center; padding: 40px; color: #9ca3af;">
+      <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+        <i class="fas fa-newspaper" style="font-size: 48px; color: #cbd5e1;"></i>
+        <h3 style="margin: 0; font-size: 18px; color: #475569;">Chưa có tin tức nào</h3>
+        <p style="margin: 0; font-size: 14px; color: #64748b;">Nhấn "Thêm tin tức mới" để tạo bài viết</p>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function openAddNewsModal() {
+  document.getElementById("newsId").value = "";
+  document.getElementById("newsModalTitle").textContent = "Thêm tin tức mới";
+  document.getElementById("newsTitle").value = "";
+  document.getElementById("newsSummary").value = "";
+  document.getElementById("newsContent").value = "";
+  document.getElementById("newsAuthor").value = "";
+  document.getElementById("newsCategory").value = "";
+  document.getElementById("newsImageUrl").value = "";
+  document.getElementById("newsIsFeatured").checked = false;
+  document.getElementById("newsIsPublished").checked = true;
+  document.getElementById("newsModal").style.display = "flex";
+}
+
+function editNews(id) {
+  const item = allNews.find((n) => n.id === id);
+  if (!item) return;
+
+  document.getElementById("newsId").value = item.id;
+  document.getElementById("newsModalTitle").textContent = "Sửa tin tức";
+  document.getElementById("newsTitle").value = item.title || "";
+  document.getElementById("newsSummary").value = item.summary || "";
+  document.getElementById("newsContent").value = item.content || "";
+  document.getElementById("newsAuthor").value = item.author || "";
+  document.getElementById("newsCategory").value = item.category || "";
+  document.getElementById("newsImageUrl").value = item.imageUrl || "";
+  document.getElementById("newsIsFeatured").checked =
+    item.isFeatured === true || item.featured === true;
+  document.getElementById("newsIsPublished").checked =
+    item.isPublished === true || item.published === true;
+  document.getElementById("newsModal").style.display = "flex";
+}
+
+function closeNewsModal() {
+  document.getElementById("newsModal").style.display = "none";
+}
+
+async function saveNews() {
+  const id = document.getElementById("newsId").value;
+  const title = document.getElementById("newsTitle").value.trim();
+  const content = document.getElementById("newsContent").value.trim();
+
+  if (!title) {
+    alert("Vui lòng nhập tiêu đề");
+    return;
+  }
+  if (!content) {
+    alert("Vui lòng nhập nội dung");
+    return;
+  }
+
+  const payload = {
+    title,
+    summary: document.getElementById("newsSummary").value.trim(),
+    content,
+    author: document.getElementById("newsAuthor").value.trim(),
+    category: document.getElementById("newsCategory").value,
+    imageUrl: document.getElementById("newsImageUrl").value.trim(),
+    isFeatured: document.getElementById("newsIsFeatured").checked,
+    isPublished: document.getElementById("newsIsPublished").checked,
+  };
+
+  const token =
+    localStorage.getItem("accessToken") ||
+    sessionStorage.getItem("accessToken");
+  try {
+    const url = id ? `/api/news/admin/${id}` : "/api/news/admin";
+    const method = id ? "PUT" : "POST";
+    const response = await fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+    if (data.success) {
+      closeNewsModal();
+      loadNewsManagementData();
+      showSuccess(id ? "Tin tức đã được cập nhật" : "Tin tức đã được tạo");
+    } else {
+      alert("Lỗi: " + (data.message || "Không thể lưu tin tức"));
+    }
+  } catch (error) {
+    console.error("Error saving news:", error);
+    alert("Lỗi kết nối server");
+  }
+}
+
+async function toggleNewsPublish(id) {
+  const item = allNews.find((n) => n.id === id);
+  if (!item) return;
+
+  const isPublished = item.isPublished === true || item.published === true;
+  const token =
+    localStorage.getItem("accessToken") ||
+    sessionStorage.getItem("accessToken");
+  try {
+    const response = await fetch(`/api/news/admin/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        title: item.title,
+        summary: item.summary,
+        content: item.content,
+        author: item.author,
+        category: item.category,
+        imageUrl: item.imageUrl,
+        isFeatured: item.isFeatured || item.featured || false,
+        isPublished: !isPublished,
+      }),
+    });
+    const data = await response.json();
+    if (data.success) {
+      loadNewsManagementData();
+      showSuccess(isPublished ? "Đã ẩn tin tức" : "Đã xuất bản tin tức");
+    } else {
+      showError(data.message || "Không thể cập nhật trạng thái");
+    }
+  } catch (error) {
+    console.error("Error toggling news:", error);
+    showError("Lỗi kết nối server");
+  }
+}
+
+async function deleteNews(id) {
+  if (!confirm("Bạn có chắc chắn muốn xóa tin tức này?")) return;
+
+  const token =
+    localStorage.getItem("accessToken") ||
+    sessionStorage.getItem("accessToken");
+  try {
+    const response = await fetch(`/api/news/admin/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: "Bearer " + token },
+    });
+    const data = await response.json();
+    if (data.success) {
+      loadNewsManagementData();
+      showSuccess("Tin tức đã được xóa");
+    } else {
+      showError(data.message || "Không thể xóa tin tức");
+    }
+  } catch (error) {
+    console.error("Error deleting news:", error);
+    showError("Lỗi kết nối server");
+  }
 }

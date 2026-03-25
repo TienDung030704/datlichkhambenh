@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chi tiết tin tức - HealthCare</title>
+    <link rel="stylesheet" href="../css/index.css" />
+    <link rel="stylesheet" href="../css/news.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&subset=vietnamese&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/chat-widget.css?v=1.1" />
+    <style>
+      .news-detail-wrapper {
+        max-width: 860px;
+        margin: 40px auto;
+        padding: 0 20px 60px;
+      }
+      .back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #2196f3;
+        background: #eff6ff;
+        border: 1.5px solid #93c5fd;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 18px;
+        border-radius: 999px;
+        margin-bottom: 28px;
+        transition:
+          background 0.2s,
+          border-color 0.2s,
+          color 0.2s,
+          box-shadow 0.2s;
+        box-shadow: 0 1px 4px rgba(33, 150, 243, 0.08);
+      }
+      .back-btn:hover {
+        background: #2196f3;
+        border-color: #2196f3;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(33, 150, 243, 0.25);
+      }
+      .back-btn i {
+        font-size: 13px;
+      }
+      .news-detail-category {
+        display: inline-block;
+        background: #eff6ff;
+        color: #1d4ed8;
+        padding: 4px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 16px;
+      }
+      .news-detail-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1a202c;
+        line-height: 1.35;
+        margin: 0 0 16px;
+      }
+      .news-detail-meta {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        color: #64748b;
+        font-size: 14px;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+      }
+      .news-detail-meta span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .news-detail-image {
+        width: 100%;
+        max-height: 480px;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 36px;
+      }
+      .news-detail-summary {
+        font-size: 1.1rem;
+        color: #475569;
+        line-height: 1.7;
+        border-left: 4px solid #2196f3;
+        padding-left: 18px;
+        margin-bottom: 32px;
+        font-style: italic;
+      }
+      .news-detail-content {
+        font-size: 1rem;
+        color: #374151;
+        line-height: 1.8;
+      }
+      .news-detail-content p {
+        margin-bottom: 18px;
+      }
+      .news-detail-content h2,
+      .news-detail-content h3 {
+        margin-top: 32px;
+        margin-bottom: 12px;
+        color: #1a202c;
+      }
+      .news-detail-content img {
+        max-width: 100%;
+        border-radius: 8px;
+        margin: 16px 0;
+      }
+      .news-detail-views {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 4px 14px;
+        font-size: 13px;
+        color: #64748b;
+      }
+      .news-detail-loading {
+        text-align: center;
+        padding: 80px 20px;
+        color: #9ca3af;
+      }
+      .news-detail-loading i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        display: block;
+      }
+      .news-detail-error {
+        text-align: center;
+        padding: 80px 20px;
+        color: #dc2626;
+      }
+      @media (max-width: 600px) {
+        .news-detail-title {
+          font-size: 1.4rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <div class="nav-container">
+        <div class="logo">
+          <a href="../index.html"><span>HealthCare</span></a>
+        </div>
+        <nav class="nav-menu">
+          <li><a href="../index.html">Trang Chủ</a></li>
+          <li><a href="/html/booking/book-appointment.html">Chức năng</a></li>
+          <li><a href="news.html" class="active">Tin Tức</a></li>
+          <li><a href="faq.html">Hướng dẫn</a></li>
+          <li><a href="contact.html">Liên Hệ</a></li>
+        </nav>
+        <div class="nav-auth">
+          <a href="login.html" class="btn-outline">Đăng Nhập</a>
+          <a href="register.html" class="btn-primary">Đăng Ký</a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="container">
+        <h1>Chi Tiết Tin Tức</h1>
+        <p>Thông tin mới nhất về sức khỏe và y tế</p>
+      </div>
+    </div>
+
+    <!-- News Detail Content -->
+    <div class="news-detail-wrapper">
+      <a href="news.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Quay lại danh sách tin tức
+      </a>
+
+      <div id="newsDetailContent">
+        <div class="news-detail-loading">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Đang tải bài viết...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div id="chatWidget"></div>
+
+    <script src="../javascript/auth-utils.js"></script>
+    <script src="../javascript/chat-widget.js"></script>
+    <script src="../javascript/news-detail.js"></script>
+  </body>
+</html>

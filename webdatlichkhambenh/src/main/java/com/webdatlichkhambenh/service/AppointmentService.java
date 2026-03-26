@@ -21,6 +21,10 @@ public class AppointmentService {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    public JdbcTemplate getJdbcTemplate() {
+        return jdbcTemplate;
+    }
+
     public Map<String, Object> createAppointment(Map<String, Object> appointmentData) {
         Map<String, Object> response = new HashMap<>();
 
@@ -97,9 +101,11 @@ public class AppointmentService {
                     appointment_time,
                     status,
                     symptoms,
+                    reminder_status,
+                    skip_reminder,
                     created_at,
                     updated_at
-                ) VALUES (?, ?, ?, ?, ?, 'booked', ?, NOW(), NOW())
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
                 """;
 
             KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -115,6 +121,14 @@ public class AppointmentService {
                 } else {
                     ps.setString(6, symptoms.trim());
                 }
+                
+                // Reminder logic: skip if < 24h away
+                boolean skipReminder = java.time.LocalDateTime.now().plusHours(24)
+                        .isAfter(appointmentDate.atTime(java.time.LocalTime.parse(appointmentTime)));
+                
+                ps.setString(7, skipReminder ? "skipped" : "pending");
+                ps.setInt(8, skipReminder ? 1 : 0);
+                
                 return ps;
             }, keyHolder);
 
@@ -203,6 +217,9 @@ public class AppointmentService {
                 appointment_time VARCHAR(20) NOT NULL,
                 status VARCHAR(20) NOT NULL DEFAULT 'booked',
                 symptoms TEXT,
+                reminder_status VARCHAR(20) DEFAULT 'pending',
+                reminder_sent_at TIMESTAMP NULL,
+                skip_reminder TINYINT(1) DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 CONSTRAINT uk_doctor_schedule UNIQUE (doctor_id, appointment_date, appointment_time),

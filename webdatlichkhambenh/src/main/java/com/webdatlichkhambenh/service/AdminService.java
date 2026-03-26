@@ -587,11 +587,13 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.specialty_name as specialty_name
+                       d.full_name as doctor_name, s.specialty_name as specialty_name,
+                       pp.allergy_status, pp.allergy_notes
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id
                 JOIN specialties s ON a.specialty_id = s.id
+                LEFT JOIN patient_profiles pp ON u.id = pp.user_id AND pp.is_default = 1
                 WHERE a.appointment_date >= CURDATE()
                 ORDER BY a.appointment_date ASC, a.appointment_time ASC
                 LIMIT ?
@@ -606,6 +608,8 @@ public class AdminService {
                 appointment.put("specialtyName", appointment.get("specialty_name"));
                 appointment.put("appointmentDate", appointment.get("appointment_date"));
                 appointment.put("appointmentTime", appointment.get("appointment_time"));
+                appointment.put("allergyStatus", appointment.get("allergy_status"));
+                appointment.put("allergyNotes", appointment.get("allergy_notes"));
 
                 // Remove snake_case keys
                 appointment.remove("patient_name");
@@ -614,6 +618,8 @@ public class AdminService {
                 appointment.remove("specialty_name");
                 appointment.remove("appointment_date");
                 appointment.remove("appointment_time");
+                appointment.remove("allergy_status");
+                appointment.remove("allergy_notes");
             }
 
             return appointments;
@@ -632,11 +638,13 @@ public class AdminService {
             String sql = """
                 SELECT a.id, a.appointment_date, a.appointment_time, a.status, a.symptoms,
                        u.full_name as patient_name, u.phone_number as patient_phone,
-                       d.full_name as doctor_name, s.specialty_name as specialty_name
+                       d.full_name as doctor_name, s.specialty_name as specialty_name,
+                       pp.allergy_status, pp.allergy_notes
                 FROM appointments a
                 JOIN users u ON a.patient_id = u.id
                 JOIN doctors d ON a.doctor_id = d.id
                 JOIN specialties s ON a.specialty_id = s.id
+                LEFT JOIN patient_profiles pp ON u.id = pp.user_id AND pp.is_default = 1
                 ORDER BY a.appointment_date DESC, a.appointment_time DESC
                 LIMIT ? OFFSET ?
                 """;
@@ -650,6 +658,8 @@ public class AdminService {
                 appointment.put("specialtyName", appointment.get("specialty_name"));
                 appointment.put("appointmentDate", appointment.get("appointment_date"));
                 appointment.put("appointmentTime", appointment.get("appointment_time"));
+                appointment.put("allergyStatus", appointment.get("allergy_status"));
+                appointment.put("allergyNotes", appointment.get("allergy_notes"));
 
                 // Remove snake_case keys
                 appointment.remove("patient_name");
@@ -658,6 +668,8 @@ public class AdminService {
                 appointment.remove("specialty_name");
                 appointment.remove("appointment_date");
                 appointment.remove("appointment_time");
+                appointment.remove("allergy_status");
+                appointment.remove("allergy_notes");
             }
 
             return appointments;
@@ -705,11 +717,13 @@ public class AdminService {
                 : """
                     SELECT a.id, a.appointment_date, a.appointment_time, a.status,
                            u.full_name AS patient_name,
-                           d.full_name AS doctor_name, s.specialty_name AS specialty_name
+                           d.full_name AS doctor_name, s.specialty_name AS specialty_name,
+                           pp.allergy_status, pp.allergy_notes
                     FROM appointments a
                     JOIN users u ON a.patient_id = u.id
                     JOIN doctors d ON a.doctor_id = d.id
                     JOIN specialties s ON a.specialty_id = s.id
+                    LEFT JOIN patient_profiles pp ON u.id = pp.user_id AND pp.is_default = 1
                     WHERE a.status = 'booked'
                     ORDER BY a.id DESC
                     LIMIT ?
@@ -725,11 +739,15 @@ public class AdminService {
                 apt.put("specialtyName", apt.get("specialty_name"));
                 apt.put("appointmentDate", apt.get("appointment_date"));
                 apt.put("appointmentTime", apt.get("appointment_time"));
+                apt.put("allergyStatus", apt.get("allergy_status"));
+                apt.put("allergyNotes", apt.get("allergy_notes"));
                 apt.remove("patient_name");
                 apt.remove("doctor_name");
                 apt.remove("specialty_name");
                 apt.remove("appointment_date");
                 apt.remove("appointment_time");
+                apt.remove("allergy_status");
+                apt.remove("allergy_notes");
             }
             return appointments;
         } catch (Exception e) {

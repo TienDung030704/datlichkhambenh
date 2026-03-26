@@ -3,11 +3,14 @@ package com.webdatlichkhambenh;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import io.github.cdimascio.dotenv.Dotenv;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@SpringBootApplication // Đây chính là cái "đánh dấu" mà bạn cần
+@SpringBootApplication
+@EnableScheduling
 public class Main {
     public static void main(String[] args) {
         // Find .env file depending on working directory (VS Code parent dir vs Maven submodule dir)

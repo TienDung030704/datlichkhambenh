@@ -14,6 +14,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const emailEl = document.getElementById("email");
     const addressEl = document.getElementById("fullAddress");
     const phoneEl = document.getElementById("phone");
+    const allergyStatusEl = document.getElementById("allergyStatus");
+    const allergyNotesEl = document.getElementById("allergyNotes");
     const birthdayEl = document.getElementById("birthday");
     const cccdEl = document.getElementById("cccd");
 
@@ -40,6 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const genderEl = document.querySelector('input[name="gender"]:checked');
     const gender = genderEl ? genderEl.value : "";
+    const allergyStatus = allergyStatusEl ? allergyStatusEl.value : "Chưa ghi nhận";
+    const allergyNotes = allergyNotesEl ? allergyNotesEl.value.trim() : "";
 
     // === Validate ===
     if (!lastname || !firstname || !gender || !phone) {
@@ -64,6 +68,8 @@ document.addEventListener("DOMContentLoaded", function () {
           gioiTinh: gender,
           soDienThoai: phone || null,
           diaChi: address || null,
+          allergyStatus: allergyStatus,
+          allergyNotes: allergyNotes || null,
           baoHiem: null,
         }),
       });
@@ -112,6 +118,19 @@ document.addEventListener("DOMContentLoaded", function () {
       btnSave.textContent = "Lưu hồ sơ";
     }
   });
+
+  // Toggle allergyNotes visibility
+  const allergyStatusEl = document.getElementById("allergyStatus");
+  const allergyNotesGroup = document.getElementById("allergyNotesGroup");
+  if (allergyStatusEl && allergyNotesGroup) {
+    allergyStatusEl.addEventListener("change", function() {
+      if (this.value === "Có dị ứng") {
+        allergyNotesGroup.style.display = "block";
+      } else {
+        allergyNotesGroup.style.display = "none";
+      }
+    });
+  }
 });
 
 function getCurrentUser() {

@@ -319,6 +319,32 @@
         </div>
       </div>
 
+      <!-- CARD 5: THÔNG TIN Y TẾ -->
+      <div class="card">
+        <h2>
+          <i class="fa-solid fa-notes-medical"></i>
+          Thông tin y tế
+        </h2>
+
+        <div class="form-group">
+          <label>Tình trạng dị ứng thuốc <span class="required">*</span></label>
+          <select id="allergyStatus" required>
+            <option value="Chưa ghi nhận" selected>Chưa ghi nhận</option>
+            <option value="Không có">Không có</option>
+            <option value="Có dị ứng">Có dị ứng thuốc</option>
+          </select>
+        </div>
+
+        <div class="form-group" id="allergyNotesGroup" style="display: none;">
+          <label>Ghi chú dị ứng (Tên thuốc, biểu hiện...)</label>
+          <textarea
+            id="allergyNotes"
+            rows="3"
+            placeholder="VD: Dị ứng Penicillin, bị phát ban..."
+          ></textarea>
+        </div>
+      </div>
+
       <!-- BUTTON -->
       <button id="btnSave" type="button">Tạo hồ sơ bệnh nhân</button>
     </div>

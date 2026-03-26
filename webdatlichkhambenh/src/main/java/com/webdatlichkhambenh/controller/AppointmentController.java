@@ -4,15 +4,7 @@ import com.webdatlichkhambenh.service.AppointmentService;
 import com.webdatlichkhambenh.service.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +75,32 @@ public class AppointmentController {
             err.put("success", false);
             err.put("message", "Lỗi khi hủy lịch hẹn: " + e.getMessage());
             return ResponseEntity.status(500).body(err);
+        }
+    }
+
+    // Endpoint cho phép hủy từ link email (GET)
+    @GetMapping("/{id}/cancel")
+    public ResponseEntity<String> cancelFromEmail(@PathVariable Integer id) {
+        try {
+            // Lấy username từ appointment để verify (không cần token ở đây vì gọi từ email)
+            String sql = "SELECT u.username FROM appointments a JOIN users u ON a.patient_id = u.id WHERE a.id = ?";
+            List<String> usernames = appointmentService.getJdbcTemplate().query(sql, (rs, rowNum) -> rs.getString("username"), id);
+            
+            if (usernames.isEmpty()) {
+                return ResponseEntity.badRequest().body("<h1>Không tìm thấy lịch hẹn</h1>");
+            }
+            
+            Map<String, Object> result = appointmentService.huyLichHen(id, usernames.get(0));
+            if (Boolean.TRUE.equals(result.get("success"))) {
+                return ResponseEntity.ok("<div style='font-family: sans-serif; text-align: center; padding: 50px;'>" +
+                        "<h1>Hủy lịch hẹn thành công</h1>" +
+                        "<p>Lịch hẹn của bạn đã được hủy bỏ. Cảm ơn bạn đã thông báo.</p>" +
+                        "</div>");
+            } else {
+                return ResponseEntity.badRequest().body("<h1>Lỗi: " + result.get("message") + "</h1>");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("<h1>Lỗi server khi xử lý yêu cầu hủy lịch</h1>");
         }
     }
 }

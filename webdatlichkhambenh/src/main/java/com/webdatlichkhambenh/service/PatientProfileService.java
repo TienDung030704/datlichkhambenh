@@ -28,6 +28,8 @@ public class PatientProfileService {
                 so_dien_thoai VARCHAR(20),
                 dia_chi     VARCHAR(255),
                 bao_hiem    VARCHAR(100),
+                allergy_status VARCHAR(20) DEFAULT 'unknown',
+                allergy_notes TEXT,
                 is_default  TINYINT(1) DEFAULT 0,
                 created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -48,7 +50,8 @@ public class PatientProfileService {
         if (userId == null) return List.of();
 
         String sql = """
-            SELECT id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, is_default, created_at
+            SELECT id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, 
+                   allergy_status, allergy_notes, is_default, created_at
             FROM patient_profiles
             WHERE user_id = ?
             ORDER BY is_default DESC, created_at ASC
@@ -62,10 +65,13 @@ public class PatientProfileService {
             p.put("soDienThoai", p.get("so_dien_thoai"));
             p.put("diaChi", p.get("dia_chi"));
             p.put("baoHiem", p.get("bao_hiem"));
+            p.put("allergyStatus", p.get("allergy_status"));
+            p.put("allergyNotes", p.get("allergy_notes"));
             p.put("isDefault", p.get("is_default"));
             p.put("createdAt", p.get("created_at"));
             p.remove("ho_ten"); p.remove("ngay_sinh"); p.remove("gioi_tinh");
             p.remove("so_dien_thoai"); p.remove("dia_chi"); p.remove("bao_hiem");
+            p.remove("allergy_status"); p.remove("allergy_notes");
             p.remove("is_default"); p.remove("created_at");
         }
         return profiles;
@@ -100,8 +106,9 @@ public class PatientProfileService {
         boolean isDefault = (count == 0);
 
         String sql = """
-            INSERT INTO patient_profiles (user_id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, is_default)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO patient_profiles (user_id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, 
+                                        allergy_status, allergy_notes, is_default)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -114,7 +121,9 @@ public class PatientProfileService {
             ps.setString(5, asString(data.get("soDienThoai")));
             ps.setString(6, asString(data.get("diaChi")));
             ps.setString(7, asString(data.get("baoHiem")));
-            ps.setInt(8, isDefault ? 1 : 0);
+            ps.setString(8, data.get("allergyStatus") != null ? asString(data.get("allergyStatus")) : "unknown");
+            ps.setString(9, asString(data.get("allergyNotes")));
+            ps.setInt(10, isDefault ? 1 : 0);
             return ps;
         }, keyHolder);
 
@@ -152,12 +161,15 @@ public class PatientProfileService {
 
         jdbcTemplate.update("""
             UPDATE patient_profiles
-            SET ho_ten = ?, ngay_sinh = ?, gioi_tinh = ?, so_dien_thoai = ?, dia_chi = ?, bao_hiem = ?, updated_at = NOW()
+            SET ho_ten = ?, ngay_sinh = ?, gioi_tinh = ?, so_dien_thoai = ?, dia_chi = ?, bao_hiem = ?, 
+                allergy_status = ?, allergy_notes = ?, updated_at = NOW()
             WHERE id = ? AND user_id = ?
             """,
             hoTen.trim(), data.get("ngaySinh"), asString(data.get("gioiTinh")),
             asString(data.get("soDienThoai")), asString(data.get("diaChi")),
-            asString(data.get("baoHiem")), profileId, userId);
+            asString(data.get("baoHiem")), 
+            asString(data.get("allergyStatus")), asString(data.get("allergyNotes")),
+            profileId, userId);
 
         response.put("success", true);
         response.put("message", "Cập nhật hồ sơ thành công");

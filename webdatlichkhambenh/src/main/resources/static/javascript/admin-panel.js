@@ -394,6 +394,13 @@ function createAppointmentRow(appointment, showCheckbox = false) {
             <div class="patient-info">
                 <strong>${appointment.patientName}</strong>
                 <small>${appointment.patientPhone}</small>
+                ${
+                  appointment.allergyStatus === "Có dị ứng"
+                    ? `<span class="allergy-badge" title="DỊ ỨNG: ${appointment.allergyNotes || "Chưa có ghi chú cụ thể"}">
+                        <i class="fas fa-exclamation-triangle"></i> Dị ứng
+                       </span>`
+                    : ""
+                }
             </div>
         </td>
         <td>${appointment.doctorName}</td>

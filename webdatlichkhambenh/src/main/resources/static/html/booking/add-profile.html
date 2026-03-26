@@ -345,6 +345,49 @@
         </div>
       </div>
 
+      <!-- CARD 6: BẢO HIỂM Y TẾ -->
+      <div class="card insurance-card">
+        <h2>
+          <i class="fa-solid fa-shield-heart"></i>
+          Bảo hiểm y tế
+        </h2>
+        <p class="card-note">
+          Không bắt buộc — giúp bệnh viện xử lý thanh toán nhanh hơn
+        </p>
+
+        <div class="form-group">
+          <label>Link ảnh thẻ bảo hiểm y tế</label>
+          <div class="insurance-link-wrap">
+            <input
+              type="url"
+              id="insuranceImageUrl"
+              class="insurance-link-input"
+              placeholder="Dán link ảnh vào đây (https://...)"
+              oninput="previewInsuranceUrl(this.value)"
+            />
+            <button
+              type="button"
+              class="insurance-clear-btn"
+              id="insuranceClearBtn"
+              style="display: none"
+              onclick="clearInsuranceUrl()"
+            >
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div
+            id="insurancePreviewWrap"
+            style="display: none; margin-top: 10px"
+          >
+            <img
+              id="insuranceImagePreview"
+              class="insurance-preview-img"
+              alt="Ảnh thẻ BHYT"
+            />
+          </div>
+        </div>
+      </div>
+
       <!-- BUTTON -->
       <button id="btnSave" type="button">Tạo hồ sơ bệnh nhân</button>
     </div>

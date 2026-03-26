@@ -73,6 +73,17 @@ function loadAndRender() {
     }
   } catch (e) {}
 
+  // Nếu bhyt chưa được người dùng chọn, tự động set dựa vào ảnh BHYT trong hồ sơ
+  if (insuranceState.bhyt === null) {
+    try {
+      const profile = JSON.parse(localStorage.getItem("selectedProfile"));
+      insuranceState.bhyt = !!(profile && profile.baoHiemAnh);
+    } catch (e) {
+      insuranceState.bhyt = false;
+    }
+    saveInsurance();
+  }
+
   updateInsuranceUI();
 }
 

@@ -6,6 +6,12 @@ import io.jsonwebtoken.JwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import java.util.List;
 import java.util.Map;
@@ -103,6 +109,33 @@ public class PatientProfileController {
             return ResponseEntity.status(401).body(Map.of("success", false, "message", "Phiên đăng nhập hết hạn"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("success", false, "message", "Lỗi server: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping(value = "/upload-insurance-image", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadInsuranceImage(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestParam("file") MultipartFile file) {
+        try {
+            extractUsername(authHeader); // verify token
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "Không có file"));
+            }
+            String uploadDir = "webdatlichkhambenh/src/main/resources/static/uploads/insurance/";
+            Path uploadPath = Paths.get(uploadDir);
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+            String originalName = file.getOriginalFilename();
+            String safeName = (originalName != null && !originalName.isBlank() ? originalName : "bhyt")
+                    .replaceAll("[^a-zA-Z0-9._-]", "_");
+            String fileName = System.currentTimeMillis() + "_" + safeName;
+            Files.copy(file.getInputStream(), uploadPath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
+            return ResponseEntity.ok(Map.of("success", true, "url", "/uploads/insurance/" + fileName));
+        } catch (JwtException e) {
+            return ResponseEntity.status(401).body(Map.of("success", false, "message", "Phiên đăng nhập hết hạn"));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(Map.of("success", false, "message", "Lỗi upload: " + e.getMessage()));
         }
     }
 }

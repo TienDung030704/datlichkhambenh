@@ -201,6 +201,7 @@ async function syncDBProfiles() {
       phone: p.soDienThoai || "",
       birthDate: p.ngaySinh ? String(p.ngaySinh).slice(0, 10) : "",
       cccd: "",
+      baoHiemAnh: p.baoHiemAnh || null,
       isAccountProfile: false,
       fromDB: true,
     }));
@@ -301,7 +302,7 @@ function renderProfiles() {
     const age = profile.birthDate ? calculateAge(profile.birthDate) : "N/A";
 
     card.innerHTML = `
-      <div class="profile-detail-icon">
+      <div class="profile-detail-icon" title="Xem chi tiết hồ sơ">
         <i class="fas fa-user"></i>
       </div>
       <div class="profile-detail-info">
@@ -322,6 +323,15 @@ function renderProfiles() {
       </div>
     `;
 
+    // Click on icon → show detail sheet
+    card
+      .querySelector(".profile-detail-icon")
+      .addEventListener("click", (e) => {
+        e.stopPropagation();
+        openProfileDetail(profile);
+      });
+
+    // Click anywhere else on card → select
     card.addEventListener("click", () => {
       selectProfile(card, profile);
     });
@@ -336,6 +346,48 @@ function selectProfile(cardElement, profile) {
     .forEach((el) => el.classList.remove("active"));
   cardElement.classList.add("active");
   setSelectedProfile(profile);
+}
+
+function openProfileDetail(profile) {
+  const fmt = (d) => {
+    if (!d) return "Chưa có";
+    const parts = String(d).slice(0, 10).split("-");
+    return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : d;
+  };
+
+  document.getElementById("pdName").textContent =
+    profile.fullName || "Chưa có tên";
+  document.getElementById("pdSub").textContent = profile.gender || "";
+  document.getElementById("pdBirth").textContent = fmt(profile.birthDate);
+  document.getElementById("pdGender").textContent = profile.gender || "Chưa có";
+  document.getElementById("pdPhone").textContent = profile.phone || "Chưa có";
+  document.getElementById("pdAddress").textContent =
+    profile.address || "Chưa có";
+
+  const tag = document.getElementById("pdInsuranceTag");
+  const imgWrap = document.getElementById("pdInsuranceImgWrap");
+  const img = document.getElementById("pdInsuranceImg");
+
+  if (profile.baoHiemAnh) {
+    tag.textContent = "Có";
+    tag.className = "pd-val pd-insurance-tag has";
+    img.src = profile.baoHiemAnh;
+    imgWrap.style.display = "block";
+  } else {
+    tag.textContent = "Không";
+    tag.className = "pd-val pd-insurance-tag no";
+    imgWrap.style.display = "none";
+  }
+
+  document.getElementById("pdOverlay").classList.add("show");
+  document.getElementById("pdSheet").classList.add("show");
+  document.body.style.overflow = "hidden";
+}
+
+function closeProfileDetail() {
+  document.getElementById("pdOverlay").classList.remove("show");
+  document.getElementById("pdSheet").classList.remove("show");
+  document.body.style.overflow = "";
 }
 
 function calculateAge(birthDate) {

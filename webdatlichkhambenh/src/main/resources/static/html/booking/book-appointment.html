@@ -109,5 +109,55 @@
     <!-- JS -->
     <script src="../../javascript/auth-utils.js"></script>
     <script src="../../javascript/booking.js"></script>
+
+    <!-- PROFILE DETAIL BOTTOM SHEET -->
+    <div class="pd-overlay" id="pdOverlay" onclick="closeProfileDetail()"></div>
+    <div class="pd-sheet" id="pdSheet">
+      <div class="pd-handle"></div>
+      <div class="pd-header">
+        <div class="pd-avatar"><i class="fas fa-user"></i></div>
+        <div>
+          <div class="pd-name" id="pdName"></div>
+          <div class="pd-sub" id="pdSub"></div>
+        </div>
+        <button class="pd-close" onclick="closeProfileDetail()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="pd-body">
+        <div class="pd-row" id="pdBirthRow">
+          <i class="fas fa-calendar-alt"></i>
+          <span class="pd-label">Ngày sinh</span>
+          <span class="pd-val" id="pdBirth"></span>
+        </div>
+        <div class="pd-row" id="pdGenderRow">
+          <i class="fas fa-venus-mars"></i>
+          <span class="pd-label">Giới tính</span>
+          <span class="pd-val" id="pdGender"></span>
+        </div>
+        <div class="pd-row" id="pdPhoneRow">
+          <i class="fas fa-phone"></i>
+          <span class="pd-label">Điện thoại</span>
+          <span class="pd-val" id="pdPhone"></span>
+        </div>
+        <div class="pd-row" id="pdAddressRow">
+          <i class="fas fa-map-marker-alt"></i>
+          <span class="pd-label">Địa chỉ</span>
+          <span class="pd-val" id="pdAddress"></span>
+        </div>
+        <div class="pd-row pd-insurance-row" id="pdInsuranceRow">
+          <i class="fas fa-shield-heart"></i>
+          <span class="pd-label">Bảo hiểm y tế</span>
+          <span class="pd-val pd-insurance-tag" id="pdInsuranceTag"></span>
+        </div>
+        <div
+          class="pd-insurance-img-wrap"
+          id="pdInsuranceImgWrap"
+          style="display: none"
+        >
+          <img id="pdInsuranceImg" src="" alt="Ảnh thẻ BHYT" />
+        </div>
+      </div>
+    </div>
   </body>
 </html>

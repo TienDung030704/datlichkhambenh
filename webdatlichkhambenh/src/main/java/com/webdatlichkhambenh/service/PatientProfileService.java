@@ -20,22 +20,51 @@ public class PatientProfileService {
     private void ensureTableExists() {
         jdbcTemplate.execute("""
             CREATE TABLE IF NOT EXISTS patient_profiles (
-                id          INT PRIMARY KEY AUTO_INCREMENT,
-                user_id     BIGINT NOT NULL,
-                ho_ten      VARCHAR(100) NOT NULL,
-                ngay_sinh   DATE,
-                gioi_tinh   VARCHAR(10),
+                id            INT PRIMARY KEY AUTO_INCREMENT,
+                user_id       BIGINT NOT NULL,
+                ho_ten        VARCHAR(100) NOT NULL,
+                ngay_sinh     DATE,
+                gioi_tinh     VARCHAR(10),
                 so_dien_thoai VARCHAR(20),
-                dia_chi     VARCHAR(255),
-                bao_hiem    VARCHAR(100),
+                dia_chi       VARCHAR(255),
+                bao_hiem      VARCHAR(100),
+                bao_hiem_anh  VARCHAR(500),
                 allergy_status VARCHAR(20) DEFAULT 'unknown',
                 allergy_notes TEXT,
-                is_default  TINYINT(1) DEFAULT 0,
-                created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                is_default    TINYINT(1) DEFAULT 0,
+                created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 CONSTRAINT fk_pp_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             )
             """);
+        // Thêm cột bao_hiem_anh nếu bảng đã tồn tại nhưng chưa có cột này
+        try {
+            List<String> cols = jdbcTemplate.queryForList(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'patient_profiles' AND COLUMN_NAME = 'bao_hiem_anh'",
+                String.class);
+            if (cols.isEmpty()) {
+                jdbcTemplate.execute("ALTER TABLE patient_profiles ADD COLUMN bao_hiem_anh VARCHAR(500)");
+            }
+        } catch (Exception ignored) {}
+        try {
+            List<String> cols = jdbcTemplate.queryForList(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'patient_profiles' AND COLUMN_NAME = 'allergy_status'",
+                String.class);
+            if (cols.isEmpty()) {
+                jdbcTemplate.execute("ALTER TABLE patient_profiles ADD COLUMN allergy_status VARCHAR(20) DEFAULT 'unknown'");
+            }
+        } catch (Exception ignored) {}
+        try {
+            List<String> cols = jdbcTemplate.queryForList(
+                "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS " +
+                "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'patient_profiles' AND COLUMN_NAME = 'allergy_notes'",
+                String.class);
+            if (cols.isEmpty()) {
+                jdbcTemplate.execute("ALTER TABLE patient_profiles ADD COLUMN allergy_notes TEXT");
+            }
+        } catch (Exception ignored) {}
     }
 
     private Long findUserId(String usernameOrEmail) {
@@ -50,8 +79,8 @@ public class PatientProfileService {
         if (userId == null) return List.of();
 
         String sql = """
-            SELECT id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, 
-                   allergy_status, allergy_notes, is_default, created_at
+            SELECT id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem,
+               bao_hiem_anh, allergy_status, allergy_notes, is_default, created_at
             FROM patient_profiles
             WHERE user_id = ?
             ORDER BY is_default DESC, created_at ASC
@@ -65,13 +94,14 @@ public class PatientProfileService {
             p.put("soDienThoai", p.get("so_dien_thoai"));
             p.put("diaChi", p.get("dia_chi"));
             p.put("baoHiem", p.get("bao_hiem"));
+            p.put("baoHiemAnh", p.get("bao_hiem_anh"));
             p.put("allergyStatus", p.get("allergy_status"));
             p.put("allergyNotes", p.get("allergy_notes"));
             p.put("isDefault", p.get("is_default"));
             p.put("createdAt", p.get("created_at"));
             p.remove("ho_ten"); p.remove("ngay_sinh"); p.remove("gioi_tinh");
             p.remove("so_dien_thoai"); p.remove("dia_chi"); p.remove("bao_hiem");
-            p.remove("allergy_status"); p.remove("allergy_notes");
+            p.remove("bao_hiem_anh"); p.remove("allergy_status"); p.remove("allergy_notes");
             p.remove("is_default"); p.remove("created_at");
         }
         return profiles;
@@ -106,9 +136,9 @@ public class PatientProfileService {
         boolean isDefault = (count == 0);
 
         String sql = """
-            INSERT INTO patient_profiles (user_id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem, 
-                                        allergy_status, allergy_notes, is_default)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO patient_profiles (user_id, ho_ten, ngay_sinh, gioi_tinh, so_dien_thoai, dia_chi, bao_hiem,
+                                        bao_hiem_anh, allergy_status, allergy_notes, is_default)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """;
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -121,9 +151,10 @@ public class PatientProfileService {
             ps.setString(5, asString(data.get("soDienThoai")));
             ps.setString(6, asString(data.get("diaChi")));
             ps.setString(7, asString(data.get("baoHiem")));
-            ps.setString(8, data.get("allergyStatus") != null ? asString(data.get("allergyStatus")) : "unknown");
-            ps.setString(9, asString(data.get("allergyNotes")));
-            ps.setInt(10, isDefault ? 1 : 0);
+            ps.setString(8, asString(data.get("baoHiemAnh")));
+            ps.setString(9, data.get("allergyStatus") != null ? asString(data.get("allergyStatus")) : "unknown");
+            ps.setString(10, asString(data.get("allergyNotes")));
+            ps.setInt(11, isDefault ? 1 : 0);
             return ps;
         }, keyHolder);
 
@@ -161,13 +192,13 @@ public class PatientProfileService {
 
         jdbcTemplate.update("""
             UPDATE patient_profiles
-            SET ho_ten = ?, ngay_sinh = ?, gioi_tinh = ?, so_dien_thoai = ?, dia_chi = ?, bao_hiem = ?, 
-                allergy_status = ?, allergy_notes = ?, updated_at = NOW()
+            SET ho_ten = ?, ngay_sinh = ?, gioi_tinh = ?, so_dien_thoai = ?, dia_chi = ?, bao_hiem = ?,
+                bao_hiem_anh = ?, allergy_status = ?, allergy_notes = ?, updated_at = NOW()
             WHERE id = ? AND user_id = ?
             """,
             hoTen.trim(), data.get("ngaySinh"), asString(data.get("gioiTinh")),
             asString(data.get("soDienThoai")), asString(data.get("diaChi")),
-            asString(data.get("baoHiem")), 
+            asString(data.get("baoHiem")), asString(data.get("baoHiemAnh")),
             asString(data.get("allergyStatus")), asString(data.get("allergyNotes")),
             profileId, userId);
 

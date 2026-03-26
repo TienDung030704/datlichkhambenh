@@ -1,3 +1,32 @@
+// === Bảo hiểm y tế — link preview ===
+function previewInsuranceUrl(url) {
+  const preview = document.getElementById("insuranceImagePreview");
+  const previewWrap = document.getElementById("insurancePreviewWrap");
+  const clearBtn = document.getElementById("insuranceClearBtn");
+  const trimmed = url.trim();
+  if (trimmed) {
+    preview.src = trimmed;
+    previewWrap.style.display = "block";
+    clearBtn.style.display = "flex";
+    preview.onerror = function () {
+      previewWrap.style.display = "none";
+    };
+    preview.onload = function () {
+      previewWrap.style.display = "block";
+    };
+  } else {
+    previewWrap.style.display = "none";
+    clearBtn.style.display = "none";
+    preview.src = "";
+  }
+}
+
+function clearInsuranceUrl() {
+  const input = document.getElementById("insuranceImageUrl");
+  input.value = "";
+  previewInsuranceUrl("");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const btnSave = document.getElementById("btnSave");
   if (!btnSave) {
@@ -45,6 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const allergyStatus = allergyStatusEl ? allergyStatusEl.value : "Chưa ghi nhận";
     const allergyNotes = allergyNotesEl ? allergyNotesEl.value.trim() : "";
 
+    const insuranceUrlInput = document.getElementById("insuranceImageUrl");
+    const insuranceUrl = insuranceUrlInput?.value?.trim() || null;
+
     // === Validate ===
     if (!lastname || !firstname || !gender || !phone) {
       alert("Vui lòng nhập đầy đủ Họ, Tên, Giới tính và Số điện thoại");
@@ -52,6 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const hoTen = `${lastname} ${firstname}`;
+    let baoHiemAnh = insuranceUrl || null;
 
     // === Lưu vào DB qua API ===
     const authManager = new AuthManager();
@@ -71,6 +104,7 @@ document.addEventListener("DOMContentLoaded", function () {
           allergyStatus: allergyStatus,
           allergyNotes: allergyNotes || null,
           baoHiem: null,
+          baoHiemAnh: baoHiemAnh,
         }),
       });
 
@@ -87,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
           phone,
           birthDate: birthday,
           cccd,
+          baoHiemAnh: baoHiemAnh,
           isAccountProfile: false,
           fromDB: true,
         };
